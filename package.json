@@ -1,0 +1,22 @@
+{
+  "name": "cognitive-complexity-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deskbot/Cognitive-Complexity-TS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Deskbot/Cognitive-Complexity-TS/issues"
+  },
+  "homepage": "https://github.com/Deskbot/Cognitive-Complexity-TS#readme",
+  "dependencies": {
+    "typescript": "^3.6.4"
+  }
+}
