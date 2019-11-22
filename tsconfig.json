@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "alwaysStrict": true,
+        "declaration": true,
+        "module": "commonjs",
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "outDir": "./build",
+        "sourceMap": true,
+        "sourceRoot": "./src",
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "target": "ES2017"
+    },
+
+    "exclude": [
+        "node_modules"
+    ]
+}

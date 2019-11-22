@@ -2,21 +2,28 @@
   "name": "cognitive-complexity-ts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "keywords": [
+    "typescript",
+    "cognitive",
+    "complexity",
+    "metrics"
+  ],
+
+  "main": "./build/index.js",
+
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Deskbot/Cognitive-Complexity-TS.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Deskbot/Cognitive-Complexity-TS/issues"
-  },
+
+  "author": "Thomas Richards",
+  "license": "UNLICENSED",
+  "bugs": "https://github.com/Deskbot/Cognitive-Complexity-TS/issues",
   "homepage": "https://github.com/Deskbot/Cognitive-Complexity-TS#readme",
+  "repository": "https://github.com/Deskbot/Cognitive-Complexity-TS",
+
   "dependencies": {
+    "@types/node": "^10.14.22",
+    "source-map-support": "^0.5.13",
     "typescript": "^3.6.4"
   }
 }
