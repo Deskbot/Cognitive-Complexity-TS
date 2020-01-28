@@ -1,29 +1,54 @@
 {
-  "name": "cognitive-complexity-ts",
-  "version": "1.0.0",
-  "description": "",
-  "keywords": [
-    "typescript",
-    "cognitive",
-    "complexity",
-    "metrics"
-  ],
-
-  "main": "./build/index.js",
-
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-
-  "author": "Thomas Richards",
-  "license": "UNLICENSED",
-  "bugs": "https://github.com/Deskbot/Cognitive-Complexity-TS/issues",
-  "homepage": "https://github.com/Deskbot/Cognitive-Complexity-TS#readme",
-  "repository": "https://github.com/Deskbot/Cognitive-Complexity-TS",
-
-  "dependencies": {
-    "@types/node": "^10.14.22",
-    "source-map-support": "^0.5.13",
-    "typescript": "^3.6.4"
-  }
+	"name": "cognitive-complexity-ts",
+	"displayName": "Cognitive-Complexity-TS",
+	"description": "Calculates the Cognitive Complexity of TypeScript code",
+	"version": "0.0.1",
+	"keywords": [
+		"typescript",
+		"cognitive",
+		"complexity",
+		"metrics"
+	],
+	"engines": {
+		"vscode": "^1.41.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.helloWorld"
+	],
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.helloWorld",
+				"title": "Hello World"
+			}
+		]
+	},
+	"main": "./out/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "node ./out/test/runTest.js"
+	},
+	"author": "Thomas Richards",
+	"license": "UNLICENSED",
+	"bugs": "https://github.com/Deskbot/Cognitive-Complexity-TS/issues",
+	"homepage": "https://github.com/Deskbot/Cognitive-Complexity-TS#readme",
+	"repository": "https://github.com/Deskbot/Cognitive-Complexity-TS",
+	"devDependencies": {
+		"@types/node": "^10.14.22",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.7",
+		"@types/vscode": "^1.41.0",
+		"glob": "^7.1.5",
+		"mocha": "^6.2.2",
+		"source-map-support": "^0.5.13",
+		"typescript": "^3.6.4",
+		"tslint": "^5.20.0",
+		"vscode-test": "^1.2.2"
+	}
 }
