@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import * as path from "path";
 import * as ts from "typescript";
 
@@ -17,7 +18,7 @@ function main() {
 
     const file = ts.createSourceFile(
         path.basename(filePath),
-        filePath,
+        fs.readFileSync(filePath).toString(),
         ts.ScriptTarget.ES2017,
         true,
     );
@@ -25,25 +26,18 @@ function main() {
     report(file);
 }
 
-function complexity(func): number {
-
-}
-
-function functionName(func): string {
-
-}
-
-function getFunctions(node: ts.Node): ts.FunctionDeclaration[] {
-    if () {
-
+function repeat(str: string, times: number): string {
+    let res = "";
+    for (let i = 0; i < times; i++) {
+        res += str;
     }
+
+    return res;
 }
 
-function report(file: ts.SourceFile) {
-    const funcToComplexity = getFunctions(file)
-        .map(func => [functionName(func), complexity(func)] as [string, number]);
-
-    funcToComplexity
-        .map(([name, complexity]) => `${name}\t${complexity}`)
-        .join("\n")
+function report(node: ts.Node, depth: number = 0) {
+    console.log(repeat("\t", depth), ts.SyntaxKind[node.kind], node.kind, node.getText());
+    for (const child of node.getChildren()) {
+        report(child, depth + 1);
+    }
 }

@@ -13,14 +13,4 @@
         "strictPropertyInitialization": true,
         "target": "ES2017"
     },
-
-    "exclude": [
-        "examples",
-        "tools",
-        "node_modules"
-    ],
-
-    "include": [
-        "src"
-    ]
 }
