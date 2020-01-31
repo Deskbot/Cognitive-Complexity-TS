@@ -34,7 +34,15 @@ function functionName(func): string {
 }
 
 function getFunctions(node: ts.Node): ts.FunctionDeclaration[] {
-    if () {
+    if (ts.isFunctionDeclaration(node)) {
+
+        const blockNode = node.getChildren().filter(funcNode => ts.isBlock(funcNode))[0];
+
+        if (blockNode === undefined) return [node];
+
+        return [node, ...getFunctions(blockNode)];
+
+    } else if (node.getChildren().length > 0) {
 
     }
 }
