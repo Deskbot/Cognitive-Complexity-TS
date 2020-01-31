@@ -5,12 +5,12 @@
         "module": "commonjs",
         "noImplicitThis": true,
         "noImplicitReturns": true,
-        "outDir": "./build",
+        "outDir": "../build/tools",
         "sourceMap": true,
-        "sourceRoot": "./src",
+        "sourceRoot": ".",
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
         "target": "ES2017"
-    },
+    }
 }
