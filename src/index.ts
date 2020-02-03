@@ -31,10 +31,6 @@ function complexity(func): number {
 
 }
 
-function functionName(func): string {
-
-}
-
 function getFunctions(node: ts.Node): FuncNode[] {
     if (ts.isFunctionDeclaration(node)) {
 
@@ -52,8 +48,11 @@ function getFunctions(node: ts.Node): FuncNode[] {
 }
 
 function report(file: ts.SourceFile) {
-    const funcToComplexity = getFunctions(file)
-        .map(func => [functionName(func), complexity(func)] as [string, number]);
+    const funcToComplexity: [ts.LineAndCharacter, number][] = getFunctions(file)
+        .map(func => [
+            file.getLineAndCharacterOfPosition(func.getStart()),
+            complexity(func)
+        ]);
 
     funcToComplexity
         .map(([name, complexity]) => `${name}\t${complexity}`)
