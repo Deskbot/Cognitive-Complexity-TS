@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as ts from "typescript";
 
-type FuncNode = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration
+type FuncNode = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration | ts.MethodDeclaration;
 
 main();
 
@@ -32,10 +32,13 @@ function complexity(func): number {
 }
 
 function getFunctions(node: ts.Node): FuncNode[] {
-    // TODO account for methods in classes
     // TODO account for methods declared in object literals { f() {} }
 
-    if (ts.isArrowFunction(node) || ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node)) {
+    if (ts.isArrowFunction(node)
+        || ts.isFunctionDeclaration(node)
+        || ts.isFunctionExpression(node)
+        || ts.isMethodDeclaration(node)
+    ) {
         const blockNode = node.getChildren().filter(funcNode => ts.isBlock(funcNode))[0];
 
         if (blockNode === undefined) return [node];
