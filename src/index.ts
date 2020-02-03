@@ -32,8 +32,6 @@ function complexity(func): number {
 }
 
 function getFunctions(node: ts.Node): FuncNode[] {
-    // TODO account for methods declared in object literals { f() {} }
-
     if (ts.isArrowFunction(node)
         || ts.isFunctionDeclaration(node)
         || ts.isFunctionExpression(node)
