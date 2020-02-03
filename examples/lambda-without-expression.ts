@@ -1,1 +1,1 @@
-const lambda = () => true && false;
+const lambdaWithExpression = () => true && false;

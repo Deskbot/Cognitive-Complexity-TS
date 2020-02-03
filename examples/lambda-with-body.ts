@@ -1,1 +1,1 @@
-const lambda = () => {};
+const lambdaWithBody = () => {};
