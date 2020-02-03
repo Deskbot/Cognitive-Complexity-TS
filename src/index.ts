@@ -1,6 +1,8 @@
 import * as path from "path";
 import * as ts from "typescript";
 
+type FuncNode = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration
+
 main();
 
 function main() {
@@ -33,7 +35,7 @@ function functionName(func): string {
 
 }
 
-function getFunctions(node: ts.Node): ts.FunctionDeclaration[] {
+function getFunctions(node: ts.Node): FuncNode[] {
     if (ts.isFunctionDeclaration(node)) {
 
         const blockNode = node.getChildren().filter(funcNode => ts.isBlock(funcNode))[0];
@@ -45,6 +47,8 @@ function getFunctions(node: ts.Node): ts.FunctionDeclaration[] {
     } else if (node.getChildren().length > 0) {
 
     }
+
+    return [];
 }
 
 function report(file: ts.SourceFile) {
