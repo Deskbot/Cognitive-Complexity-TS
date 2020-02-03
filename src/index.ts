@@ -32,13 +32,15 @@ function complexity(func): number {
 }
 
 function getFunctions(node: ts.Node): FuncNode[] {
-    if (ts.isFunctionDeclaration(node)) {
-
+    if (ts.isArrowFunction(node) || ts.isFunctionDeclaration(node) || ts.isFunctionExpression(node)) {
         const blockNode = node.getChildren().filter(funcNode => ts.isBlock(funcNode))[0];
 
         if (blockNode === undefined) return [node];
 
         return [node, ...getFunctions(blockNode)];
+
+        // todo account for arrow function, which uses expression directly after EqualsGreaterThanToken
+        // which is a child of ArrowFunction
 
     } else if (node.getChildren().length > 0) {
 
