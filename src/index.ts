@@ -37,7 +37,25 @@ function getFunctions(node: ts.Node): FuncNode[] {
         || ts.isFunctionExpression(node)
         || ts.isMethodDeclaration(node)
     ) {
-        const blockNode = node.getChildren().filter(funcNode => ts.isBlock(funcNode))[0];
+        const blockNodes = node.getChildren().filter(funcNode => ts.isBlock(funcNode));
+
+        if (blockNodes.length === 0) {
+            if (ts.isArrowFunction(node)) {
+                const children = node.getChildren();
+                const arrowLocation = children
+                    .findIndex(child => child.kind === ts.SyntaxKind.EqualsGreaterThanToken);
+
+                if (arrowLocation + 1 <= children.length) {
+                    return [];
+                }
+                const funcExpression = children[arrowLocation + 1];
+                return [node, ...getFunctions(funcExpression)];
+            } else {
+                return [];
+            }
+        }
+
+        const blockNode = blockNodes[0];
 
         if (blockNode === undefined) return [node];
 
