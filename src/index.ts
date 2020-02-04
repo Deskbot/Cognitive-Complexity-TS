@@ -32,6 +32,8 @@ function complexity(func): number {
 }
 
 function getFunctions(node: ts.Node): FuncNode[] {
+    let block;
+
     if (ts.isArrowFunction(node)
         || ts.isFunctionDeclaration(node)
         || ts.isFunctionExpression(node)
@@ -40,6 +42,7 @@ function getFunctions(node: ts.Node): FuncNode[] {
         const blockNodes = node.getChildren().filter(funcNode => ts.isBlock(funcNode));
 
         if (blockNodes.length === 0) {
+            // only arrow functions can have a body that is not a block
             if (ts.isArrowFunction(node)) {
                 const children = node.getChildren();
                 const arrowLocation = children
@@ -55,20 +58,19 @@ function getFunctions(node: ts.Node): FuncNode[] {
             }
         }
 
-        const blockNode = blockNodes[0];
+        block = blockNodes[0];
 
-        if (blockNode === undefined) return [node];
+        if (block === undefined) return [node];
 
-        return [node, ...getFunctions(blockNode)];
+        return [node, ...getFunctions(block)];
 
-        // todo account for arrow function, which uses expression directly after EqualsGreaterThanToken
-        // which is a child of ArrowFunction
-
-    } else if (node.getChildren().length > 0) {
-
+    } else if (ts.isBlock(node)) {
+        block = node;
     }
 
-    return [];
+    if (block === undefined) return [];
+
+    return [...getFunctions(block)];
 }
 
 function report(file: ts.SourceFile) {
