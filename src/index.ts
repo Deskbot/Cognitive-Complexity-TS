@@ -32,8 +32,6 @@ function complexity(func): number {
 }
 
 function getFunctions(node: ts.Node): FuncNode[] {
-    let block;
-
     if (ts.isArrowFunction(node)
         || ts.isFunctionDeclaration(node)
         || ts.isFunctionExpression(node)
@@ -58,19 +56,17 @@ function getFunctions(node: ts.Node): FuncNode[] {
             }
         }
 
-        block = blockNodes[0];
+        const block = blockNodes[0];
 
         if (block === undefined) return [node];
 
         return [node, ...getFunctions(block)];
 
     } else if (ts.isBlock(node)) {
-        block = node;
+        return [...getFunctions(node)];
     }
 
-    if (block === undefined) return [];
-
-    return [...getFunctions(block)];
+    return [];
 }
 
 function report(file: ts.SourceFile) {
