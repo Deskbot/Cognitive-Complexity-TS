@@ -27,7 +27,7 @@ function main() {
 }
 
 function complexity(func): number {
-
+    return 1;
 }
 
 function report(file: ts.SourceFile) {

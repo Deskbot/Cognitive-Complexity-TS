@@ -11,6 +11,7 @@
   "main": "./build/src/index.js",
   "scripts": {
     "build": "tsc -p ./src",
+    "build-test": "tsc -p ./test",
     "build-tools": "tsc -p ./tools"
   },
   "author": "Thomas Richards",
