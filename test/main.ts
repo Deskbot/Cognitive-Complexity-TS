@@ -7,14 +7,7 @@ import { toPromise } from "../src/util";
 import { OutputJson } from "../src/types"
 import { diff } from "deep-diff";
 
-const cases = path.normalize(__dirname + "/cases");
 const program = path.normalize(__dirname + "/../build/test/main");
-const tsc = path.normalize(__dirname + "/../node_modules/typescript/bin/tsc");
-
-
-function compileCase(caseFilePath: string) {
-    cp.spawnSync(tsc, ["-i", caseFilePath]);
-}
 
 function runCase(caseFile: string): Promise<OutputJson> {
     return new Promise((resolve, reject) => {
@@ -31,7 +24,7 @@ function runCase(caseFile: string): Promise<OutputJson> {
 }
 
 function allCaseFilePaths(): Promise<string[]> {
-    return toPromise(cb => glob("./cases/**/*.ts", cb));
+    return toPromise(cb => glob(__dirname + "/../../../test/cases/**/*.ts", cb));
 }
 
 async function main() {
@@ -43,8 +36,6 @@ async function main() {
     for (const fileName of caseFilePaths) {
         const testName = path.parse(fileName).name.split(".")[0];
         console.log("Testing ", testName);
-        // compile the case
-        compileCase(fileName);
         // run program on case
         // convert output to json
         const resultObj = await runCase(fileName);
