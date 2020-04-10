@@ -35,6 +35,7 @@ function allCaseFilePaths(): Promise<string[]> {
 function getExpectation(fileName: string): any {
     const extensionIndex = fileName.lastIndexOf(".ts");
     const caseExpectationFile = fileName.substr(0, extensionIndex) + ".expected.json";
+    console.log(caseExpectationFile);
     const expectedJsonFileContent = fs.readFileSync(caseExpectationFile).toString();
     return JSON.parse(expectedJsonFileContent);
 }
@@ -51,25 +52,25 @@ async function main() {
         // run program on case
         // convert output to json
         try {
-            var resultObj = await runCase(testName);
+            const resultObj = await runCase(testName);
             // read json exected for case
             const expectedObj = getExpectation(fileName);
             // deep compare the 2
             const difference = diff(expectedObj, resultObj);
             // output the difference
             // print pass or fail
-            if (!difference || difference.length > 0) {
+            if (difference && difference.length > 0) {
                 console.log(difference);
                 throw "Fail";
             } else {
                 console.log("Pass");
             }
         } catch (err) {
+            console.trace();
             console.error(err);
             failedCases.push(testName);
             continue;
         }
-
     }
 
     // list failures
