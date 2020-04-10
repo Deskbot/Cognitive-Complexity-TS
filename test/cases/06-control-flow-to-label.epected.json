@@ -1,0 +1,19 @@
+{
+    "06-control-flow-to-label.ts": {
+        "score": 4,
+        "inner": [
+            {
+                "name": "h",
+                "score": 2,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "i",
+                "score": 2,
+                "line": 9,
+                "column": 1
+            }
+        ]
+    }
+}

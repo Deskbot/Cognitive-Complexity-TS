@@ -1,0 +1,43 @@
+{
+    "09-try-catch-finally.ts": {
+        "score": 16,
+        "inner": [
+            {
+                "name": "f",
+                "line": 1,
+                "column": 1,
+                "score": 1
+            },
+            {
+                "name": "g",
+                "line": 8,
+                "column": 1,
+                "score": 5
+            },
+            {
+                "name": "h",
+                "line": 21,
+                "column": 1,
+                "score": 2
+            },
+            {
+                "name": "i",
+                "line": 29,
+                "column": 1,
+                "score": 3
+            },
+            {
+                "name": "j",
+                "line": 37,
+                "column": 1,
+                "score": 2
+            },
+            {
+                "name": "k",
+                "line": 45,
+                "column": 1,
+                "score": 3
+            }
+        ]
+    }
+}

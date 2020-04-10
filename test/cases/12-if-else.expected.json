@@ -1,0 +1,19 @@
+{
+    "12-if-else.ts": {
+        "score": 8,
+        "inner": [
+            {
+                "name": "f",
+                "score": 3,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "g",
+                "score": 7,
+                "line": 8,
+                "column": 1
+            }
+        ]
+    }
+}

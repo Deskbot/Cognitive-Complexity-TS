@@ -1,0 +1,19 @@
+{
+    "09-try-catch-finally.ts": {
+        "score": 8,
+        "inner": [
+            {
+                "name": "N",
+                "line": 1,
+                "column": 1,
+                "score": 0
+            },
+            {
+                "name": "M",
+                "line": 5,
+                "column": 1,
+                "score": 4
+            }
+        ]
+    }
+}

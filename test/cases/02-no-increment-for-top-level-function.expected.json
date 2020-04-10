@@ -1,0 +1,53 @@
+{
+    "02-no-increment-for-top-level-function.ts": {
+        "score": 5,
+        "inner": [
+            {
+                "name": "f",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "g",
+                "score": 1,
+                "line": 5,
+                "column": 1
+            },
+            {
+                "name": "N",
+                "score": 1,
+                "line": 9,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "f",
+                        "score": 1,
+                        "line": 10,
+                        "column": 4
+                    }
+                ]
+            },
+            {
+                "name": "C",
+                "score": 2,
+                "line": 15,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "f",
+                        "score": 1,
+                        "line": 17,
+                        "column": 4
+                    },
+                    {
+                        "name": "g",
+                        "score": 1,
+                        "line": 22,
+                        "column": 4
+                    }
+                ]
+            }
+        ]
+    }
+}

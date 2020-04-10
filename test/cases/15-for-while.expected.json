@@ -1,0 +1,61 @@
+{
+    "15-for-while.ts": {
+        "score": 20,
+        "inner": [
+            {
+                "name": "f",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "g",
+                "score": 1,
+                "line": 6,
+                "column": 1
+            },
+            {
+                "name": "h",
+                "score": 1,
+                "line": 10,
+                "column": 1
+            },
+            {
+                "name": "i",
+                "score": 2,
+                "line": 17,
+                "column": 1
+            },
+            {
+                "name": "j",
+                "score": 2,
+                "line": 25,
+                "column": 1
+            },
+            {
+                "name": "k",
+                "score": 2,
+                "line": 31,
+                "column": 1
+            },
+            {
+                "name": "l",
+                "score": 3,
+                "line": 38,
+                "column": 1
+            },
+            {
+                "name": "m",
+                "score": 3,
+                "line": 46,
+                "column": 1
+            },
+            {
+                "name": "n",
+                "score": 3,
+                "line": 52,
+                "column": 1
+            }
+        ]
+    }
+}

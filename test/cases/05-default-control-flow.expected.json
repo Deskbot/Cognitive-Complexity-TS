@@ -1,0 +1,31 @@
+{
+    "05-default-control-flow.ts": {
+        "score": 2,
+        "inner": [
+            {
+                "name": "f",
+                "line": 1,
+                "column": 1,
+                "score": 0
+            },
+            {
+                "name": "g",
+                "line": 5,
+                "column": 1,
+                "score": 0
+            },
+            {
+                "name": "h",
+                "line": 9,
+                "column": 1,
+                "score": 1
+            },
+            {
+                "name": "i",
+                "line": 15,
+                "column": 1,
+                "score": 1
+            }
+        ]
+    }
+}
