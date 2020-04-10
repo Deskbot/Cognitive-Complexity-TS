@@ -18,13 +18,22 @@ function runCase(caseFile: string): Promise<OutputJson> {
         process.on("close", () => {
             // I'm sure getting it into an object could be simpler
             const jsonString =  fs.readFileSync(outputPath).toString();
-            resolve(JSON.parse(jsonString));
+            try {
+                resolve(JSON.parse(jsonString));
+            } catch(e) {
+                reject(`Fail: Could not parse result of ${caseFile}.`);
+            }
         });
     });
 }
 
 function allCaseFilePaths(): Promise<string[]> {
     return toPromise(cb => glob(__dirname + "/../../../test/cases/**/*.ts", cb));
+}
+
+function getExpectation(testName: string): any {
+    const expectedJsonFileContent = fs.readFileSync(testName + ".expected.json").toString();
+    return JSON.parse(expectedJsonFileContent);
 }
 
 async function main() {
@@ -38,21 +47,26 @@ async function main() {
         console.log("Testing ", testName);
         // run program on case
         // convert output to json
-        const resultObj = await runCase(fileName);
-        // read json exected for case
-        const expectedJsonFileContent = fs.readFileSync(testName + ".expected.json").toString();
-        const expectedObj = JSON.parse(expectedJsonFileContent);
-        // deep compare the 2
-        const difference = diff(expectedObj, resultObj);
-        // output the difference
-        // print pass or fail
-        if (!difference || difference.length > 0) {
-            console.log("Fail");
-            console.log(difference);
+        try {
+            var resultObj = await runCase(fileName);
+            // read json exected for case
+            const expectedObj = getExpectation(testName);
+            // deep compare the 2
+            const difference = diff(expectedObj, resultObj);
+            // output the difference
+            // print pass or fail
+            if (!difference || difference.length > 0) {
+                console.log(difference);
+                throw "Fail";
+            } else {
+                console.log("Pass");
+            }
+        } catch (err) {
+            console.error(err);
             failedCases.push(testName);
-        } else {
-            console.log("Pass");
+            continue;
         }
+
     }
 
     // list failures
