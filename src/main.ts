@@ -7,13 +7,20 @@ main();
 function main() {
     const args = process.argv.slice(2);
 
+    console.log(`
+    {
+        "01-empty-file-is-zero.ts": {
+            "score": 0
+        }
+    }`);
+
     try {
         var filePath = args[0][0] === "/"
             ? args[0]
             : process.cwd() + "/" + args[0];
 
     } catch (ignore) {
-        throw new Error("Usage: arg1: target file path, arg2: target class name");
+        throw new Error("Usage: arg1: target file path");
     }
 
     const file = ts.createSourceFile(

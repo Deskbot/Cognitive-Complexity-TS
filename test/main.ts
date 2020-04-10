@@ -7,11 +7,12 @@ import { toPromise } from "../src/util";
 import { OutputJson } from "../src/types"
 import { diff } from "deep-diff";
 
-const program = path.normalize(__dirname + "/../build/test/main");
+const casesDir = path.normalize(__dirname + "/../../../test/cases");
+const program = path.normalize(__dirname + "/../../src/main");
 
-function runCase(caseFile: string): Promise<OutputJson> {
+function runCase(caseName: string): Promise<OutputJson> {
     return new Promise((resolve, reject) => {
-        const process = cp.spawn("node", [program, caseFile]);
+        const process = cp.spawn("node", [program, caseName + ".ts"]);
         const outputPath = tempfile();
         const outputStream = fs.createWriteStream(outputPath);
         process.stdout.pipe(outputStream);
@@ -21,18 +22,20 @@ function runCase(caseFile: string): Promise<OutputJson> {
             try {
                 resolve(JSON.parse(jsonString));
             } catch(e) {
-                reject(`Fail: Could not parse result of ${caseFile}.`);
+                reject(`Fail: Could not parse result of ${caseName}. (${outputPath})`);
             }
         });
     });
 }
 
 function allCaseFilePaths(): Promise<string[]> {
-    return toPromise(cb => glob(__dirname + "/../../../test/cases/**/*.ts", cb));
+    return toPromise(cb => glob(`${casesDir}/**/*.ts`, cb));
 }
 
-function getExpectation(testName: string): any {
-    const expectedJsonFileContent = fs.readFileSync(testName + ".expected.json").toString();
+function getExpectation(fileName: string): any {
+    const extensionIndex = fileName.lastIndexOf(".ts");
+    const caseExpectationFile = fileName.substr(0, extensionIndex) + ".expected.json";
+    const expectedJsonFileContent = fs.readFileSync(caseExpectationFile).toString();
     return JSON.parse(expectedJsonFileContent);
 }
 
@@ -44,13 +47,13 @@ async function main() {
     // for each case
     for (const fileName of caseFilePaths) {
         const testName = path.parse(fileName).name.split(".")[0];
-        console.log("Testing ", testName);
+        console.log("Testing", testName);
         // run program on case
         // convert output to json
         try {
-            var resultObj = await runCase(fileName);
+            var resultObj = await runCase(testName);
             // read json exected for case
-            const expectedObj = getExpectation(testName);
+            const expectedObj = getExpectation(fileName);
             // deep compare the 2
             const difference = diff(expectedObj, resultObj);
             // output the difference

@@ -13,6 +13,7 @@
     "build": "tsc -p ./src",
     "build-test": "tsc -p ./test",
     "build-tools": "tsc -p ./tools",
+    "start": "node -r source-map-support/register ./build/src/main",
     "test": "node -r source-map-support/register ./build/test/test/main"
   },
   "author": "Thomas Richards",
@@ -21,6 +22,7 @@
   "homepage": "https://github.com/Deskbot/Cognitive-Complexity-TS#readme",
   "repository": "https://github.com/Deskbot/Cognitive-Complexity-TS",
   "dependencies": {
+    "source-map-support": "^0.5.13",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
@@ -31,7 +33,6 @@
     "deep-diff": "^1.0.2",
     "glob": "^7.1.6",
     "json-stream": "^1.0.0",
-    "source-map-support": "^0.5.13",
     "tempfile": "^3.0.0"
   }
 }
