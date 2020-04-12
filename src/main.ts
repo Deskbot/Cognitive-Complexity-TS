@@ -1,18 +1,13 @@
+import * as glob from "glob";
 import * as path from "path";
 import * as ts from "typescript";
 import { getFunctions } from "./get-functions";
+import { toPromise } from "./util";
 
 main();
 
-function main() {
+async function main() {
     const args = process.argv.slice(2);
-
-    console.log(`
-    {
-        "01-empty-file-is-zero.ts": {
-            "score": 0
-        }
-    }`);
 
     try {
         var filePath = args[0][0] === "/"
@@ -23,14 +18,18 @@ function main() {
         throw new Error("Usage: arg1: target file path");
     }
 
-    const file = ts.createSourceFile(
-        path.basename(filePath),
-        filePath,
-        ts.ScriptTarget.ES2017,
-        true,
-    );
+    const filePaths = await toPromise<string[], Error | null>(cb => glob(`${filePath}/**/*`, cb));
 
-    report(file);
+    for (const filePath of filePaths) {
+        const file = ts.createSourceFile(
+            path.basename(filePath),
+            filePath,
+            ts.ScriptTarget.ES2017,
+            true,
+        );
+
+        report(file);
+    }
 }
 
 function complexity(func): number {
