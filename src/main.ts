@@ -18,7 +18,11 @@ async function main() {
         throw new Error("Usage: arg1: target file path");
     }
 
-    const filePaths = await toPromise<string[], Error | null>(cb => glob(`${filePath}/**/*`, cb));
+    let filePaths: string[] = await toPromise(cb => glob(`${filePath}/**/*`, cb));
+    filePaths.push(filePath);
+    filePaths = filePaths.filter(path => path.match(/.*\.[tj]sx?$/) !== null);
+
+    console.log(filePaths);
 
     for (const filePath of filePaths) {
         const file = ts.createSourceFile(
