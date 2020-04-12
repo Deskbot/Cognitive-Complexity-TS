@@ -1,8 +1,11 @@
 import * as glob from "glob";
 import * as path from "path";
+import * as process from "process";
 import * as ts from "typescript";
 import { getFunctions } from "./get-functions";
 import { toPromise } from "./util";
+import { OutputFileElem, OutputJson } from "./types";
+import { js_beautify } from "js-beautify";
 
 main();
 
@@ -24,23 +27,35 @@ async function main() {
 
     console.log(filePaths);
 
-    for (const filePath of filePaths) {
-        const file = ts.createSourceFile(
-            path.basename(filePath),
-            filePath,
-            ts.ScriptTarget.ES2017,
-            true,
-        );
-
-        report(file);
-    }
+    printCognitiveComplexityJson(filePaths);
 }
 
-function complexity(func): number {
+function complexity(func: any): number {
     return 1;
 }
 
-function report(file: ts.SourceFile) {
+function printCognitiveComplexityJson(filePaths: string[]) {
+    const resultForAllFiles: OutputJson = {};
+
+    for (const filePath of filePaths) {
+        const fileName = path.relative(process.cwd(), filePath);
+
+        const file = ts.createSourceFile(
+            fileName,
+            filePath,
+            ts.ScriptTarget.Latest,
+            true,
+        );
+
+        const resultForFile = report(file);
+
+        resultForAllFiles[fileName] = resultForFile;
+    }
+
+    console.log(js_beautify(JSON.stringify(resultForAllFiles)));
+}
+
+function report(file: ts.SourceFile): OutputFileElem {
     const funcToComplexity: [ts.LineAndCharacter, number][] = getFunctions(file)
         .map(func => [
             file.getLineAndCharacterOfPosition(func.getStart()),
@@ -49,5 +64,7 @@ function report(file: ts.SourceFile) {
 
     funcToComplexity
         .map(([name, complexity]) => `${name}\t${complexity}`)
-        .join("\n")
+        .join("\n");
+
+    return {} as any;
 }

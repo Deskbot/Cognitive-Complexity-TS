@@ -6,9 +6,7 @@
         "noImplicitThis": true,
         "noImplicitReturns": true,
         "sourceMap": true,
-        "strictFunctionTypes": true,
-        "strictNullChecks": true,
-        "strictPropertyInitialization": true,
+        "strict": true,
         "target": "esnext"
     }
 }
