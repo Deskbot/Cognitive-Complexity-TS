@@ -6,6 +6,7 @@ import { getFunctions } from "./get-functions";
 import { toPromise } from "./util";
 import { OutputFileElem, OutputJson } from "./types";
 import { js_beautify } from "js-beautify";
+import { calcFileCost } from "./cognitive-complexity";
 
 main();
 
@@ -30,10 +31,6 @@ async function main() {
     printCognitiveComplexityJson(filePaths);
 }
 
-function complexity(func: any): number {
-    return 1;
-}
-
 function printCognitiveComplexityJson(filePaths: string[]) {
     const resultForAllFiles: OutputJson = {};
 
@@ -47,24 +44,10 @@ function printCognitiveComplexityJson(filePaths: string[]) {
             true,
         );
 
-        const resultForFile = report(file);
+        const resultForFile = calcFileCost(file);
 
         resultForAllFiles[fileName] = resultForFile;
     }
 
     console.log(js_beautify(JSON.stringify(resultForAllFiles)));
-}
-
-function report(file: ts.SourceFile): OutputFileElem {
-    const funcToComplexity: [ts.LineAndCharacter, number][] = getFunctions(file)
-        .map(func => [
-            file.getLineAndCharacterOfPosition(func.getStart()),
-            complexity(func)
-        ]);
-
-    funcToComplexity
-        .map(([name, complexity]) => `${name}\t${complexity}`)
-        .join("\n");
-
-    return {} as any;
 }

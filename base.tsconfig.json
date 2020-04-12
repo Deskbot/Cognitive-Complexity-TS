@@ -2,6 +2,9 @@
     "compilerOptions": {
         "alwaysStrict": true,
         "declaration": true,
+        "lib": [
+            "ES2018"
+        ],
         "module": "commonjs",
         "noImplicitThis": true,
         "noImplicitReturns": true,
