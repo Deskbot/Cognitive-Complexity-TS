@@ -53,6 +53,20 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
     let inner = [] as OutputElem[];
     let result: ScoreAndInner;
 
+    // certain langauge features carry and inherent cost
+    if (ts.isCatchClause(node)
+        || ts.isConditionalExpression(node)
+        || ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isForStatement(node)
+        || ts.isIfStatement(node)
+        || ts.isSwitchStatement(node)
+        || ts.isWhileStatement(node)
+        || isBreakOrContinueToLabel(node)
+    ) {
+        score += 1;
+    }
+
     // increment for nesting level
     if (depth > 0 && (
         ts.isConditionalExpression(node)
@@ -86,11 +100,20 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
             )
         )
     ) {
-        // some of the children will have the same depth, some will be depth + 1
-        // the condition of an if has the same depth
+        // TODO some of the children will have the same depth, some will be depth + 1
+        // the condition of an if/do has the same depth
         // the block/statement has depth + 1
         depth += 1;
     }
+
+    // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
+    // BinaryExpressions have 1 child that is the operator
+    // BinaryExpressions have their last child as a sub expression
+    // can just consume the entire sequence of the same operator
+    // then continue traversing from the next different operator in the sequence,
+    // which presumably will be given another inherent increment by the next call to calcNodeCost
+    // should redundant brackets be ignored? or do they end a sequence?
+    // probably the latter, which would also be easier
 
     for (const child of node.getChildren()) {
         result = calcNodeCost(child, depth);
@@ -102,4 +125,16 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
         score,
         inner,
     };
+}
+
+function isBreakOrContinueToLabel(node: ts.Node): boolean {
+    if (ts.isBreakOrContinueStatement(node)) {
+        for (const child of node.getChildren()) {
+            if (ts.isIdentifier(child)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
