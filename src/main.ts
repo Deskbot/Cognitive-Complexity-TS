@@ -26,8 +26,6 @@ async function main() {
     filePaths.push(filePath);
     filePaths = filePaths.filter(path => path.match(/.*\.[tj]sx?$/) !== null);
 
-    console.log(filePaths);
-
     printCognitiveComplexityJson(filePaths);
 }
 
