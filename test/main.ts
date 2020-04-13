@@ -34,6 +34,10 @@ function allCaseFilePaths(): Promise<string[]> {
 }
 
 function getExpectation(fileName: string): any {
+    const tsIndex = fileName.indexOf(".ts")
+    if (tsIndex !== -1) {
+        fileName = fileName.substr(0, tsIndex);
+    }
     const caseExpectationFile = fileName + ".expected.json";
     console.log(caseExpectationFile);
     const expectedJsonFileContent = fs.readFileSync(caseExpectationFile).toString();
@@ -48,8 +52,8 @@ async function main() {
     const failedCases = [] as string[];
 
     // for each case
-    for (const fileName of caseFilePaths) {
-        const testName = path.parse(fileName).name.split(".")[0];
+    for (const caseFileName of caseFilePaths) {
+        const testName = path.parse(caseFileName).name.split(".")[0];
         console.log("Testing", testName);
 
         // run program on case
@@ -58,7 +62,7 @@ async function main() {
         try {
             const resultObj = await runCase(testName, outputPath);
             // read json exected for case
-            const expectedObj = getExpectation(fileName);
+            const expectedObj = getExpectation(caseFileName);
             // deep compare the 2
             const difference = diff(expectedObj, resultObj);
             // output the difference
