@@ -24,7 +24,7 @@ function calcElemCost(node: ts.Node, depth = 0): OutputElem {
     inner.push(...nodeCost.inner);
 
     return {
-        name: node.getText(), // todo make this match the function etc
+        name: node.getFullText(), // todo make this match the function etc
         score,
         line,
         column,

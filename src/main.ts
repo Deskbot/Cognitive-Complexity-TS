@@ -1,10 +1,10 @@
+import * as fs from "fs";
 import * as glob from "glob";
 import * as path from "path";
 import * as process from "process";
 import * as ts from "typescript";
-import { getFunctions } from "./get-functions";
 import { toPromise } from "./util";
-import { OutputFileElem, OutputJson } from "./types";
+import { OutputJson } from "./types";
 import { js_beautify } from "js-beautify";
 import { calcFileCost } from "./cognitive-complexity";
 
@@ -31,13 +31,15 @@ async function main() {
 
 function printCognitiveComplexityJson(filePaths: string[]) {
     const resultForAllFiles: OutputJson = {};
+    const cwd = process.cwd();
 
     for (const filePath of filePaths) {
-        const fileName = path.relative(process.cwd(), filePath);
+        const fileName = path.relative(cwd, filePath);
+        const fileContent = fs.readFileSync(filePath).toString();
 
         const file = ts.createSourceFile(
-            fileName,
-            filePath,
+            path.basename(filePath),
+            fileContent,
             ts.ScriptTarget.Latest,
             true,
         );

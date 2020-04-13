@@ -2,6 +2,7 @@ import * as cp from "child_process";
 import * as fs from "fs";
 import glob from "glob";
 import * as path from "path";
+import * as process from "process";
 import tempfile from "tempfile";
 import { toPromise } from "../src/util";
 import { OutputJson } from "../src/types"
@@ -12,10 +13,11 @@ const program = path.normalize(__dirname + "/../../src/main");
 
 function runCase(caseName: string, outputPath: string): Promise<OutputJson> {
     return new Promise((resolve, reject) => {
-        const process = cp.spawn("node", [program, caseName + ".ts"]);
+        const proc = cp.spawn("node", [program, `${casesDir}/${caseName}.ts`]);
         const outputStream = fs.createWriteStream(outputPath);
-        process.stdout.pipe(outputStream);
-        process.on("close", () => {
+        proc.stdout.pipe(outputStream);
+        proc.stderr.pipe(process.stderr);
+        proc.on("close", () => {
             // I'm sure getting it into an object could be simpler
             const jsonString =  fs.readFileSync(outputPath).toString();
             try {
