@@ -2,6 +2,8 @@ import * as fs from "fs";
 import * as path from "path";
 import * as ts from "typescript";
 
+let text = false;
+
 main();
 
 function main() {
@@ -14,6 +16,12 @@ function main() {
 
     } catch (ignore) {
         throw new Error("Usage: arg1: target file path, arg2: target class name");
+    }
+
+    for (const arg of args.slice(2)) {
+        if (arg === "text") {
+            text = true;
+        }
     }
 
     const file = ts.createSourceFile(
@@ -36,7 +44,13 @@ function repeat(str: string, times: number): string {
 }
 
 function report(node: ts.Node, depth: number = 0) {
-    console.log(repeat("\t", depth), ts.SyntaxKind[node.kind], node.kind, node.getText());
+    const toLog = [repeat("\t", depth), ts.SyntaxKind[node.kind], node.kind];
+    if (text) {
+        toLog.push(node.getText());
+    }
+
+    console.log(...toLog);
+
     for (const child of node.getChildren()) {
         report(child, depth + 1);
     }

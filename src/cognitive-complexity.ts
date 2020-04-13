@@ -53,14 +53,27 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
     let inner = [] as OutputElem[];
     let result: ScoreAndInner;
 
+    // increment for nesting level
+    if (depth > 0 && (
+        ts.isConditionalExpression(node)
+        || ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isForStatement(node)
+        || ts.isIfStatement(node)
+        || ts.isSwitchStatement(node)
+        || ts.isWhileStatement(node)
+    )) {
+        score += depth;
+    }
+
     // certain structures increment depth for their child nodes
     if (ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
         || ts.isDoStatement(node)
-        || ts.isIfStatement(node)
         || ts.isForInStatement(node)
         || ts.isForOfStatement(node)
         || ts.isForStatement(node)
+        || ts.isIfStatement(node)
         || ts.isSwitchStatement(node)
         || ts.isWhileStatement(node)
         || (
@@ -73,6 +86,9 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
             )
         )
     ) {
+        // some of the children will have the same depth, some will be depth + 1
+        // the condition of an if has the same depth
+        // the block/statement has depth + 1
         depth += 1;
     }
 
