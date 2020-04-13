@@ -1,3 +1,15 @@
+class EndOfIteratorError extends Error {}
+
+export function throwingIterator<T>(iter: Iterator<T>): () => T {
+    return () => {
+        const { value, done } = iter.next();
+
+        if (done) throw new EndOfIteratorError();
+
+        return value;
+    };
+}
+
 export function toPromise<T, E>(
     action: (callback: (err: E, successData: T) => void) => void,
     errorTransformer?: (err: E) => Error

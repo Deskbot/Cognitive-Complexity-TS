@@ -1,9 +1,16 @@
 import * as ts from "typescript";
 import { OutputElem, OutputFileElem } from "./types";
+import { throwingIterator } from "./util";
 
 interface ScoreAndInner {
     inner: OutputElem[];
     score: number;
+}
+
+class UnexpectedNodeError extends Error {
+    constructor(public readonly node: ts.Node) {
+        super("Unexpected Node");
+    }
 }
 
 function calcElemCost(node: ts.Node, depth = 0): OutputElem {
@@ -52,6 +59,7 @@ abstract class AbstractNodeCostCalculator {
     protected score = 0;
     protected inner = [] as OutputElem[];
 
+    // can probs put depth in the constructor as readonly
     abstract calculate(node: ts.Node, depth: number): ScoreAndInner;
 
     protected include(node: ts.Node, depth: number) {
@@ -110,7 +118,6 @@ class NodeCost extends AbstractNodeCostCalculator {
         if (ts.isForInStatement(node)
             || ts.isForOfStatement(node)
             || ts.isForStatement(node)
-            || ts.isIfStatement(node)
             || ts.isSwitchStatement(node)
             || ts.isWhileStatement(node)
             || (
@@ -141,6 +148,10 @@ class NodeCost extends AbstractNodeCostCalculator {
                     this.include(child, depth + 1);
                 }
             }
+        } else if (ts.isIfStatement(node)) {
+            const { inner, score } = new IfStatementCost().calculate(node, depth);
+            this.inner.push(...inner);
+            this.score += score;
         } else {
             this.includeAll(node.getChildren(), depth);
         }
@@ -175,6 +186,35 @@ class ConditionalExpressionCost extends AbstractNodeCostCalculator {
 
         // aggregate else
         this.includeAll(childNodesToAggregate, depth);
+
+        return {
+            score: this.score,
+            inner: this.inner,
+        }
+    }
+}
+
+class IfStatementCost extends AbstractNodeCostCalculator {
+
+    calculate(node: ts.IfStatement, depth: number): ScoreAndInner {
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        while (true) {
+            const child = nextChild();
+            if (ts.isToken(child) && child.kind === ts.SyntaxKind.OpenParenToken) {
+                // aggregate condition
+                this.include(nextChild(), depth);
+            } else if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
+                // aggregate then
+                this.include(nextChild(), depth + 1);
+            } else if (ts.isToken(child) && child.kind === ts.SyntaxKind.ElseKeyword) {
+                // aggregate else
+                this.include(nextChild(), depth + 1);
+                break;
+            } else {
+                throw new UnexpectedNodeError(node);
+            }
+        }
 
         return {
             score: this.score,

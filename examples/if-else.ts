@@ -1,6 +1,6 @@
 let x;
 
-if (true) x;
+if ((true)) x;
 else if (true) x;
 else x;
 
