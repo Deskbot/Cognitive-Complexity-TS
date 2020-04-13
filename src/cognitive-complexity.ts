@@ -83,6 +83,15 @@ class NodeCost {
             this.score += depth;
         }
 
+        // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
+        // BinaryExpressions have 1 child that is the operator
+        // BinaryExpressions have their last child as a sub expression
+        // can just consume the entire sequence of the same operator
+        // then continue traversing from the next different operator in the sequence,
+        // which presumably will be given another inherent increment by the next call to calcNodeCost
+        // should redundant brackets be ignored? or do they end a sequence?
+        // probably the latter, which would also be easier
+
         // certain structures increment depth for their child nodes
         if (ts.isCatchClause(node)
             || ts.isConditionalExpression(node)
@@ -106,26 +115,17 @@ class NodeCost {
             // TODO some of the children will have the same depth, some will be depth + 1
             // the condition of an if/do has the same depth
             // the block/statement has depth + 1
-            depth += 1;
-        }
 
-        // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
-        // BinaryExpressions have 1 child that is the operator
-        // BinaryExpressions have their last child as a sub expression
-        // can just consume the entire sequence of the same operator
-        // then continue traversing from the next different operator in the sequence,
-        // which presumably will be given another inherent increment by the next call to calcNodeCost
-        // should redundant brackets be ignored? or do they end a sequence?
-        // probably the latter, which would also be easier
+        } else {
+            if (!this.continueFrom) {
+                this.continueFrom = node.getChildren();
+            }
 
-        if (!this.continueFrom) {
-            this.continueFrom = node.getChildren();
-        }
-
-        for (const child of this.continueFrom) {
-            result = new NodeCost().calculate(child, depth);
-            this.score += result.score;
-            this.inner.push(...result.inner);
+            for (const child of this.continueFrom) {
+                result = new NodeCost().calculate(child, depth);
+                this.score += result.score;
+                this.inner.push(...result.inner);
+            }
         }
 
         return {
