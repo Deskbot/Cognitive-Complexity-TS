@@ -53,6 +53,8 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
     let inner = [] as OutputElem[];
     let result: ScoreAndInner;
 
+    let continueFrom = node.getChildren();
+
     // certain langauge features carry and inherent cost
     if (ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
@@ -115,7 +117,7 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
     // should redundant brackets be ignored? or do they end a sequence?
     // probably the latter, which would also be easier
 
-    for (const child of node.getChildren()) {
+    for (const child of continueFrom) {
         result = calcNodeCost(child, depth);
         score += result.score;
         inner.push(...result.inner);
