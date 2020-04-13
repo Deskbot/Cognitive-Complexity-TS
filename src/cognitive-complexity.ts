@@ -54,15 +54,15 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
     let result: ScoreAndInner;
 
     // certain structures increment depth for their child nodes
-    if (ts.isIfStatement(node)
+    if (ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
-        || ts.isSwitchStatement(node)
-        || ts.isForStatement(node)
+        || ts.isDoStatement(node)
+        || ts.isIfStatement(node)
         || ts.isForInStatement(node)
         || ts.isForOfStatement(node)
+        || ts.isForStatement(node)
+        || ts.isSwitchStatement(node)
         || ts.isWhileStatement(node)
-        || ts.isDoStatement(node)
-        || ts.isCatchClause(node)
         || (
             depth !== 0
             && (
