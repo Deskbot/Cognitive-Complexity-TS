@@ -49,13 +49,10 @@ export function calcFileCost(file: ts.Node): OutputFileElem {
 }
 
 class NodeCost {
-    private continueFrom: ts.Node[] | undefined;
     private score = 0;
     private inner = [] as OutputElem[];
 
     calculate(node: ts.Node, depth: number): ScoreAndInner {
-        let result: ScoreAndInner;
-
         // certain langauge features carry and inherent cost
         if (ts.isCatchClause(node)
             || ts.isConditionalExpression(node)
@@ -93,9 +90,7 @@ class NodeCost {
         // probably the latter, which would also be easier
 
         // certain structures increment depth for their child nodes
-        if (ts.isCatchClause(node)
-            || ts.isConditionalExpression(node)
-            || ts.isDoStatement(node)
+        if (ts.isConditionalExpression(node)
             || ts.isForInStatement(node)
             || ts.isForOfStatement(node)
             || ts.isForStatement(node)
@@ -116,22 +111,34 @@ class NodeCost {
             // the condition of an if/do has the same depth
             // the block/statement has depth + 1
 
+        } else if (ts.isCatchClause(node)) {
+            this.includeAll(node.getChildren(), depth + 1);
+        } else if (ts.isDoStatement(node)) {
+            for (const child of node.getChildren()) {
+                if (ts.isBlock(child)) {
+                    this.include(child, depth + 1);
+                }
+            }
         } else {
-            if (!this.continueFrom) {
-                this.continueFrom = node.getChildren();
-            }
-
-            for (const child of this.continueFrom) {
-                result = new NodeCost().calculate(child, depth);
-                this.score += result.score;
-                this.inner.push(...result.inner);
-            }
+            this.includeAll(node.getChildren(), depth);
         }
 
         return {
             inner: this.inner,
             score: this.score,
         };
+    }
+
+    private include(node: ts.Node, depth: number) {
+        const { inner, score } = new NodeCost().calculate(node, depth);
+        this.inner.push(...inner);
+        this.score += score;
+    }
+
+    private includeAll(nodes: ts.Node[], depth: number) {
+        for (const child of nodes) {
+            this.include(child, depth);
+        }
     }
 }
 
