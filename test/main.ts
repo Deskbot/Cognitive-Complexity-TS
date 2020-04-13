@@ -10,10 +10,9 @@ import { diff } from "deep-diff";
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
 const program = path.normalize(__dirname + "/../../src/main");
 
-function runCase(caseName: string): Promise<OutputJson> {
+function runCase(caseName: string, outputPath: string): Promise<OutputJson> {
     return new Promise((resolve, reject) => {
         const process = cp.spawn("node", [program, caseName + ".ts"]);
-        const outputPath = tempfile();
         const outputStream = fs.createWriteStream(outputPath);
         process.stdout.pipe(outputStream);
         process.on("close", () => {
@@ -49,10 +48,12 @@ async function main() {
     for (const fileName of caseFilePaths) {
         const testName = path.parse(fileName).name.split(".")[0];
         console.log("Testing", testName);
+
         // run program on case
         // convert output to json
+        const outputPath = tempfile();
         try {
-            const resultObj = await runCase(testName);
+            const resultObj = await runCase(testName, outputPath);
             // read json exected for case
             const expectedObj = getExpectation(fileName);
             // deep compare the 2
@@ -60,14 +61,15 @@ async function main() {
             // output the difference
             // print pass or fail
             if (difference && difference.length > 0) {
-                console.log(difference);
-                throw "Fail";
+                throw difference;
             } else {
                 console.log("Pass");
             }
         } catch (err) {
-            console.trace();
+            console.error(outputPath);
+            console.error("Fail");
             console.error(err);
+            console.trace();
             failedCases.push(testName);
             continue;
         }
