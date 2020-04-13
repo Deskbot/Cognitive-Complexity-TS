@@ -49,12 +49,12 @@ export function calcFileCost(file: ts.Node): OutputFileElem {
 }
 
 class NodeCost {
-    calculate(node: ts.Node, depth: number): ScoreAndInner {
-        let score = 0;
-        let inner = [] as OutputElem[];
-        let result: ScoreAndInner;
+    private continueFrom: ts.Node[] | undefined;
+    private score = 0;
+    private inner = [] as OutputElem[];
 
-        let continueFrom = node.getChildren();
+    calculate(node: ts.Node, depth: number): ScoreAndInner {
+        let result: ScoreAndInner;
 
         // certain langauge features carry and inherent cost
         if (ts.isCatchClause(node)
@@ -67,7 +67,7 @@ class NodeCost {
             || ts.isWhileStatement(node)
             || isBreakOrContinueToLabel(node)
         ) {
-            score += 1;
+            this.score += 1;
         }
 
         // increment for nesting level
@@ -80,7 +80,7 @@ class NodeCost {
             || ts.isSwitchStatement(node)
             || ts.isWhileStatement(node)
         )) {
-            score += depth;
+            this.score += depth;
         }
 
         // certain structures increment depth for their child nodes
@@ -118,15 +118,19 @@ class NodeCost {
         // should redundant brackets be ignored? or do they end a sequence?
         // probably the latter, which would also be easier
 
-        for (const child of continueFrom) {
+        if (!this.continueFrom) {
+            this.continueFrom = node.getChildren();
+        }
+
+        for (const child of this.continueFrom) {
             result = new NodeCost().calculate(child, depth);
-            score += result.score;
-            inner.push(...result.inner);
+            this.score += result.score;
+            this.inner.push(...result.inner);
         }
 
         return {
-            score,
-            inner,
+            inner: this.inner,
+            score: this.score,
         };
     }
 }
