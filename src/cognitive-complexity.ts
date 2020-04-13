@@ -48,9 +48,26 @@ export function calcFileCost(file: ts.Node): OutputFileElem {
     }
 }
 
-class NodeCost {
-    private score = 0;
-    private inner = [] as OutputElem[];
+abstract class AbstractNodeCostCalculator {
+    protected score = 0;
+    protected inner = [] as OutputElem[];
+
+    abstract calculate(node: ts.Node, depth: number): ScoreAndInner;
+
+    protected include(node: ts.Node, depth: number) {
+        const { inner, score } = new NodeCost().calculate(node, depth);
+        this.inner.push(...inner);
+        this.score += score;
+    }
+
+    protected includeAll(nodes: ts.Node[], depth: number) {
+        for (const child of nodes) {
+            this.include(child, depth);
+        }
+    }
+}
+
+class NodeCost extends AbstractNodeCostCalculator {
 
     calculate(node: ts.Node, depth: number): ScoreAndInner {
         // certain langauge features carry and inherent cost
@@ -90,8 +107,7 @@ class NodeCost {
         // probably the latter, which would also be easier
 
         // certain structures increment depth for their child nodes
-        if (ts.isConditionalExpression(node)
-            || ts.isForInStatement(node)
+        if (ts.isForInStatement(node)
             || ts.isForOfStatement(node)
             || ts.isForStatement(node)
             || ts.isIfStatement(node)
@@ -113,6 +129,12 @@ class NodeCost {
 
         } else if (ts.isCatchClause(node)) {
             this.includeAll(node.getChildren(), depth + 1);
+
+        } else if (ts.isConditionalExpression(node)) {
+            const { inner, score } = new ConditionalExpressionCost().calculate(node, depth);
+            this.inner.push(...inner);
+            this.score += score;
+
         } else if (ts.isDoStatement(node)) {
             for (const child of node.getChildren()) {
                 if (ts.isBlock(child)) {
@@ -128,16 +150,35 @@ class NodeCost {
             score: this.score,
         };
     }
+}
 
-    private include(node: ts.Node, depth: number) {
-        const { inner, score } = new NodeCost().calculate(node, depth);
-        this.inner.push(...inner);
-        this.score += score;
-    }
+class ConditionalExpressionCost extends AbstractNodeCostCalculator {
 
-    private includeAll(nodes: ts.Node[], depth: number) {
-        for (const child of nodes) {
-            this.include(child, depth);
+    calculate(node: ts.ConditionalExpression, depth: number): ScoreAndInner {
+        let childNodesToAggregate = [] as ts.Node[];
+
+        for (const child of node.getChildren()) {
+            if (ts.isToken(child) && child.kind === ts.SyntaxKind.QuestionToken) {
+                // aggregate condition
+                this.includeAll(childNodesToAggregate, depth);
+                childNodesToAggregate = [];
+
+            } else if (ts.isToken(child) && child.kind === ts.SyntaxKind.ColonToken) {
+                // aggregate then
+                this.includeAll(childNodesToAggregate, depth + 1);
+                childNodesToAggregate = [];
+
+            } else {
+                childNodesToAggregate.push();
+            }
+        }
+
+        // aggregate else
+        this.includeAll(childNodesToAggregate, depth);
+
+        return {
+            score: this.score,
+            inner: this.inner,
         }
     }
 }
