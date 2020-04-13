@@ -14,7 +14,8 @@
     "build-test": "tsc -p ./test",
     "build-tools": "tsc -p ./tools",
     "start": "node -r source-map-support/register ./build/src/main",
-    "test": "node -r source-map-support/register ./build/test/test/main"
+    "test": "node -r source-map-support/register ./build/test/test/main",
+    "what": "node -r source-map-support/register ./build/tools/what-is-it"
   },
   "author": "Thomas Richards",
   "license": "UNLICENSED",

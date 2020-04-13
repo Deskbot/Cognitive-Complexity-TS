@@ -53,31 +53,36 @@ function calcNodeCost(node: ts.Node, depth: number): ScoreAndInner {
     let inner = [] as OutputElem[];
     let result: ScoreAndInner;
 
-    depth += incrementNestingLevel(node) ? 1 : 0;
+    // increment depth for certain structures
+    if (ts.isIfStatement(node)
+        || ts.isSwitchStatement(node)
+        || ts.isForStatement(node)
+        || ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isWhileStatement(node)
+        || ts.isDoStatement(node)
+        || ts.isCatchClause(node)
+        || (
+            depth !== 0
+            && (
+                ts.isArrowFunction(node)
+                || ts.isFunctionDeclaration(node)
+                || ts.isFunctionExpression(node)
+                || ts.isMethodDeclaration(node)
+            )
+        )
+    ) {
+        depth += 1;
+    }
 
-    if (ts.isIfStatement(node)) {
-        result = calcNodeCost(node.thenStatement, depth + 1);
+    for (const child of node.getChildren()) {
+        result = calcNodeCost(child, depth);
         score += result.score;
         inner.push(...result.inner);
-
-        if (node.elseStatement) {
-            result = calcNodeCost(node.elseStatement, depth + 1);
-            score += result.score;
-            inner.push(...result.inner);
-        }
     }
 
     return {
         score,
         inner,
     };
-}
-
-function incrementNestingLevel(node: ts.Node): boolean {
-    if (ts.isIfStatement(node)) {
-        node.thenStatement
-        node.elseStatement
-    }
-
-    return false;
 }
