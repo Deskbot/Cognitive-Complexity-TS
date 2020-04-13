@@ -13,7 +13,7 @@ const program = path.normalize(__dirname + "/../../src/main");
 
 function runCase(caseName: string, outputPath: string): Promise<OutputJson> {
     return new Promise((resolve, reject) => {
-        const proc = cp.spawn("node", [program, `${casesDir}/${caseName}.ts`]);
+        const proc = cp.spawn("node", [program, `${casesDir}/${caseName}`]);
         const outputStream = fs.createWriteStream(outputPath);
         proc.stdout.pipe(outputStream);
         proc.stderr.pipe(process.stderr);
@@ -30,12 +30,11 @@ function runCase(caseName: string, outputPath: string): Promise<OutputJson> {
 }
 
 function allCaseFilePaths(): Promise<string[]> {
-    return toPromise(cb => glob(`${casesDir}/**/*.ts`, cb));
+    return toPromise(cb => glob(`${casesDir}/*`, cb));
 }
 
 function getExpectation(fileName: string): any {
-    const extensionIndex = fileName.lastIndexOf(".ts");
-    const caseExpectationFile = fileName.substr(0, extensionIndex) + ".expected.json";
+    const caseExpectationFile = fileName + ".expected.json";
     console.log(caseExpectationFile);
     const expectedJsonFileContent = fs.readFileSync(caseExpectationFile).toString();
     return JSON.parse(expectedJsonFileContent);
@@ -43,7 +42,9 @@ function getExpectation(fileName: string): any {
 
 async function main() {
     // get all case names
-    const caseFilePaths = await allCaseFilePaths();
+    // treat ts files and folders as tests
+    const caseFilePaths = (await allCaseFilePaths())
+        .filter(path => !path.endsWith(".expected.json"));
     const failedCases = [] as string[];
 
     // for each case
