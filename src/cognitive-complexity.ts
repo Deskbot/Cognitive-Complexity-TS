@@ -89,7 +89,7 @@ abstract class AbstractNodeCost {
 
 class NodeCost extends AbstractNodeCost {
 
-    protected calculate(): ScoreAndInner {
+    protected calculate() {
         const depth = this.depth;
         const node = this.node;
         // certain langauge features carry and inherent cost
@@ -132,7 +132,6 @@ class NodeCost extends AbstractNodeCost {
         if (ts.isForInStatement(node)
             || ts.isForOfStatement(node)
             || ts.isForStatement(node)
-            || ts.isSwitchStatement(node)
             || (
                 depth !== 0
                 && (
@@ -163,6 +162,10 @@ class NodeCost extends AbstractNodeCost {
             const { inner, score } = new IfStatementCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
+        } else if (ts.isSwitchStatement(node)) {
+            const { inner, score } = new SwitchStatementCost(node, depth);
+            this.inner.push(...inner);
+            this._score += score;
         } else if (ts.isWhileStatement(node)) {
             const { inner, score } = new WhileStatementCost(node, depth);
             this.inner.push(...inner);
@@ -170,11 +173,6 @@ class NodeCost extends AbstractNodeCost {
         } else {
             this.includeAll(node.getChildren(), depth);
         }
-
-        return {
-            inner: this.inner,
-            score: this._score,
-        };
     }
 }
 
@@ -265,8 +263,27 @@ class IfStatementCost extends AbstractNodeCost {
     }
 }
 
-class WhileStatementCost extends AbstractNodeCost {
+class SwitchStatementCost extends AbstractNodeCost {
+    protected calculate() {
+        const depth = this.depth;
+        const node = this.node;
 
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        // consume switch keyword
+        nextChild();
+        // consume open parenthesis
+        nextChild();
+        // aggregate condition
+        this.include(nextChild(), depth);
+        // consume close parenthesis
+        nextChild();
+        // consume cases
+        this.include(nextChild(), depth + 1);
+    }
+}
+
+class WhileStatementCost extends AbstractNodeCost {
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
