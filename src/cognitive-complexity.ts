@@ -55,7 +55,7 @@ export function calcFileCost(file: ts.Node): OutputFileElem {
     }
 }
 
-abstract class AbstractNodeCostCalculator {
+abstract class AbstractNodeCost {
     protected score = 0;
     protected inner = [] as OutputElem[];
 
@@ -76,7 +76,7 @@ abstract class AbstractNodeCostCalculator {
     }
 }
 
-class NodeCost extends AbstractNodeCostCalculator {
+class NodeCost extends AbstractNodeCost {
 
     calculate(node: ts.Node, depth: number): ScoreAndInner {
         // certain langauge features carry and inherent cost
@@ -143,11 +143,9 @@ class NodeCost extends AbstractNodeCostCalculator {
             this.score += score;
 
         } else if (ts.isDoStatement(node)) {
-            for (const child of node.getChildren()) {
-                if (ts.isBlock(child)) {
-                    this.include(child, depth + 1);
-                }
-            }
+            const { inner, score } = new DoStatementCost().calculate(node, depth);
+            this.inner.push(...inner);
+            this.score += score;
         } else if (ts.isIfStatement(node)) {
             const { inner, score } = new IfStatementCost().calculate(node, depth);
             this.inner.push(...inner);
@@ -167,7 +165,7 @@ class NodeCost extends AbstractNodeCostCalculator {
     }
 }
 
-class ConditionalExpressionCost extends AbstractNodeCostCalculator {
+class ConditionalExpressionCost extends AbstractNodeCost {
 
     calculate(node: ts.ConditionalExpression, depth: number): ScoreAndInner {
         let childNodesToAggregate = [] as ts.Node[];
@@ -198,7 +196,33 @@ class ConditionalExpressionCost extends AbstractNodeCostCalculator {
     }
 }
 
-class IfStatementCost extends AbstractNodeCostCalculator {
+class DoStatementCost extends AbstractNodeCost {
+
+    calculate(node: ts.DoStatement, depth: number): ScoreAndInner {
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        const child = nextChild();
+        if (ts.isToken(child) && child.kind === ts.SyntaxKind.DoKeyword) {
+            // aggregate block
+            this.include(nextChild(), depth + 1);
+            // consume while keyword
+            nextChild();
+            // consume open paren
+            nextChild();
+            // aggregate condition
+            this.include(nextChild(), depth);
+        } else {
+            throw new UnexpectedNodeError(child);
+        }
+
+        return {
+            score: this.score,
+            inner: this.inner,
+        }
+    }
+}
+
+class IfStatementCost extends AbstractNodeCost {
 
     calculate(node: ts.IfStatement, depth: number): ScoreAndInner {
         const nextChild = throwingIterator(node.getChildren().values());
@@ -229,7 +253,7 @@ class IfStatementCost extends AbstractNodeCostCalculator {
     }
 }
 
-class WhileStatementCost extends AbstractNodeCostCalculator {
+class WhileStatementCost extends AbstractNodeCost {
 
     calculate(node: ts.WhileStatement, depth: number): ScoreAndInner {
         const nextChild = throwingIterator(node.getChildren().values());
