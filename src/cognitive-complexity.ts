@@ -60,6 +60,7 @@ abstract class AbstractNodeCostCalculator {
     protected inner = [] as OutputElem[];
 
     // can probs put depth in the constructor as readonly
+    // maybe make this get called in the constructor
     abstract calculate(node: ts.Node, depth: number): ScoreAndInner;
 
     protected include(node: ts.Node, depth: number) {
@@ -119,7 +120,6 @@ class NodeCost extends AbstractNodeCostCalculator {
             || ts.isForOfStatement(node)
             || ts.isForStatement(node)
             || ts.isSwitchStatement(node)
-            || ts.isWhileStatement(node)
             || (
                 depth !== 0
                 && (
@@ -150,6 +150,10 @@ class NodeCost extends AbstractNodeCostCalculator {
             }
         } else if (ts.isIfStatement(node)) {
             const { inner, score } = new IfStatementCost().calculate(node, depth);
+            this.inner.push(...inner);
+            this.score += score;
+        } else if (ts.isWhileStatement(node)) {
+            const { inner, score } = new WhileStatementCost().calculate(node, depth);
             this.inner.push(...inner);
             this.score += score;
         } else {
@@ -201,7 +205,9 @@ class IfStatementCost extends AbstractNodeCostCalculator {
 
         while (true) {
             const child = nextChild();
-            if (ts.isToken(child) && child.kind === ts.SyntaxKind.OpenParenToken) {
+            if (ts.isToken(child) && child.kind === ts.SyntaxKind.IfKeyword) {
+                // consume open parenthesis
+                nextChild();
                 // aggregate condition
                 this.include(nextChild(), depth);
             } else if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
@@ -212,7 +218,35 @@ class IfStatementCost extends AbstractNodeCostCalculator {
                 this.include(nextChild(), depth + 1);
                 break;
             } else {
-                throw new UnexpectedNodeError(node);
+                throw new UnexpectedNodeError(child);
+            }
+        }
+
+        return {
+            score: this.score,
+            inner: this.inner,
+        }
+    }
+}
+
+class WhileStatementCost extends AbstractNodeCostCalculator {
+
+    calculate(node: ts.WhileStatement, depth: number): ScoreAndInner {
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        while (true) {
+            const child = nextChild();
+            if (ts.isToken(child) && child.kind === ts.SyntaxKind.WhileKeyword) {
+                // consume open parenthesis
+                nextChild();
+                // aggregate condition
+                this.include(nextChild(), depth);
+            } if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
+                // aggregate loop code
+                this.include(nextChild(), depth + 1);
+                break;
+            } else {
+                throw new UnexpectedNodeError(child);
             }
         }
 

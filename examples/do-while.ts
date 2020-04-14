@@ -1,5 +1,5 @@
 let x;
-while (true);
+while (true && true);
 while (true) x;
 while (true) {
     x;
