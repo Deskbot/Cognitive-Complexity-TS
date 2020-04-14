@@ -2,10 +2,10 @@ import * as ts from "typescript";
 import { OutputElem, OutputFileElem } from "./types";
 import { throwingIterator } from "./util";
 
-interface ScoreAndInner {
-    inner: OutputElem[];
-    score: number;
-}
+type ForLikeStatement =
+    ts.ForInStatement
+    | ts.ForOfStatement
+    | ts.ForStatement;
 
 class UnexpectedNodeError extends Error {
     constructor(public readonly node: ts.Node) {
@@ -55,7 +55,7 @@ export function calcFileCost(file: ts.Node): OutputFileElem {
     }
 }
 
-abstract class AbstractNodeCost {
+abstract class AbstractNodeCost<N extends ts.Node> {
     protected _score = 0;
     public readonly inner = [] as OutputElem[];
 
@@ -87,7 +87,7 @@ abstract class AbstractNodeCost {
     }
 }
 
-class NodeCost extends AbstractNodeCost {
+class NodeCost extends AbstractNodeCost<ts.Node> {
 
     protected calculate() {
         const depth = this.depth;
@@ -129,17 +129,13 @@ class NodeCost extends AbstractNodeCost {
         // probably the latter, which would also be easier
 
         // certain structures increment depth for their child nodes
-        if (ts.isForInStatement(node)
-            || ts.isForOfStatement(node)
-            || ts.isForStatement(node)
-            || (
-                depth !== 0
-                && (
-                    ts.isArrowFunction(node)
-                    || ts.isFunctionDeclaration(node)
-                    || ts.isFunctionExpression(node)
-                    || ts.isMethodDeclaration(node)
-                )
+        if (
+            depth !== 0
+            && (
+                ts.isArrowFunction(node)
+                || ts.isFunctionDeclaration(node)
+                || ts.isFunctionExpression(node)
+                || ts.isMethodDeclaration(node)
             )
         ) {
             // TODO some of the children will have the same depth, some will be depth + 1
@@ -156,6 +152,10 @@ class NodeCost extends AbstractNodeCost {
 
         } else if (ts.isDoStatement(node)) {
             const { inner, score } = new DoStatementCost(node, depth);
+            this.inner.push(...inner);
+            this._score += score;
+        } else if (isForLikeStatement(node)) {
+            const { inner, score } = new ForLikeStatementCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
         } else if (ts.isIfStatement(node)) {
@@ -176,7 +176,7 @@ class NodeCost extends AbstractNodeCost {
     }
 }
 
-class ConditionalExpressionCost extends AbstractNodeCost {
+class ConditionalExpressionCost extends AbstractNodeCost<ts.ConditionalExpression> {
 
     protected calculate() {
         const depth = this.depth;
@@ -202,15 +202,10 @@ class ConditionalExpressionCost extends AbstractNodeCost {
 
         // aggregate else
         this.includeAll(childNodesToAggregate, depth);
-
-        return {
-            score: this._score,
-            inner: this.inner,
-        }
     }
 }
 
-class DoStatementCost extends AbstractNodeCost {
+class DoStatementCost extends AbstractNodeCost<ts.DoStatement> {
 
     protected calculate() {
         const depth = this.depth;
@@ -234,7 +229,7 @@ class DoStatementCost extends AbstractNodeCost {
     }
 }
 
-class IfStatementCost extends AbstractNodeCost {
+class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
 
     protected calculate() {
         const depth = this.depth;
@@ -263,7 +258,13 @@ class IfStatementCost extends AbstractNodeCost {
     }
 }
 
-class SwitchStatementCost extends AbstractNodeCost {
+class ForLikeStatementCost extends AbstractNodeCost<ForLikeStatement> {
+    protected calculate() {
+
+    }
+}
+
+class SwitchStatementCost extends AbstractNodeCost<ts.SwitchStatement> {
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
@@ -283,7 +284,7 @@ class SwitchStatementCost extends AbstractNodeCost {
     }
 }
 
-class WhileStatementCost extends AbstractNodeCost {
+class WhileStatementCost extends AbstractNodeCost<ts.WhileStatement> {
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
@@ -318,4 +319,10 @@ function isBreakOrContinueToLabel(node: ts.Node): boolean {
     }
 
     return false;
+}
+
+function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
+    return ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isForStatement(node);
 }
