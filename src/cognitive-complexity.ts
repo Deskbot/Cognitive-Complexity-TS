@@ -154,8 +154,10 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             const { inner, score } = new DoStatementCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
-        } else if (isForLikeStatement(node)) {
-            const { inner, score } = new ForLikeStatementCost(node, depth);
+        } else if (ts.isForInStatement(node)) {
+        } else if (ts.isForOfStatement(node)) {
+        } else if (ts.isForStatement(node)) {
+            const { inner, score } = new ForStatementCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
         } else if (ts.isIfStatement(node)) {
@@ -258,9 +260,35 @@ class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
     }
 }
 
-class ForLikeStatementCost extends AbstractNodeCost<ForLikeStatement> {
+class ForStatementCost extends AbstractNodeCost<ts.ForStatement> {
     protected calculate() {
+        const depth = this.depth;
+        const node = this.node;
 
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        // consume for keyword
+        nextChild();
+        // consume open parenthesis
+        nextChild();
+
+        // consume everything up to the close parenthesis
+        {
+            const variableDeclarations = [];
+            while (true) {
+                const child = nextChild();
+                if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
+                    break;
+                } else {
+                    variableDeclarations.push(child);
+                }
+
+            }
+            this.includeAll(variableDeclarations, depth);
+        }
+
+        // consume looped code
+        this.include(nextChild(), depth + 1);
     }
 }
 
@@ -319,10 +347,4 @@ function isBreakOrContinueToLabel(node: ts.Node): boolean {
     }
 
     return false;
-}
-
-function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
-    return ts.isForInStatement(node)
-        || ts.isForOfStatement(node)
-        || ts.isForStatement(node);
 }
