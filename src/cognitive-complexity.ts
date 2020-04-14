@@ -56,26 +56,24 @@ export function calcFileCost(file: ts.Node): OutputFileElem {
 }
 
 abstract class AbstractNodeCost {
-    protected score = 0;
-    protected inner = [] as OutputElem[];
+    protected _score = 0;
+    public readonly inner = [] as OutputElem[];
 
     constructor(
-        private _node: ts.Node,
-        private _depth: number
-    ) {}
+        protected node: ts.Node,
+        protected depth: number
+    ) {
+        this.calculate();
+    }
 
     // can probs put depth in the constructor as readonly
     // maybe make this get called in the constructor
-    protected abstract calculate(): ScoreAndInner;
-
-    get depth(): number {
-        return this._depth;
-    }
+    protected abstract calculate(): void;
 
     protected include(node: ts.Node, depth: number) {
         const { inner, score } = new NodeCost(node, depth).calculate();
         this.inner.push(...inner);
-        this.score += score;
+        this._score += score;
     }
 
     protected includeAll(nodes: ts.Node[], depth: number) {
@@ -84,8 +82,8 @@ abstract class AbstractNodeCost {
         }
     }
 
-    get node(): ts.Node {
-        return this._node;
+    get score(): number {
+        return this._score;
     }
 }
 
@@ -105,7 +103,7 @@ class NodeCost extends AbstractNodeCost {
             || ts.isWhileStatement(node)
             || isBreakOrContinueToLabel(node)
         ) {
-            this.score += 1;
+            this._score += 1;
         }
 
         // increment for nesting level
@@ -118,7 +116,7 @@ class NodeCost extends AbstractNodeCost {
             || ts.isSwitchStatement(node)
             || ts.isWhileStatement(node)
         )) {
-            this.score += depth;
+            this._score += depth;
         }
 
         // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
@@ -153,36 +151,36 @@ class NodeCost extends AbstractNodeCost {
             this.includeAll(node.getChildren(), depth + 1);
 
         } else if (ts.isConditionalExpression(node)) {
-            const { inner, score } = new ConditionalExpressionCost(node, depth).calculate();
+            const { inner, score } = new ConditionalExpressionCost(node, depth);
             this.inner.push(...inner);
-            this.score += score;
+            this._score += score;
 
         } else if (ts.isDoStatement(node)) {
-            const { inner, score } = new DoStatementCost(node, depth).calculate();
+            const { inner, score } = new DoStatementCost(node, depth);
             this.inner.push(...inner);
-            this.score += score;
+            this._score += score;
         } else if (ts.isIfStatement(node)) {
-            const { inner, score } = new IfStatementCost(node, depth).calculate();
+            const { inner, score } = new IfStatementCost(node, depth);
             this.inner.push(...inner);
-            this.score += score;
+            this._score += score;
         } else if (ts.isWhileStatement(node)) {
-            const { inner, score } = new WhileStatementCost(node, depth).calculate();
+            const { inner, score } = new WhileStatementCost(node, depth);
             this.inner.push(...inner);
-            this.score += score;
+            this._score += score;
         } else {
             this.includeAll(node.getChildren(), depth);
         }
 
         return {
             inner: this.inner,
-            score: this.score,
+            score: this._score,
         };
     }
 }
 
 class ConditionalExpressionCost extends AbstractNodeCost {
 
-    calculate(): ScoreAndInner {
+    calculate() {
         const depth = this.depth;
         const node = this.node;
 
@@ -208,7 +206,7 @@ class ConditionalExpressionCost extends AbstractNodeCost {
         this.includeAll(childNodesToAggregate, depth);
 
         return {
-            score: this.score,
+            score: this._score,
             inner: this.inner,
         }
     }
@@ -216,7 +214,7 @@ class ConditionalExpressionCost extends AbstractNodeCost {
 
 class DoStatementCost extends AbstractNodeCost {
 
-    calculate(): ScoreAndInner {
+    calculate() {
         const depth = this.depth;
         const node = this.node;
 
@@ -235,17 +233,12 @@ class DoStatementCost extends AbstractNodeCost {
         } else {
             throw new UnexpectedNodeError(child);
         }
-
-        return {
-            score: this.score,
-            inner: this.inner,
-        }
     }
 }
 
 class IfStatementCost extends AbstractNodeCost {
 
-    calculate(): ScoreAndInner {
+    calculate() {
         const depth = this.depth;
         const node = this.node;
 
@@ -269,17 +262,12 @@ class IfStatementCost extends AbstractNodeCost {
                 throw new UnexpectedNodeError(child);
             }
         }
-
-        return {
-            score: this.score,
-            inner: this.inner,
-        }
     }
 }
 
 class WhileStatementCost extends AbstractNodeCost {
 
-    calculate(): ScoreAndInner {
+    calculate() {
         const depth = this.depth;
         const node = this.node;
 
@@ -299,11 +287,6 @@ class WhileStatementCost extends AbstractNodeCost {
             } else {
                 throw new UnexpectedNodeError(child);
             }
-        }
-
-        return {
-            score: this.score,
-            inner: this.inner,
         }
     }
 }
