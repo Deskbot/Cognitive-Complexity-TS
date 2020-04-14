@@ -26,7 +26,7 @@ function calcElemCost(node: ts.Node, depth = 0): OutputElem {
     const { line, character: column } = node.getSourceFile()
         .getLineAndCharacterOfPosition(node.getStart());
 
-    const nodeCost = new NodeCost(node, depth).calculate();
+    const nodeCost = new NodeCost(node, depth);
     score += nodeCost.score;
     inner.push(...nodeCost.inner);
 
@@ -71,7 +71,7 @@ abstract class AbstractNodeCost {
     protected abstract calculate(): void;
 
     protected include(node: ts.Node, depth: number) {
-        const { inner, score } = new NodeCost(node, depth).calculate();
+        const { inner, score } = new NodeCost(node, depth);
         this.inner.push(...inner);
         this._score += score;
     }
@@ -89,7 +89,7 @@ abstract class AbstractNodeCost {
 
 class NodeCost extends AbstractNodeCost {
 
-    calculate(): ScoreAndInner {
+    protected calculate(): ScoreAndInner {
         const depth = this.depth;
         const node = this.node;
         // certain langauge features carry and inherent cost
@@ -180,7 +180,7 @@ class NodeCost extends AbstractNodeCost {
 
 class ConditionalExpressionCost extends AbstractNodeCost {
 
-    calculate() {
+    protected calculate() {
         const depth = this.depth;
         const node = this.node;
 
@@ -214,7 +214,7 @@ class ConditionalExpressionCost extends AbstractNodeCost {
 
 class DoStatementCost extends AbstractNodeCost {
 
-    calculate() {
+    protected calculate() {
         const depth = this.depth;
         const node = this.node;
 
@@ -238,7 +238,7 @@ class DoStatementCost extends AbstractNodeCost {
 
 class IfStatementCost extends AbstractNodeCost {
 
-    calculate() {
+    protected calculate() {
         const depth = this.depth;
         const node = this.node;
 
@@ -267,7 +267,7 @@ class IfStatementCost extends AbstractNodeCost {
 
 class WhileStatementCost extends AbstractNodeCost {
 
-    calculate() {
+    protected calculate() {
         const depth = this.depth;
         const node = this.node;
 
