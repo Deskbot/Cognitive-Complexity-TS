@@ -21,7 +21,7 @@ function calcElemCost(node: ts.Node, depth = 0): OutputElem {
     const { line, character: column } = node.getSourceFile()
         .getLineAndCharacterOfPosition(node.getStart());
 
-    const nodeCost = new NodeCost(node, depth, true);
+    const nodeCost = new NodeCost(node, depth);
     score += nodeCost.score;
     inner.push(...nodeCost.inner);
 
@@ -129,8 +129,7 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
         if (
             depth !== 0
             && (
-                ts.isFunctionDeclaration(node)
-                || ts.isFunctionExpression(node)
+                ts.isFunctionExpression(node)
                 || ts.isMethodDeclaration(node)
             )
         ) {
@@ -160,6 +159,10 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             // TODO
         } else if (ts.isForStatement(node)) {
             const { inner, score } = new ForStatementCost(node, depth);
+            this.inner.push(...inner);
+            this._score += score;
+        } else if (ts.isFunctionDeclaration(node)) {
+            const { inner, score } = new FunctionDeclarationCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
         } else if (ts.isIfStatement(node)) {
@@ -318,6 +321,26 @@ class ForStatementCost extends AbstractNodeCost<ts.ForStatement> {
     }
 }
 
+class FunctionDeclarationCost extends AbstractFunctionCost<ts.FunctionDeclaration> {
+    protected calculate() {
+        const depth = this.depth;
+        const node = this.node;
+
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        while (true) {
+            const child = nextChild();
+
+            if (isSyntaxList(child)) {
+                this.include(child, depth);
+            } else if (ts.isBlock(child)) {
+                this.include(child, depth + 1);
+                break;
+            }
+        }
+    }
+}
+
 class SwitchStatementCost extends AbstractNodeCost<ts.SwitchStatement> {
     protected calculate() {
         const depth = this.depth;
@@ -373,6 +396,10 @@ function isBreakOrContinueToLabel(node: ts.Node): boolean {
     }
 
     return false;
+}
+
+function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
+    return node.kind === ts.SyntaxKind.SyntaxList;
 }
 
 function isTopLevel(node: ts.Node): boolean {
