@@ -2,11 +2,6 @@ import * as ts from "typescript";
 import { OutputElem, OutputFileElem } from "./types";
 import { throwingIterator } from "./util";
 
-type ForLikeStatement =
-    ts.ForInStatement
-    | ts.ForOfStatement
-    | ts.ForStatement;
-
 class UnexpectedNodeError extends Error {
     constructor(public readonly node: ts.Node) {
         super("Unexpected Node");
@@ -26,20 +21,21 @@ function calcElemCost(node: ts.Node, depth = 0): OutputElem {
     const { line, character: column } = node.getSourceFile()
         .getLineAndCharacterOfPosition(node.getStart());
 
-    const nodeCost = new NodeCost(node, depth);
+    const nodeCost = new NodeCost(node, depth, true);
     score += nodeCost.score;
     inner.push(...nodeCost.inner);
 
     return {
-        name: node.getFullText(), // todo make this match the function etc
+        name: node.getFullText(), // TODO make this match the function etc
         score,
         line,
         column,
         inner,
-    }
+    };
 }
 
-export function calcFileCost(file: ts.Node): OutputFileElem {
+// TODO is this needed
+export function calcFileCost(file: ts.SourceFile): OutputFileElem {
     const inner = [] as OutputElem[];
 
     let score = 0;
@@ -52,7 +48,7 @@ export function calcFileCost(file: ts.Node): OutputFileElem {
     return {
         inner,
         score,
-    }
+    };
 }
 
 abstract class AbstractNodeCost<N extends ts.Node> {
@@ -60,7 +56,7 @@ abstract class AbstractNodeCost<N extends ts.Node> {
     public readonly inner = [] as OutputElem[];
 
     constructor(
-        protected node: ts.Node,
+        protected node: N,
         protected depth: number
     ) {
         this.calculate();
@@ -92,6 +88,7 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
+
         // certain langauge features carry and inherent cost
         if (ts.isCatchClause(node)
             || ts.isConditionalExpression(node)
@@ -132,8 +129,7 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
         if (
             depth !== 0
             && (
-                ts.isArrowFunction(node)
-                || ts.isFunctionDeclaration(node)
+                ts.isFunctionDeclaration(node)
                 || ts.isFunctionExpression(node)
                 || ts.isMethodDeclaration(node)
             )
@@ -142,6 +138,10 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             // the condition of an if/do has the same depth
             // the block/statement has depth + 1
 
+        } else if (ts.isArrowFunction(node)) {
+            const { inner, score } = new ArrowFunctionCost(node, depth);
+            this.inner.push(...inner);
+            this._score += score;
         } else if (ts.isCatchClause(node)) {
             this.includeAll(node.getChildren(), depth + 1);
 
@@ -155,7 +155,9 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             this.inner.push(...inner);
             this._score += score;
         } else if (ts.isForInStatement(node)) {
+            // TODO
         } else if (ts.isForOfStatement(node)) {
+            // TODO
         } else if (ts.isForStatement(node)) {
             const { inner, score } = new ForStatementCost(node, depth);
             this.inner.push(...inner);
@@ -178,8 +180,35 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
     }
 }
 
-class ConditionalExpressionCost extends AbstractNodeCost<ts.ConditionalExpression> {
+class ArrowFunctionCost extends AbstractNodeCost<ts.ArrowFunction> {
+    constructor(
+        node: ts.ArrowFunction,
+        depth: number,
+        protected topLevel: boolean = isTopLevel(node),
+    ) {
+        super(node, depth);
+    }
 
+    protected calculate() {
+        const depth = this.depth;
+        const node = this.node;
+
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        // consume OpenParenToken
+        nextChild();
+        // aggregate code inside SyntaxList
+        this.include(nextChild(), depth);
+        // consume CloseParenToken
+        nextChild();
+        // consume EqualsGreaterThanToken
+        nextChild();
+        // aggregate code inside arrow function
+        this.include(nextChild(), this.topLevel ? depth : depth + 1);
+    }
+}
+
+class ConditionalExpressionCost extends AbstractNodeCost<ts.ConditionalExpression> {
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
@@ -208,31 +237,26 @@ class ConditionalExpressionCost extends AbstractNodeCost<ts.ConditionalExpressio
 }
 
 class DoStatementCost extends AbstractNodeCost<ts.DoStatement> {
-
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
 
         const nextChild = throwingIterator(node.getChildren().values());
 
-        const child = nextChild();
-        if (ts.isToken(child) && child.kind === ts.SyntaxKind.DoKeyword) {
-            // aggregate block
-            this.include(nextChild(), depth + 1);
-            // consume while keyword
-            nextChild();
-            // consume open paren
-            nextChild();
-            // aggregate condition
-            this.include(nextChild(), depth);
-        } else {
-            throw new UnexpectedNodeError(child);
-        }
+        // consume do token
+        nextChild();
+        // aggregate block
+        this.include(nextChild(), depth + 1);
+        // consume while keyword
+        nextChild();
+        // consume open paren
+        nextChild();
+        // aggregate condition
+        this.include(nextChild(), depth);
     }
 }
 
 class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
-
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
@@ -347,4 +371,29 @@ function isBreakOrContinueToLabel(node: ts.Node): boolean {
     }
 
     return false;
+}
+
+function isTopLevel(node: ts.Node): boolean {
+    const parent = node.parent;
+
+    // TODO check what the parent of a ts.SourceFile is
+    if (parent === undefined) {
+        console.trace();
+        return true;
+    }
+
+    if (ts.isSourceFile(parent)) {
+        return true;
+    }
+
+    let highestNonBlockAncestor = parent;
+    while (ts.isBlock(highestNonBlockAncestor)) {
+        highestNonBlockAncestor = highestNonBlockAncestor.parent;
+    }
+
+    if (highestNonBlockAncestor === parent) {
+        return false;
+    }
+
+    return isTopLevel(highestNonBlockAncestor);
 }
