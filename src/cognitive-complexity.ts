@@ -180,15 +180,17 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
     }
 }
 
-class ArrowFunctionCost extends AbstractNodeCost<ts.ArrowFunction> {
+abstract class AbstractFunctionCost<N extends ts.Node> extends AbstractNodeCost<N> {
     constructor(
-        node: ts.ArrowFunction,
+        node: N,
         depth: number,
         protected topLevel: boolean = isTopLevel(node),
     ) {
         super(node, depth);
     }
+}
 
+class ArrowFunctionCost extends AbstractFunctionCost<ts.ArrowFunction> {
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
