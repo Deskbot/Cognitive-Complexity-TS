@@ -45,6 +45,9 @@ function getExpectation(fileName: string): any {
 }
 
 async function main() {
+    // expected file paths are relative to the case dir
+    process.chdir(casesDir);
+
     // get all case names
     // treat ts files and folders as tests
     const caseFilePaths = (await allCaseFilePaths())
