@@ -2,6 +2,8 @@ import * as ts from "typescript";
 import { OutputElem, OutputFileElem } from "./types";
 import { throwingIterator } from "./util";
 
+type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
+
 class UnexpectedNodeError extends Error {
     constructor(public readonly node: ts.Node) {
         super("Unexpected Node");
@@ -153,12 +155,8 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             const { inner, score } = new DoStatementCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
-        } else if (ts.isForInStatement(node)) {
-            // TODO
-        } else if (ts.isForOfStatement(node)) {
-            // TODO
-        } else if (ts.isForStatement(node)) {
-            const { inner, score } = new ForStatementCost(node, depth);
+        } else if (isForLikeStatement(node)) {
+            const { inner, score } = new ForLikeStatementCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
         } else if (ts.isFunctionDeclaration(node)) {
@@ -289,7 +287,7 @@ class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
     }
 }
 
-class ForStatementCost extends AbstractNodeCost<ts.ForStatement> {
+class ForLikeStatementCost extends AbstractNodeCost<ForLikeStatement> {
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
@@ -303,17 +301,17 @@ class ForStatementCost extends AbstractNodeCost<ts.ForStatement> {
 
         // consume everything up to the close parenthesis
         {
-            const variableDeclarations = [];
+            const loopConfigStatements = [];
             while (true) {
                 const child = nextChild();
                 if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
                     break;
                 } else {
-                    variableDeclarations.push(child);
+                    loopConfigStatements.push(child);
                 }
 
             }
-            this.includeAll(variableDeclarations, depth);
+            this.includeAll(loopConfigStatements, depth);
         }
 
         // consume looped code
@@ -396,6 +394,12 @@ function isBreakOrContinueToLabel(node: ts.Node): boolean {
     }
 
     return false;
+}
+
+function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
+    return ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isForStatement(node);
 }
 
 function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
