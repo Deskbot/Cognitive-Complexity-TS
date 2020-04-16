@@ -128,17 +128,7 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
         // probably the latter, which would also be easier
 
         // certain structures increment depth for their child nodes
-        if (
-            depth !== 0
-            && (
-                ts.isFunctionExpression(node)
-            )
-        ) {
-            // TODO some of the children will have the same depth, some will be depth + 1
-            // the condition of an if/do has the same depth
-            // the block/statement has depth + 1
-
-        } else if (ts.isArrowFunction(node)) {
+        if (ts.isArrowFunction(node)) {
             const { inner, score } = new ArrowFunctionCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
@@ -158,6 +148,10 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             this._score += score;
         } else if (ts.isFunctionDeclaration(node)) {
             const { inner, score } = new FunctionDeclarationCost(node, depth);
+            this.inner.push(...inner);
+            this._score += score;
+        } else if (ts.isFunctionExpression(node)) {
+            const { inner, score } = new FunctionExpressionCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
         } else if (ts.isIfStatement(node)) {
@@ -332,6 +326,20 @@ class FunctionDeclarationCost extends AbstractFunctionCost<ts.FunctionDeclaratio
                 break;
             }
         }
+    }
+}
+
+class FunctionExpressionCost extends AbstractFunctionCost<ts.FunctionExpression> {
+    protected calculate() {
+        const depth = this.depth;
+        const node = this.node;
+
+        const children = node.getChildren();
+        const functionBody = children.slice(-1);
+        const functionDecl = children.slice(0, -1)[0];
+
+        this.includeAll(functionBody, depth);
+        this.include(functionDecl, depth + 1);
     }
 }
 
