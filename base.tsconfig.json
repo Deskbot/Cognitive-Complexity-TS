@@ -6,6 +6,7 @@
             "ES2018"
         ],
         "module": "commonjs",
+        "noImplicitAny": true,
         "noImplicitThis": true,
         "noImplicitReturns": true,
         "sourceMap": true,

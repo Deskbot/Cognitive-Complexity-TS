@@ -132,7 +132,6 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             depth !== 0
             && (
                 ts.isFunctionExpression(node)
-                || ts.isMethodDeclaration(node)
             )
         ) {
             // TODO some of the children will have the same depth, some will be depth + 1
@@ -145,12 +144,10 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             this._score += score;
         } else if (ts.isCatchClause(node)) {
             this.includeAll(node.getChildren(), depth + 1);
-
         } else if (ts.isConditionalExpression(node)) {
             const { inner, score } = new ConditionalExpressionCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
-
         } else if (ts.isDoStatement(node)) {
             const { inner, score } = new DoStatementCost(node, depth);
             this.inner.push(...inner);
@@ -165,6 +162,10 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
             this._score += score;
         } else if (ts.isIfStatement(node)) {
             const { inner, score } = new IfStatementCost(node, depth);
+            this.inner.push(...inner);
+            this._score += score;
+        } else if (ts.isMethodDeclaration(node)) {
+            const { inner, score } = new MethodDeclarationCost(node, depth);
             this.inner.push(...inner);
             this._score += score;
         } else if (ts.isSwitchStatement(node)) {
@@ -300,18 +301,13 @@ class ForLikeStatementCost extends AbstractNodeCost<ForLikeStatement> {
         nextChild();
 
         // consume everything up to the close parenthesis
-        {
-            const loopConfigStatements = [];
-            while (true) {
-                const child = nextChild();
-                if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
-                    break;
-                } else {
-                    loopConfigStatements.push(child);
-                }
-
+        while (true) {
+            const child = nextChild();
+            if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
+                break;
             }
-            this.includeAll(loopConfigStatements, depth);
+
+            this.include(child, depth);
         }
 
         // consume looped code
@@ -338,6 +334,26 @@ class FunctionDeclarationCost extends AbstractFunctionCost<ts.FunctionDeclaratio
         }
     }
 }
+
+class MethodDeclarationCost extends AbstractFunctionCost<ts.MethodDeclaration> {
+    protected calculate() {
+        const depth = this.depth;
+        const node = this.node;
+
+        const nextChild = throwingIterator(node.getChildren().values());
+
+        while (true) {
+            const child = nextChild();
+            if (ts.isBlock(child)) {
+                this.include(nextChild(), this.topLevel ? depth : depth + 1);
+                break;
+            }
+
+            this.include(child, depth);
+        }
+    }
+}
+
 
 class SwitchStatementCost extends AbstractNodeCost<ts.SwitchStatement> {
     protected calculate() {
