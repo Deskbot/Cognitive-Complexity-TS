@@ -36,21 +36,8 @@ function calcElemCost(node: ts.Node, depth = 0): OutputElem {
     };
 }
 
-// TODO is this needed
 export function calcFileCost(file: ts.SourceFile): OutputFileElem {
-    const inner = [] as OutputElem[];
-
-    let score = 0;
-    for (const child of file.getChildren()) {
-        const elem = calcElemCost(child);
-        score += elem.score;
-        inner.push(elem);
-    }
-
-    return {
-        inner,
-        score,
-    };
+    return new FileCost(file);
 }
 
 abstract class AbstractNodeCost<N extends ts.Node> {
@@ -69,9 +56,9 @@ abstract class AbstractNodeCost<N extends ts.Node> {
     protected abstract calculate(): void;
 
     protected include(node: ts.Node, depth: number) {
-        const { inner, score } = new NodeCost(node, depth);
-        this.inner.push(...inner);
-        this._score += score;
+        const elem = calcElemCost(node, depth);
+        this.inner.push(elem);
+        this._score += elem.score;
     }
 
     protected includeAll(nodes: ts.Node[], depth: number) {
@@ -86,7 +73,6 @@ abstract class AbstractNodeCost<N extends ts.Node> {
 }
 
 class NodeCost extends AbstractNodeCost<ts.Node> {
-
     protected calculate() {
         const depth = this.depth;
         const node = this.node;
@@ -279,6 +265,16 @@ class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
                 throw new UnexpectedNodeError(child);
             }
         }
+    }
+}
+
+class FileCost extends AbstractNodeCost<ts.SourceFile> {
+    constructor(file: ts.SourceFile) {
+        super(file, 0);
+    }
+
+    protected calculate() {
+        this.includeAll(this.node.getChildren(), this.depth);
     }
 }
 

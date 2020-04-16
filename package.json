@@ -10,12 +10,12 @@
   ],
   "main": "./build/src/index.js",
   "scripts": {
-    "build": "tsc -p ./src",
-    "build-test": "tsc -p ./test",
-    "build-tools": "tsc -p ./tools",
-    "start": "node -r source-map-support/register ./build/src/main",
-    "test": "node -r source-map-support/register ./build/test/test/main",
-    "what": "node -r source-map-support/register ./build/tools/what-is-it"
+    "build": "tsc -i -p ./src",
+    "build-test": "tsc -i -p ./test",
+    "build-tools": "tsc -i -p ./tools",
+    "start": "npm run build && node -r source-map-support/register ./build/src/main",
+    "test": "npm run build-test && node -r source-map-support/register ./build/test/test/main",
+    "what": "npm run build=tools && node -r source-map-support/register ./build/tools/what-is-it"
   },
   "author": "Thomas Richards",
   "license": "UNLICENSED",
