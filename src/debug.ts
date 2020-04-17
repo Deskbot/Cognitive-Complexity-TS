@@ -1,10 +1,8 @@
 import * as ts from "typescript";
 import { debuglog } from "util";
 
-export const mainDebug = debuglog("main");
+export const testLog = debuglog("test");
 
-export function debugNode(child: ts.Node) {
-    if (process.env.DEBUG) {
-        mainDebug(child.getFullText());
-    }
+export function logNode(child: ts.Node) {
+    testLog(child.getFullText());
 }

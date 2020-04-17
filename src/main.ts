@@ -7,14 +7,11 @@ import { toPromise } from "./util";
 import { OutputJson } from "./types";
 import { js_beautify } from "js-beautify";
 import { calcFileCost } from "./cognitive-complexity";
-import { debug } from "util";
-import { mainDebug, debugNode } from "./debug";
 
 main();
 
 async function main() {
     const args = process.argv.slice(2);
-    console.log(args);
 
     try {
         var filePath = args[0][0] === "/"
@@ -27,17 +24,13 @@ async function main() {
 
     let filePaths: string[] = await toPromise(cb => glob(`${filePath}/**/*`, cb));
     filePaths.push(filePath);
-    console.log(filePaths);
     filePaths = filePaths.filter(path => path.match(/.*\.[tj]sx?$/) !== null);
-    console.log(filePaths);
     printCognitiveComplexityJson(filePaths);
 }
 
 function printCognitiveComplexityJson(filePaths: string[]) {
     const resultForAllFiles: OutputJson = {};
     const cwd = process.cwd();
-
-    console.log(filePaths);
 
     for (const filePath of filePaths) {
         const fileName = path.relative(cwd, filePath);
@@ -50,10 +43,10 @@ function printCognitiveComplexityJson(filePaths: string[]) {
             true,
         );
 
-        mainDebug(fileName);
+        console.log(fileName, "poo"); // todo use debug func
         const resultForFile = calcFileCost(file);
 
-        mainDebug(JSON.stringify(resultForFile));
+        console.error(JSON.stringify(resultForFile));
         resultForAllFiles[fileName] = resultForFile;
     }
 

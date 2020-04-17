@@ -11,19 +11,19 @@ import { diff } from "deep-diff";
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
 const program = path.normalize(__dirname + "/../../src/main");
 
-function runCase(caseName: string, outputPath: string): Promise<OutputJson> {
+function runCase(caseFilePath: string, outputPath: string): Promise<OutputJson> {
     return new Promise((resolve, reject) => {
-        const proc = cp.spawn("node", [program, `${casesDir}/${caseName}`]);
+        const procUnderTest = cp.spawn("node", [program, caseFilePath]);
         const outputStream = fs.createWriteStream(outputPath);
-        proc.stdout.pipe(outputStream);
-        proc.stderr.pipe(process.stderr);
-        proc.on("close", () => {
+        procUnderTest.stdout.pipe(outputStream);
+        procUnderTest.stderr.pipe(process.stdout);
+        procUnderTest.on("close", () => {
             // I'm sure getting it into an object could be simpler
             const jsonString =  fs.readFileSync(outputPath).toString();
             try {
                 resolve(JSON.parse(jsonString));
             } catch(e) {
-                reject(`Fail: Could not parse result of ${caseName}. (${outputPath})`);
+                reject(`Fail: Could not parse result of ${caseFilePath}. (${outputPath})`);
             }
         });
     });
@@ -69,17 +69,18 @@ async function main() {
     const failedCases = [] as string[];
 
     // for each case
-    for (const caseFileName of caseFilePaths) {
-        const testName = path.parse(caseFileName).name.split(".")[0];
+    for (const caseFilePath of caseFilePaths) {
+        const testFileName = path.parse(caseFilePath).name;
+        const testName = testFileName.split(".")[0];
         console.log("Testing", testName);
 
         // run program on case
         // convert output to json
         const outputPath = tempfile();
         try {
-            const resultObj = await runCase(testName, outputPath);
+            const resultObj = await runCase(caseFilePath, outputPath);
             // read json exected for case
-            const expectedObj = getExpectation(caseFileName);
+            const expectedObj = getExpectation(caseFilePath);
             // deep compare the 2
             const difference = diff(expectedObj, resultObj);
             // output the difference
@@ -101,9 +102,11 @@ async function main() {
 
     // list failures
     if (failedCases.length > 0) {
+        console.log("All Failures:");
         console.log(failedCases);
     }
-    console.log(caseFilePaths.length - failedCases.length, "passed. Out of ", caseFilePaths.length);
+
+    console.log(caseFilePaths.length - failedCases.length, "passed. Out of", caseFilePaths.length);
 }
 
 main();
