@@ -15,7 +15,7 @@
     "build-tools": "tsc -i -p ./tools",
     "start": "npm run build && node -r source-map-support/register ./build/src/main",
     "test": "npm run build-test && node -r source-map-support/register ./build/test/test/main",
-    "what": "npm run build=tools && node -r source-map-support/register ./build/tools/what-is-it"
+    "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it"
   },
   "author": "Thomas Richards",
   "license": "UNLICENSED",

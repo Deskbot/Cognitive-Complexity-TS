@@ -50,8 +50,22 @@ async function main() {
 
     // get all case names
     // treat ts files and folders as tests
-    const caseFilePaths = (await allCaseFilePaths())
+    let caseFilePaths = (await allCaseFilePaths())
         .filter(path => !path.endsWith(".expected.json"));
+
+    const wantedTests = process.argv.slice(2);
+    if (wantedTests.length > 0) {
+        caseFilePaths = caseFilePaths
+            .filter(path => {
+                for (const wantedTest of wantedTests) {
+                    if (path.includes(wantedTest)) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+    }
+
     const failedCases = [] as string[];
 
     // for each case
