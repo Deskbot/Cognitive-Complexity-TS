@@ -245,26 +245,13 @@ class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
         const depth = this.depth;
         const node = this.node;
 
-        const nextChild = throwingIterator(node.getChildren().values());
+        const children = node.getChildren();
 
-        while (true) {
-            const child = nextChild();
-            if (ts.isToken(child) && child.kind === ts.SyntaxKind.IfKeyword) {
-                // consume open parenthesis
-                nextChild();
-                // aggregate condition
-                this.include(nextChild(), depth);
-            } else if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
-                // aggregate then
-                this.include(nextChild(), depth + 1);
-            } else if (ts.isToken(child) && child.kind === ts.SyntaxKind.ElseKeyword) {
-                // aggregate else
-                this.include(nextChild(), depth + 1);
-                break;
-            } else {
-                throw new UnexpectedNodeError(child);
-            }
-        }
+        const condition = children[2];
+        const thenCode = children[4];
+
+        this.include(condition, depth);
+        this.include(thenCode, depth + 1);
     }
 }
 
@@ -384,23 +371,13 @@ class WhileStatementCost extends AbstractNodeCost<ts.WhileStatement> {
         const depth = this.depth;
         const node = this.node;
 
-        const nextChild = throwingIterator(node.getChildren().values());
+        const children = node.getChildren();
 
-        while (true) {
-            const child = nextChild();
-            if (ts.isToken(child) && child.kind === ts.SyntaxKind.WhileKeyword) {
-                // consume open parenthesis
-                nextChild();
-                // aggregate condition
-                this.include(nextChild(), depth);
-            } if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
-                // aggregate loop code
-                this.include(nextChild(), depth + 1);
-                break;
-            } else {
-                throw new UnexpectedNodeError(child);
-            }
-        }
+        const condition = children[2];
+        const loopCode = children[4];
+
+        this.include(condition, depth);
+        this.include(loopCode, depth + 1);
     }
 }
 

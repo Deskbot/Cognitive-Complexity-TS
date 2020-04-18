@@ -43,7 +43,7 @@ function printCognitiveComplexityJson(filePaths: string[]) {
             true,
         );
 
-        console.log(fileName, "poo"); // todo use debug func
+        console.error(fileName, "poo"); // todo use debug func
         const resultForFile = calcFileCost(file);
 
         console.error(JSON.stringify(resultForFile));

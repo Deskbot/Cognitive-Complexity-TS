@@ -9,11 +9,10 @@ import { OutputJson } from "../src/types"
 import { diff } from "deep-diff";
 
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
-const program = path.normalize(__dirname + "/../../src/main");
 
 function runCase(caseFilePath: string, outputPath: string): Promise<OutputJson> {
     return new Promise((resolve, reject) => {
-        const procUnderTest = cp.spawn("node", [program, caseFilePath]);
+        const procUnderTest = cp.spawn("npm", ["run", "start", "--", caseFilePath]);
         const outputStream = fs.createWriteStream(outputPath);
         procUnderTest.stdout.pipe(outputStream);
         procUnderTest.stderr.pipe(process.stdout);
