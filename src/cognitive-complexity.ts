@@ -1,17 +1,11 @@
 import * as ts from "typescript";
-import { OutputElem, OutputFileElem } from "./types";
+import { FunctionOutput, FileOutput } from "./types";
 import { throwingIterator } from "./util";
 
 type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
-class UnexpectedNodeError extends Error {
-    constructor(public readonly node: ts.Node) {
-        super("Unexpected Node");
-    }
-}
-
-function calcElemCost(node: ts.Node, depth = 0): OutputElem {
-    const inner = [] as OutputElem[];
+function calcElemCost(node: ts.Node, depth = 0): FunctionOutput {
+    const inner = [] as FunctionOutput[];
 
     let score = 0;
     for (const child of node.getChildren()) {
@@ -25,7 +19,6 @@ function calcElemCost(node: ts.Node, depth = 0): OutputElem {
 
     const nodeCost = new NodeCost(node, depth);
     score += nodeCost.score;
-    inner.push(...nodeCost.inner);
 
     return {
         name: node.getFullText(), // TODO make this match the function etc
@@ -36,13 +29,12 @@ function calcElemCost(node: ts.Node, depth = 0): OutputElem {
     };
 }
 
-export function calcFileCost(file: ts.SourceFile): OutputFileElem {
+export function calcFileCost(file: ts.SourceFile): FileOutput {
     return new FileCost(file);
 }
 
 abstract class AbstractNodeCost<N extends ts.Node> {
     protected _score = 0;
-    public readonly inner = [] as OutputElem[];
 
     constructor(
         protected node: N,
@@ -57,7 +49,6 @@ abstract class AbstractNodeCost<N extends ts.Node> {
 
     protected include(node: ts.Node, depth: number) {
         const elem = calcElemCost(node, depth);
-        this.inner.push(elem);
         this._score += elem.score;
     }
 
@@ -115,46 +106,36 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
 
         // certain structures increment depth for their child nodes
         if (ts.isArrowFunction(node)) {
-            const { inner, score } = new ArrowFunctionCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new ArrowFunctionCost(node, depth);
             this._score += score;
         } else if (ts.isCatchClause(node)) {
             this.includeAll(node.getChildren(), depth + 1);
         } else if (ts.isConditionalExpression(node)) {
-            const { inner, score } = new ConditionalExpressionCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new ConditionalExpressionCost(node, depth);
             this._score += score;
         } else if (ts.isDoStatement(node)) {
-            const { inner, score } = new DoStatementCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new DoStatementCost(node, depth);
             this._score += score;
         } else if (isForLikeStatement(node)) {
-            const { inner, score } = new ForLikeStatementCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new ForLikeStatementCost(node, depth);
             this._score += score;
         } else if (ts.isFunctionDeclaration(node)) {
-            const { inner, score } = new FunctionDeclarationCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new FunctionDeclarationCost(node, depth);
             this._score += score;
         } else if (ts.isFunctionExpression(node)) {
-            const { inner, score } = new FunctionExpressionCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new FunctionExpressionCost(node, depth);
             this._score += score;
         } else if (ts.isIfStatement(node)) {
-            const { inner, score } = new IfStatementCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new IfStatementCost(node, depth);
             this._score += score;
         } else if (ts.isMethodDeclaration(node)) {
-            const { inner, score } = new MethodDeclarationCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new MethodDeclarationCost(node, depth);
             this._score += score;
         } else if (ts.isSwitchStatement(node)) {
-            const { inner, score } = new SwitchStatementCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new SwitchStatementCost(node, depth);
             this._score += score;
         } else if (ts.isWhileStatement(node)) {
-            const { inner, score } = new WhileStatementCost(node, depth);
-            this.inner.push(...inner);
+            const { score } = new WhileStatementCost(node, depth);
             this._score += score;
         } else {
             this.includeAll(node.getChildren(), depth);

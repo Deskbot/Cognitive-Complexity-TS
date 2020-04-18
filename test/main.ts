@@ -5,12 +5,12 @@ import * as path from "path";
 import * as process from "process";
 import tempfile from "tempfile";
 import { toPromise } from "../src/util";
-import { OutputJson } from "../src/types"
+import { ProgramOutput } from "../src/types"
 import { diff } from "deep-diff";
 
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
 
-function runCase(caseFilePath: string, outputPath: string): Promise<OutputJson> {
+function runCase(caseFilePath: string, outputPath: string): Promise<ProgramOutput> {
     return new Promise((resolve, reject) => {
         const procUnderTest = cp.spawn("npm", ["run", "start", "--", caseFilePath]);
         const outputStream = fs.createWriteStream(outputPath);

@@ -4,7 +4,7 @@ import * as path from "path";
 import * as process from "process";
 import * as ts from "typescript";
 import { toPromise } from "./util";
-import { OutputJson } from "./types";
+import { ProgramOutput } from "./types";
 import { js_beautify } from "js-beautify";
 import { calcFileCost } from "./cognitive-complexity";
 
@@ -29,7 +29,7 @@ async function main() {
 }
 
 function printCognitiveComplexityJson(filePaths: string[]) {
-    const resultForAllFiles: OutputJson = {};
+    const resultForAllFiles: ProgramOutput = {};
     const cwd = process.cwd();
 
     for (const filePath of filePaths) {
