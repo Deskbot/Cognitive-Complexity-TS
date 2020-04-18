@@ -143,13 +143,23 @@ class NodeCost extends AbstractNodeCost<ts.Node> {
     }
 }
 
-abstract class AbstractFunctionCost<N extends ts.Node> extends AbstractNodeCost<N> {
+abstract class AbstractFunctionCost<N extends ts.Node> extends AbstractNodeCost<N> implements FunctionOutput {
+    readonly name: string;
+    readonly line: number;
+    readonly column: number;
+
     constructor(
         node: N,
         depth: number,
         protected topLevel: boolean = isTopLevel(node),
     ) {
         super(node, depth);
+
+        const lineAndCol = node.getSourceFile()
+            .getLineAndCharacterOfPosition(node.getStart());
+        this.column = lineAndCol.character;
+        this.line = lineAndCol.line;
+        this.name = node.getFullText();
     }
 }
 
@@ -236,7 +246,9 @@ class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
     }
 }
 
-class FileCost extends AbstractNodeCost<ts.SourceFile> {
+class FileCost extends AbstractNodeCost<ts.SourceFile> implements FileOutput {
+    readonly inner = [] as FunctionOutput[];
+
     constructor(file: ts.SourceFile) {
         super(file, 0);
     }
