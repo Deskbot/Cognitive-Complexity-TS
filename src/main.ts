@@ -6,7 +6,7 @@ import * as ts from "typescript";
 import { toPromise } from "./util";
 import { ProgramOutput } from "./types";
 import { js_beautify } from "js-beautify";
-import { calcFileCost } from "./cognitive-complexity";
+import { calcFileCost } from "./old-cognitive-complexity";
 
 main();
 
