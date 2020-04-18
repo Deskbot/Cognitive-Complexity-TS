@@ -4,36 +4,15 @@ import { throwingIterator } from "./util";
 
 type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
-function calcElemCost(node: ts.Node, depth = 0): FunctionOutput {
-    const inner = [] as FunctionOutput[];
-
-    let score = 0;
-    for (const child of node.getChildren()) {
-        const elem = calcElemCost(child);
-        score += elem.score;
-        inner.push(elem);
-    }
-
-    const { line, character: column } = node.getSourceFile()
-        .getLineAndCharacterOfPosition(node.getStart());
-
-    const nodeCost = new NodeCost(node, depth);
-    score += nodeCost.score;
-
-    return {
-        name: node.getFullText(), // TODO make this match the function etc
-        score,
-        line,
-        column,
-        inner,
-    };
-}
-
 export function calcFileCost(file: ts.SourceFile): FileOutput {
     return new FileCost(file);
 }
 
 abstract class AbstractNodeCost<N extends ts.Node> {
+    /**
+     * function declarations inside this node
+     */
+    readonly inner = [] as FunctionOutput[];
     protected _score = 0;
 
     constructor(
@@ -48,8 +27,9 @@ abstract class AbstractNodeCost<N extends ts.Node> {
     protected abstract calculate(): void;
 
     protected include(node: ts.Node, depth: number) {
-        const elem = calcElemCost(node, depth);
+        const elem = new NodeCost(node, depth);
         this._score += elem.score;
+        this.inner.push(...elem.inner);
     }
 
     protected includeAll(nodes: ts.Node[], depth: number) {
@@ -247,8 +227,6 @@ class IfStatementCost extends AbstractNodeCost<ts.IfStatement> {
 }
 
 class FileCost extends AbstractNodeCost<ts.SourceFile> implements FileOutput {
-    readonly inner = [] as FunctionOutput[];
-
     constructor(file: ts.SourceFile) {
         super(file, 0);
     }
