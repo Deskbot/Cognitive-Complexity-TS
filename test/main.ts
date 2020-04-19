@@ -1,4 +1,5 @@
 import * as cp from "child_process";
+import { diff } from "deep-diff";
 import * as fs from "fs";
 import glob from "glob";
 import * as path from "path";
@@ -6,27 +7,10 @@ import * as process from "process";
 import tempfile from "tempfile";
 import { toPromise } from "../src/util";
 import { ProgramOutput } from "../src/types"
-import { diff } from "deep-diff";
 
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
 
-function runCase(caseFilePath: string, outputPath: string): Promise<ProgramOutput> {
-    return new Promise((resolve, reject) => {
-        const procUnderTest = cp.spawn("npm", ["run", "start", "--", caseFilePath]);
-        const outputStream = fs.createWriteStream(outputPath);
-        procUnderTest.stdout.pipe(outputStream);
-        procUnderTest.stderr.pipe(process.stdout);
-        procUnderTest.on("close", () => {
-            // I'm sure getting it into an object could be simpler
-            const jsonString =  fs.readFileSync(outputPath).toString();
-            try {
-                resolve(JSON.parse(jsonString));
-            } catch(e) {
-                reject(`Fail: Could not parse result of ${caseFilePath}. (${outputPath})`);
-            }
-        });
-    });
-}
+main();
 
 function allCaseFilePaths(): Promise<string[]> {
     return toPromise(cb => glob(`${casesDir}/*`, cb));
@@ -108,4 +92,20 @@ async function main() {
     console.log(caseFilePaths.length - failedCases.length, "passed. Out of", caseFilePaths.length);
 }
 
-main();
+function runCase(caseFilePath: string, outputPath: string): Promise<ProgramOutput> {
+    return new Promise((resolve, reject) => {
+        const procUnderTest = cp.spawn("npm", ["run", "start", "--", caseFilePath]);
+        const outputStream = fs.createWriteStream(outputPath);
+        procUnderTest.stdout.pipe(outputStream);
+        procUnderTest.stderr.pipe(process.stdout);
+        procUnderTest.on("close", () => {
+            // I'm sure getting it into an object could be simpler
+            const jsonString = fs.readFileSync(outputPath).toString();
+            try {
+                resolve(JSON.parse(jsonString));
+            } catch (e) {
+                reject(`Fail: Could not parse result of ${caseFilePath}. (${outputPath})`);
+            }
+        });
+    });
+}
