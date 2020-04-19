@@ -3,7 +3,7 @@
  */
 
 import * as ts from "typescript";
-import { isForLikeStatement, isTopLevel, ForLikeStatement, isSyntaxList } from "./node-kind";
+import { isForLikeStatement, isTopLevel, ForLikeStatement, isSyntaxList } from "./node-inspection";
 import { throwingIterator } from "./util";
 
 type DepthOfChildren = [ts.Node[], ts.Node[]];

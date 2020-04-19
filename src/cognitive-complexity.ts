@@ -1,7 +1,7 @@
 import * as ts from "typescript"
-import { FileOutput, FunctionOutput, getFunctionNodeInfo } from "./types";
+import { FileOutput, FunctionOutput } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, FunctionNode } from "./node-kind";
+import { isFunctionNode, isBreakOrContinueToLabel, getFunctionNodeInfo } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput

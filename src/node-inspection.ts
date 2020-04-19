@@ -1,4 +1,5 @@
 import * as ts from "typescript";
+import { FunctionNodeInfo } from "./types";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
@@ -6,6 +7,49 @@ export type FunctionNode = ts.ArrowFunction
     | ts.FunctionDeclaration
     | ts.FunctionExpression
     | ts.MethodDeclaration;
+
+export function getFunctionNodeInfo(func: FunctionNode): FunctionNodeInfo {
+    const lineAndCol = func.getSourceFile()
+        .getLineAndCharacterOfPosition(func.getStart());
+
+    return {
+        column: lineAndCol.character + 1,
+        line: lineAndCol.line + 1,
+        name: getFunctionNodeName(func),
+    };
+}
+
+function getFunctionNodeName(func: FunctionNode): string {
+    if (ts.isArrowFunction(func)) {
+        return ""; // TODO figure out a decent name for this
+    }
+
+    if (ts.isFunctionDeclaration(func)) {
+        return func.getChildren()[1].getText();
+    }
+
+    if (ts.isFunctionExpression(func)) {
+        const maybeIdentifier = func.getChildren()[1];
+        if (ts.isIdentifier(maybeIdentifier)) {
+            return maybeIdentifier.getText();
+        } else {
+            return ""; // TODO figure out a decent name for this
+        }
+    }
+
+    if (ts.isMethodDeclaration(func)) {
+        return func.getChildren()[0].getText();
+    }
+
+    // unreachable
+
+    console.error("Unreachable code branch reached.");
+    console.error("FunctionNode is not of a recognised type.");
+    console.trace();
+
+    return "";
+}
+
 
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     if (ts.isBreakOrContinueStatement(node)) {
