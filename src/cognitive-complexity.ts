@@ -6,6 +6,7 @@ import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
 export function fileCost(file: ts.SourceFile): FileOutput {
+    // TODO can I just call nodeCost(file)
     const childCosts = file.getChildren()
         .map(nodeCost);
 
@@ -24,7 +25,6 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 }
 
 function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
-
     // include the sum of scores for all child nodes
     let score = 0;
     const [same, below] = getChildrenByDepth(node);
@@ -36,8 +36,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
 
     for (const child of same) {
         const cost = nodeCost(child, depth);
+        score += cost.score;
         if (isFunctionNode(child)) {
-            score += cost.score;
             inner.push({
                 ...getFunctionNodeInfo(child),
                 ...cost,
@@ -47,8 +47,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
 
     for (const child of below) {
         const cost = nodeCost(child, depth + 1);
+        score += cost.score;
         if (isFunctionNode(child)) {
-            score += cost.score;
             inner.push({
                 ...getFunctionNodeInfo(child),
                 ...cost,
