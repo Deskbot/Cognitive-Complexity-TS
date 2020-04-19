@@ -28,8 +28,8 @@ export function getFunctionNodeInfo(func: FunctionNode): FunctionNodeInfo {
         .getLineAndCharacterOfPosition(func.getStart());
 
     return {
-        column: lineAndCol.character,
-        line: lineAndCol.line,
+        column: lineAndCol.character + 1,
+        line: lineAndCol.line + 1,
         name: func.getFullText(),
     };
 }
