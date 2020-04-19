@@ -23,8 +23,6 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-// some child nodes are at the same depth as this node
-// some child nodes are at a depth of 1 greater
 // functions declared inside is the concat of:
 // all functions declared directly under a non function child node
 // all child nodes that are functions
@@ -33,13 +31,20 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 
 // function for node cost (need depth, need node)
 function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
-    const childCosts = node.getChildren()
-        .map(nodeCost);
 
     // include the sum of scores for all child nodes
-    let score = childCosts
-        .map(cost => cost.score)
-        .reduce(sum, 0);
+    let score = 0;
+    const [same, below] = getChildrenByDepth(node);
+
+    for (const childNode of same) {
+        const childCost = nodeCost(childNode, depth);
+        score += childCost.score;
+    }
+
+    for (const childNode of below) {
+        const childCost = nodeCost(childNode, depth + 1);
+        score += childCost.score;
+    }
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
     // BinaryExpressions have 1 child that is the operator
@@ -76,8 +81,6 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     )) {
         score += depth;
     }
-
-    const [same, below] = getChildrenByDepth(node);
 
     const inner = [] as FunctionOutput[];
 
