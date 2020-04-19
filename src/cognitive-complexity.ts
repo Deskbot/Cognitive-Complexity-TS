@@ -25,12 +25,11 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 }
 
 function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
-    // include the sum of scores for all child nodes
     let score = 0;
 
-    // inner functions of a node are defined as the concat of:
+    // The inner functions of a node is defined as the concat of:
+    // * all child nodes that are functions/namespaces/classes
     // * all functions declared directly under a non function child node
-    // * all child nodes that are functions
     const inner = [] as FunctionOutput[];
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
@@ -53,8 +52,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         }
     }
 
-    // aggregate score of this node's children
-    // and aggregate the inner functions of this node's children
+    // Aggregate score of this node's children.
+    // Aggregate the inner functions of this node's children.
     const [same, below] = getChildrenByDepth(node);
     aggregateScoreAndInnerForChildren(same, depth);
     aggregateScoreAndInnerForChildren(below, depth + 1);
