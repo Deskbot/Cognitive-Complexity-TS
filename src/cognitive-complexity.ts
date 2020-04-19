@@ -1,7 +1,8 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel } from "./node";
+import { isFunctionNode, isBreakOrContinueToLabel } from "./node-kind";
+import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
 export function fileCost(file: ts.SourceFile): FileOutput {
@@ -40,6 +41,15 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         .map(cost => cost.score)
         .reduce(sum, 0);
 
+    // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
+    // BinaryExpressions have 1 child that is the operator
+    // BinaryExpressions have their last child as a sub expression
+    // can just consume the entire sequence of the same operator
+    // then continue traversing from the next different operator in the sequence,
+    // which presumably will be given another inherent increment by the next call to calcNodeCost
+    // should redundant brackets be ignored? or do they end a sequence?
+    // probably the latter, which would also be easier
+
     // certain langauge features carry and inherent cost
     if (ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
@@ -66,6 +76,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     )) {
         score += depth;
     }
+
+    const [same, below] = getChildrenByDepth(node);
 
     const inner = [] as FunctionOutput[];
 
