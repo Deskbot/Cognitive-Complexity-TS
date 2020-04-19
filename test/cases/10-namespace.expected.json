@@ -1,6 +1,6 @@
 {
     "10-namespace.ts": {
-        "score": 8,
+        "score": 1,
         "inner": [
             {
                 "name": "N",
@@ -12,7 +12,7 @@
                 "name": "M",
                 "line": 5,
                 "column": 1,
-                "score": 4
+                "score": 1
             }
         ]
     }

@@ -1,5 +1,4 @@
 import * as ts from "typescript";
-import { FunctionNode } from "./node-inspection";
 
 export type FuncNode = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration | ts.MethodDeclaration;
 

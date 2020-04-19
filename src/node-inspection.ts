@@ -50,6 +50,16 @@ function getFunctionNodeName(func: FunctionNode): string {
     return "";
 }
 
+export function getModuleDeclarationInfo(node: ts.ModuleDeclaration): FunctionNodeInfo {
+    const lineAndCol = node.getSourceFile()
+        .getLineAndCharacterOfPosition(node.getStart());
+
+    return {
+        column: lineAndCol.character + 1,
+        line: lineAndCol.line + 1,
+        name: node.getChildren()[1].getText(),
+    };
+}
 
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     if (ts.isBreakOrContinueStatement(node)) {
