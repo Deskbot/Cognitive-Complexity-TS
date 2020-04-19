@@ -9,6 +9,7 @@ import { toPromise } from "../src/util";
 import { ProgramOutput } from "../src/types"
 
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
+const programPath = path.normalize(__dirname + "/../../src/main");
 
 main();
 
@@ -94,7 +95,7 @@ async function main() {
 
 function runCase(caseFilePath: string, outputPath: string): Promise<ProgramOutput> {
     return new Promise((resolve, reject) => {
-        const procUnderTest = cp.spawn("npm", ["run", "start", "--", caseFilePath]);
+        const procUnderTest = cp.spawn("node", ["-r", "source-map-support/register", programPath, caseFilePath]);
         const outputStream = fs.createWriteStream(outputPath);
         procUnderTest.stdout.pipe(outputStream);
         procUnderTest.stderr.pipe(process.stdout);
