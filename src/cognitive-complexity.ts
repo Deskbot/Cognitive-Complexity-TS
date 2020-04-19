@@ -56,6 +56,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
             } else if (ts.isModuleDeclaration(child)) {
                 const name = getModuleDeclarationName(child);
                 addInner(name);
+            } else {
+                inner.push(...childCost.inner);
             }
         }
     }
