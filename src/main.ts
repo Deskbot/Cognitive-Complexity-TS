@@ -47,5 +47,13 @@ function printCognitiveComplexityJson(filePaths: string[]) {
         resultForAllFiles[fileName] = resultForFile;
     }
 
-    console.log(js_beautify(JSON.stringify(resultForAllFiles)));
+    const outputStructure = JSON.stringify(resultForAllFiles, (key, value) => {
+        // don't show empty inner
+        if (key === "inner" && value.length === 0) {
+            return undefined;
+        }
+
+        return value;
+    });
+    console.log(js_beautify(outputStructure));
 }
