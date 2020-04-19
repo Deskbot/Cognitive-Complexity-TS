@@ -33,29 +33,32 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     const inner = [] as FunctionOutput[];
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
-        for (const child of nodesInsideNode) {
-            const cost = nodeCost(child, localDepth);
-            score += cost.score;
 
-            if (isFunctionNode(child)) {
+        for (const child of nodesInsideNode) {
+            const childCost = nodeCost(child, localDepth);
+
+            function poop(name: string) {
                 inner.push({
                     ...getColumnAndLine(child),
-                    ...cost,
-                    name: getFunctionNodeName(child),
-                });
-            } else if (ts.isClassDeclaration(child)) {
-                inner.push({
-                    ...getColumnAndLine(child),
-                    ...cost,
-                    name: getClassDeclarationName(child),
-                });
-            } else if (ts.isModuleDeclaration(child)) {
-                inner.push({
-                    ...getColumnAndLine(child),
-                    ...cost,
-                    name: getModuleDeclarationName(child),
+                    ...childCost,
+                    name,
                 });
             }
+
+            let name: string;
+
+            if (isFunctionNode(child)) {
+                name = getFunctionNodeName(child);
+                poop(name);
+            } else if (ts.isClassDeclaration(child)) {
+                name = getClassDeclarationName(child);
+                poop(name);
+            } else if (ts.isModuleDeclaration(child)) {
+                name = getModuleDeclarationName(child);
+                poop(name);
+            }
+
+            score += childCost.score;
         }
     }
 
