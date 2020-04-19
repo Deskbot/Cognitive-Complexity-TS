@@ -27,14 +27,13 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
     // include the sum of scores for all child nodes
     let score = 0;
-    const [same, below] = getChildrenByDepth(node);
 
     // inner functions of a node are defined as the concat of:
     // * all functions declared directly under a non function child node
     // * all child nodes that are functions
     const inner = [] as FunctionOutput[];
 
-    function calcScoreAndInnerForNodesAtDepth(nodesInsideNode: ts.Node[], localDepth: number) {
+    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {
             const cost = nodeCost(child, localDepth);
             score += cost.score;
@@ -54,8 +53,11 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         }
     }
 
-    calcScoreAndInnerForNodesAtDepth(same, depth);
-    calcScoreAndInnerForNodesAtDepth(below, depth + 1);
+    // aggregate score of this node's children
+    // and aggregate the inner functions of this node's children
+    const [same, below] = getChildrenByDepth(node);
+    aggregateScoreAndInnerForChildren(same, depth);
+    aggregateScoreAndInnerForChildren(below, depth + 1);
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
     // BinaryExpressions have 1 child that is the operator
