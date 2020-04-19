@@ -1,7 +1,7 @@
 import * as ts from "typescript"
-import { FileOutput, FunctionOutput } from "./types";
+import { FileOutput, FunctionOutput, getFunctionNodeInfo } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel } from "./node-kind";
+import { isFunctionNode, isBreakOrContinueToLabel, FunctionNode } from "./node-kind";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -23,27 +23,37 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-// functions declared inside is the concat of:
-// all functions declared directly under a non function child node
-// all child nodes that are functions
-// return score
-// return all functions declared inside
-
-// function for node cost (need depth, need node)
 function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
 
     // include the sum of scores for all child nodes
     let score = 0;
     const [same, below] = getChildrenByDepth(node);
 
-    for (const childNode of same) {
-        const childCost = nodeCost(childNode, depth);
-        score += childCost.score;
+    // functions declared inside is the concat of:
+    // all functions declared directly under a non function child node
+    // all child nodes that are functions
+    const inner = [] as FunctionOutput[];
+
+    for (const child of same) {
+        const cost = nodeCost(child, depth);
+        if (isFunctionNode(child)) {
+            score += cost.score;
+            inner.push({
+                ...getFunctionNodeInfo(child),
+                ...cost,
+            });
+        }
     }
 
-    for (const childNode of below) {
-        const childCost = nodeCost(childNode, depth + 1);
-        score += childCost.score;
+    for (const child of below) {
+        const cost = nodeCost(child, depth + 1);
+        if (isFunctionNode(child)) {
+            score += cost.score;
+            inner.push({
+                ...getFunctionNodeInfo(child),
+                ...cost,
+            });
+        }
     }
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
@@ -54,6 +64,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     // which presumably will be given another inherent increment by the next call to calcNodeCost
     // should redundant brackets be ignored? or do they end a sequence?
     // probably the latter, which would also be easier
+
+    // TODO check if ConstructorDeclaration and AccessorDeclaration (get,set) need to be added separately
 
     // certain langauge features carry and inherent cost
     if (ts.isCatchClause(node)
@@ -80,14 +92,6 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         || ts.isWhileStatement(node)
     )) {
         score += depth;
-    }
-
-    const inner = [] as FunctionOutput[];
-
-    if (isFunctionNode(node)) {
-
-    } else {
-
     }
 
     return {
