@@ -1,15 +1,82 @@
-// function for file cost returns FileOutput
-// score is sum of score for all child nodes
-// inner is concat of all functions declared directly under every child node
+import * as ts from "typescript"
+import { FileOutput, FunctionOutput } from "./types";
+import { sum } from "./util";
+import { isFunctionNode, isBreakOrContinueToLabel } from "./node";
 
-// function for node cost (need depth, need node)
-// score is sum of scores for all child nodes
+// function for file cost returns FileOutput
+export function fileCost(file: ts.SourceFile): FileOutput {
+    const childCosts = file.getChildren()
+        .map(nodeCost);
+
+    // score is sum of score for all child nodes
+    const score = childCosts
+        .map(childNode => childNode.score)
+        .reduce(sum, 0);
+
+    // inner is concat of all functions declared directly under every child node
+    const inner = childCosts.map(childNode => childNode.inner).flat();
+
+    return {
+        inner,
+        score,
+    };
+}
+
 // some child nodes are at the same depth as this node
 // some child nodes are at a depth of 1 greater
-// plus possible inherent cost
-// plus possible nesting cost for current depth
 // functions declared inside is the concat of:
-    // all functions declared directly under a non function child node
-    // all child nodes that are functions
+// all functions declared directly under a non function child node
+// all child nodes that are functions
 // return score
 // return all functions declared inside
+
+// function for node cost (need depth, need node)
+function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
+    const childCosts = node.getChildren()
+        .map(nodeCost);
+
+    // include the sum of scores for all child nodes
+    let score = childCosts
+        .map(cost => cost.score)
+        .reduce(sum, 0);
+
+    // certain langauge features carry and inherent cost
+    if (ts.isCatchClause(node)
+        || ts.isConditionalExpression(node)
+        || ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isForStatement(node)
+        || ts.isIfStatement(node)
+        || ts.isSwitchStatement(node)
+        || ts.isWhileStatement(node)
+        || isBreakOrContinueToLabel(node)
+    ) {
+        score += 1;
+    }
+
+    // increment for nesting level
+    if (depth > 0 && (
+        ts.isConditionalExpression(node)
+        || ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isForStatement(node)
+        || ts.isIfStatement(node)
+        || ts.isSwitchStatement(node)
+        || ts.isWhileStatement(node)
+    )) {
+        score += depth;
+    }
+
+    const inner = [] as FunctionOutput[];
+
+    if (isFunctionNode(node)) {
+
+    } else {
+
+    }
+
+    return {
+        inner,
+        score,
+    };
+}

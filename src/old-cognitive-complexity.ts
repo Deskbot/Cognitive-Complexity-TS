@@ -1,8 +1,9 @@
+// TODO delete me
+
 import * as ts from "typescript";
 import { FunctionOutput, FileOutput } from "./types";
 import { throwingIterator } from "./util";
-
-type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
+import { isBreakOrContinueToLabel, isForLikeStatement, isTopLevel, ForLikeStatement, isSyntaxList } from "./node";
 
 export function calcFileCost(file: ts.SourceFile): FileOutput {
     return new FileCost(file);
@@ -350,51 +351,4 @@ class WhileStatementCost extends AbstractNodeCost<ts.WhileStatement> {
         this.include(condition, depth);
         this.include(loopCode, depth + 1);
     }
-}
-
-function isBreakOrContinueToLabel(node: ts.Node): boolean {
-    if (ts.isBreakOrContinueStatement(node)) {
-        for (const child of node.getChildren()) {
-            if (ts.isIdentifier(child)) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
-    return ts.isForInStatement(node)
-        || ts.isForOfStatement(node)
-        || ts.isForStatement(node);
-}
-
-function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
-    return node.kind === ts.SyntaxKind.SyntaxList;
-}
-
-function isTopLevel(node: ts.Node): boolean {
-    const parent = node.parent;
-
-    // TODO check what the parent of a ts.SourceFile is
-    if (parent === undefined) {
-        console.trace();
-        return true;
-    }
-
-    if (ts.isSourceFile(parent)) {
-        return true;
-    }
-
-    let highestNonBlockAncestor = parent;
-    while (ts.isBlock(highestNonBlockAncestor)) {
-        highestNonBlockAncestor = highestNonBlockAncestor.parent;
-    }
-
-    if (highestNonBlockAncestor === parent) {
-        return false;
-    }
-
-    return isTopLevel(highestNonBlockAncestor);
 }

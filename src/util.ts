@@ -1,5 +1,9 @@
 class EndOfIteratorError extends Error {}
 
+export function sum(a: number, b: number): number {
+    return a + b;
+}
+
 export function throwingIterator<T>(iter: Iterator<T>): () => T {
     return () => {
         const { value, done } = iter.next();
