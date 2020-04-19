@@ -37,25 +37,22 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         for (const child of nodesInsideNode) {
             const childCost = nodeCost(child, localDepth);
 
-            function poop(name: string) {
+            let name: string | undefined;
+
+            if (isFunctionNode(child)) {
+                name = getFunctionNodeName(child);
+            } else if (ts.isClassDeclaration(child)) {
+                name = getClassDeclarationName(child);
+            } else if (ts.isModuleDeclaration(child)) {
+                name = getModuleDeclarationName(child);
+            }
+
+            if (name !== undefined) {
                 inner.push({
                     ...getColumnAndLine(child),
                     ...childCost,
                     name,
                 });
-            }
-
-            let name: string;
-
-            if (isFunctionNode(child)) {
-                name = getFunctionNodeName(child);
-                poop(name);
-            } else if (ts.isClassDeclaration(child)) {
-                name = getClassDeclarationName(child);
-                poop(name);
-            } else if (ts.isModuleDeclaration(child)) {
-                name = getModuleDeclarationName(child);
-                poop(name);
             }
 
             score += childCost.score;
