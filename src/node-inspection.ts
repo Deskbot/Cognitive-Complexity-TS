@@ -8,6 +8,17 @@ export type FunctionNode = ts.ArrowFunction
     | ts.FunctionExpression
     | ts.MethodDeclaration;
 
+export function getClassDeclarationInfo(node: ts.ClassDeclaration): FunctionNodeInfo {
+    const lineAndCol = node.getSourceFile()
+        .getLineAndCharacterOfPosition(node.getStart());
+
+    return {
+        column: lineAndCol.character + 1,
+        line: lineAndCol.line + 1,
+        name: node.getChildren()[1].getText(),
+    };
+}
+
 export function getFunctionNodeInfo(func: FunctionNode): FunctionNodeInfo {
     const lineAndCol = func.getSourceFile()
         .getLineAndCharacterOfPosition(func.getStart());
