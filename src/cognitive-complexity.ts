@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getFunctionNodeInfo, getModuleDeclarationInfo, getClassDeclarationInfo } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -39,18 +39,21 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
 
             if (isFunctionNode(child)) {
                 inner.push({
-                    ...getFunctionNodeInfo(child),
+                    ...getColumnAndLine(child),
                     ...cost,
+                    name: getFunctionNodeName(child),
                 });
             } else if (ts.isClassDeclaration(child)) {
                 inner.push({
-                    ...getClassDeclarationInfo(child),
+                    ...getColumnAndLine(child),
                     ...cost,
+                    name: getClassDeclarationName(child),
                 });
             } else if (ts.isModuleDeclaration(child)) {
                 inner.push({
-                    ...getModuleDeclarationInfo(child),
+                    ...getColumnAndLine(child),
                     ...cost,
+                    name: getModuleDeclarationName(child),
                 });
             }
         }

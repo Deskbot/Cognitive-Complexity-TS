@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { FunctionNodeInfo } from "./types";
+import { FunctionNodeInfo, ColumnAndLine } from "./types";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
@@ -8,29 +8,21 @@ export type FunctionNode = ts.ArrowFunction
     | ts.FunctionExpression
     | ts.MethodDeclaration;
 
-export function getClassDeclarationInfo(node: ts.ClassDeclaration): FunctionNodeInfo {
+export function getClassDeclarationName(node: ts.ClassDeclaration): string {
+    return node.getChildren()[1].getText();
+}
+
+export function getColumnAndLine(node: ts.Node): ColumnAndLine {
     const lineAndCol = node.getSourceFile()
         .getLineAndCharacterOfPosition(node.getStart());
 
     return {
         column: lineAndCol.character + 1,
         line: lineAndCol.line + 1,
-        name: node.getChildren()[1].getText(),
     };
 }
 
-export function getFunctionNodeInfo(func: FunctionNode): FunctionNodeInfo {
-    const lineAndCol = func.getSourceFile()
-        .getLineAndCharacterOfPosition(func.getStart());
-
-    return {
-        column: lineAndCol.character + 1,
-        line: lineAndCol.line + 1,
-        name: getFunctionNodeName(func),
-    };
-}
-
-function getFunctionNodeName(func: FunctionNode): string {
+export function getFunctionNodeName(func: FunctionNode): string {
     if (ts.isArrowFunction(func)) {
         return ""; // TODO figure out a decent name for this
     }
@@ -61,15 +53,8 @@ function getFunctionNodeName(func: FunctionNode): string {
     return "";
 }
 
-export function getModuleDeclarationInfo(node: ts.ModuleDeclaration): FunctionNodeInfo {
-    const lineAndCol = node.getSourceFile()
-        .getLineAndCharacterOfPosition(node.getStart());
-
-    return {
-        column: lineAndCol.character + 1,
-        line: lineAndCol.line + 1,
-        name: node.getChildren()[1].getText(),
-    };
+export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
+    return node.getChildren()[1].getText();
 }
 
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
