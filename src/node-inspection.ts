@@ -100,7 +100,10 @@ export function isTopLevel(node: ts.Node): boolean {
     }
 
     let highestNonBlockAncestor = parent;
-    while (ts.isBlock(highestNonBlockAncestor)) {
+    while (ts.isBlock(highestNonBlockAncestor)
+        || ts.isModuleDeclaration(highestNonBlockAncestor)
+        || ts.isClassDeclaration(highestNonBlockAncestor)
+    ) {
         highestNonBlockAncestor = highestNonBlockAncestor.parent;
     }
 
