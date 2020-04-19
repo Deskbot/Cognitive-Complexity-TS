@@ -36,6 +36,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         for (const child of nodesInsideNode) {
             const childCost = nodeCost(child, localDepth);
 
+            score += childCost.score;
+
             function addInner(name: string) {
                 inner.push({
                     ...getColumnAndLine(child),
@@ -55,8 +57,6 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
                 const name = getModuleDeclarationName(child);
                 addInner(name);
             }
-
-            score += childCost.score;
         }
     }
 
