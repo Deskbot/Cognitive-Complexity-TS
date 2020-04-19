@@ -34,6 +34,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     // all child nodes that are functions
     const inner = [] as FunctionOutput[];
 
+    // TODO do this for classes
+    // TODO functionise this and parameterise depth
     for (const child of same) {
         const cost = nodeCost(child, depth);
         score += cost.score;

@@ -8,6 +8,7 @@ export interface FunctionNodeInfo {
     name: string;
 }
 
+// TOOD rename this because it includes classes and namespaces
 export interface FunctionOutput extends FunctionNodeInfo {
     score: number;
     inner: FunctionOutput[];
