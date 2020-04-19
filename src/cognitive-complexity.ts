@@ -33,11 +33,11 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     const inner = [] as FunctionOutput[];
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
-
         for (const child of nodesInsideNode) {
             const childCost = nodeCost(child, localDepth);
 
-            let name: string | undefined;
+            let name: string;
+            let addInner = true;
 
             if (isFunctionNode(child)) {
                 name = getFunctionNodeName(child);
@@ -45,9 +45,13 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
                 name = getClassDeclarationName(child);
             } else if (ts.isModuleDeclaration(child)) {
                 name = getModuleDeclarationName(child);
+            } else {
+                // not a function/class/namespace ∴ it's not an inner scope we want to output
+                addInner = false;
+                name = ""; // make TypeScript happy by ensuring this is assigned
             }
 
-            if (name !== undefined) {
+            if (addInner) {
                 inner.push({
                     ...getColumnAndLine(child),
                     ...childCost,
