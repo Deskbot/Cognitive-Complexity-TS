@@ -29,44 +29,33 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     let score = 0;
     const [same, below] = getChildrenByDepth(node);
 
-    // functions declared inside is the concat of:
-    // all functions declared directly under a non function child node
-    // all child nodes that are functions
+    // inner functions of a node are defined as the concat of:
+    // * all functions declared directly under a non function child node
+    // * all child nodes that are functions
     const inner = [] as FunctionOutput[];
 
-    // TODO do this for classes
-    // TODO functionise this and parameterise depth
-    for (const child of same) {
-        const cost = nodeCost(child, depth);
-        score += cost.score;
-        if (isFunctionNode(child)) {
-            inner.push({
-                ...getFunctionNodeInfo(child),
-                ...cost,
-            });
-        } else if (ts.isModuleDeclaration(child)) {
-            inner.push({
-                ...getModuleDeclarationInfo(child),
-                ...cost,
-            });
+    function calcScoreAndInnerForNodesAtDepth(nodesInsideNode: ts.Node[], localDepth: number) {
+        for (const child of nodesInsideNode) {
+            const cost = nodeCost(child, localDepth);
+            score += cost.score;
+
+            // TODO do this for classes
+            if (isFunctionNode(child)) {
+                inner.push({
+                    ...getFunctionNodeInfo(child),
+                    ...cost,
+                });
+            } else if (ts.isModuleDeclaration(child)) {
+                inner.push({
+                    ...getModuleDeclarationInfo(child),
+                    ...cost,
+                });
+            }
         }
     }
 
-    for (const child of below) {
-        const cost = nodeCost(child, depth + 1);
-        score += cost.score;
-        if (isFunctionNode(child)) {
-            inner.push({
-                ...getFunctionNodeInfo(child),
-                ...cost,
-            });
-        } else if (ts.isModuleDeclaration(child)) {
-            inner.push({
-                ...getModuleDeclarationInfo(child),
-                ...cost,
-            });
-        }
-    }
+    calcScoreAndInnerForNodesAtDepth(same, depth);
+    calcScoreAndInnerForNodesAtDepth(below, depth + 1);
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
     // BinaryExpressions have 1 child that is the operator
