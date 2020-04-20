@@ -85,31 +85,3 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
 export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
-
-export function isTopLevel(node: ts.Node): boolean {
-    const parent = node.parent;
-
-    // TODO check what the parent of a ts.SourceFile is
-    if (parent === undefined) {
-        console.trace();
-        return true;
-    }
-
-    if (ts.isSourceFile(parent)) {
-        return true;
-    }
-
-    let highestNonBlockAncestor = parent;
-    while (ts.isBlock(highestNonBlockAncestor)
-        || ts.isModuleDeclaration(highestNonBlockAncestor)
-        || ts.isClassDeclaration(highestNonBlockAncestor)
-    ) {
-        highestNonBlockAncestor = highestNonBlockAncestor.parent;
-    }
-
-    if (highestNonBlockAncestor === parent) {
-        return false;
-    }
-
-    return isTopLevel(highestNonBlockAncestor);
-}

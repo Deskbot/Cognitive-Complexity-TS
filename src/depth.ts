@@ -3,7 +3,7 @@
  */
 
 import * as ts from "typescript";
-import { isForLikeStatement, isTopLevel, ForLikeStatement, isSyntaxList } from "./node-inspection";
+import { isForLikeStatement, ForLikeStatement, isSyntaxList } from "./node-inspection";
 import { throwingIterator } from "./util";
 
 type DepthOfChildren = [ts.Node[], ts.Node[]];
@@ -165,6 +165,10 @@ function functionDeclaration(node: ts.FunctionDeclaration): DepthOfChildren {
         }
     }
 
+    if (isTopLevel(node)) {
+        same.push(...below);
+    }
+
     return [same, below];
 }
 
@@ -172,6 +176,10 @@ function functionExpression(node: ts.FunctionExpression): DepthOfChildren {
     const children = node.getChildren();
     const functionBody = children.slice(-1);
     const functionDecl = children.slice(0, -1)[0];
+
+    if (isTopLevel(node)) {
+        [[...functionBody, functionDecl], []];
+    }
 
     return [functionBody, [functionDecl]];
 }
