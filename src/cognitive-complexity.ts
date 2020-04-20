@@ -38,27 +38,26 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
 
             score += childCost.score;
 
-            function addInner(name: string) {
-                inner.push({
-                    ...getColumnAndLine(child),
-                    ...childCost,
-                    name,
-                });
-            }
+            let name: string;
 
             // a function/class/namespace is part of the inner scope we want to output
             if (isFunctionNode(child)) {
-                const name = getFunctionNodeName(child);
-                addInner(name);
+                name = getFunctionNodeName(child);
             } else if (ts.isClassDeclaration(child)) {
-                const name = getClassDeclarationName(child);
-                addInner(name);
+                name = getClassDeclarationName(child);
             } else if (ts.isModuleDeclaration(child)) {
-                const name = getModuleDeclarationName(child);
-                addInner(name);
+                name = getModuleDeclarationName(child);
             } else {
+                // the child's inner is all part of this node's direct inner scope
                 inner.push(...childCost.inner);
+                continue;
             }
+
+            inner.push({
+                ...getColumnAndLine(child),
+                ...childCost,
+                name,
+            });
         }
     }
 
