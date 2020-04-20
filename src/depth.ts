@@ -149,27 +149,16 @@ function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
 }
 
 function functionDeclaration(node: ts.FunctionDeclaration, isTopLevel: boolean): DepthOfChildren {
-    const same = [];
-    const below = [];
+    const children = node.getChildren();
 
-    const nextChild = throwingIterator(node.getChildren().values());
-
-    while (true) {
-        const child = nextChild();
-
-        if (isSyntaxList(child)) {
-            same.push(child);
-        } else if (ts.isBlock(child)) {
-            below.push(child);
-            break;
-        }
-    }
+    const params = children[3];
+    const body = children[children.length - 1];
 
     if (isTopLevel) {
-        same.push(...below);
+        return [[params, body], []];
+    } else {
+        return [[params], [body]];
     }
-
-    return [same, below];
 }
 
 function functionExpression(node: ts.FunctionExpression, isTopLevel: boolean): DepthOfChildren {

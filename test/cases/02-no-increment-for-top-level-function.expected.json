@@ -24,7 +24,7 @@
                         "name": "f",
                         "score": 1,
                         "line": 10,
-                        "column": 4
+                        "column": 5
                     }
                 ]
             },
@@ -38,13 +38,13 @@
                         "name": "f",
                         "score": 1,
                         "line": 17,
-                        "column": 4
+                        "column": 5
                     },
                     {
                         "name": "g",
                         "score": 1,
                         "line": 22,
-                        "column": 4
+                        "column": 5
                     }
                 ]
             }

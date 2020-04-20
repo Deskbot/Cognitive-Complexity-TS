@@ -8,7 +8,7 @@ import { getChildrenByDepth } from "./depth";
 export function fileCost(file: ts.SourceFile): FileOutput {
     // TODO can I just call nodeCost(file)
     const childCosts = file.getChildren()
-        .map(nodeCost);
+        .map(elem => nodeCost(elem)); // using an arrow so it shows up in call hierarchy
 
     // score is sum of score for all child nodes
     const score = childCosts
