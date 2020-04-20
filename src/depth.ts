@@ -3,7 +3,7 @@
  */
 
 import * as ts from "typescript";
-import { isForLikeStatement, ForLikeStatement, isSyntaxList } from "./node-inspection";
+import { isForLikeStatement, ForLikeStatement, isSyntaxList, isFunctionNode } from "./node-inspection";
 import { throwingIterator } from "./util";
 
 type DepthOfChildren = [ts.Node[], ts.Node[]];
@@ -12,9 +12,9 @@ type DepthOfChildren = [ts.Node[], ts.Node[]];
  * @param node The node whose children to categorise by depth
  * @returns a tuple of [children and the same depth, children at one level below]
  */
-export function getChildrenByDepth(node: ts.Node): DepthOfChildren {
+export function getChildrenByDepth(node: ts.Node, depth: number): DepthOfChildren {
     if (ts.isArrowFunction(node)) {
-        return arrowFunction(node);
+        return arrowFunction(node, depth === 0);
     } else if (ts.isCatchClause(node)) {
         return catchClause(node);
     } else if (ts.isConditionalExpression(node)) {
@@ -24,13 +24,13 @@ export function getChildrenByDepth(node: ts.Node): DepthOfChildren {
     } else if (isForLikeStatement(node)) {
         return forLikeStatement(node);
     } else if (ts.isFunctionDeclaration(node)) {
-        return functionDeclaration(node);
+        return functionDeclaration(node, depth === 0);
     } else if (ts.isFunctionExpression(node)) {
-        return functionExpression(node);
+        return functionExpression(node, depth === 0);
     } else if (ts.isIfStatement(node)) {
         return ifStatement(node);
     } else if (ts.isMethodDeclaration(node)) {
-        return methodDeclaration(node);
+        return methodDeclaration(node, depth === 0);
     } else if (ts.isSwitchStatement(node)) {
         return switchStatement(node);
     } else if (ts.isWhileStatement(node)) {
@@ -40,7 +40,7 @@ export function getChildrenByDepth(node: ts.Node): DepthOfChildren {
     }
 }
 
-function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
+function arrowFunction(node: ts.ArrowFunction, isTopLevel: boolean): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
@@ -55,7 +55,7 @@ function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
     // consume EqualsGreaterThanToken
     nextChild();
     // aggregate code inside arrow function
-    if (isTopLevel(node)) {
+    if (isTopLevel) {
         same.push(nextChild());
     } else {
         below.push(nextChild());
@@ -148,7 +148,7 @@ function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
     return [same, below];
 }
 
-function functionDeclaration(node: ts.FunctionDeclaration): DepthOfChildren {
+function functionDeclaration(node: ts.FunctionDeclaration, isTopLevel: boolean): DepthOfChildren {
     const same = [];
     const below = [];
 
@@ -165,19 +165,19 @@ function functionDeclaration(node: ts.FunctionDeclaration): DepthOfChildren {
         }
     }
 
-    if (isTopLevel(node)) {
+    if (isTopLevel) {
         same.push(...below);
     }
 
     return [same, below];
 }
 
-function functionExpression(node: ts.FunctionExpression): DepthOfChildren {
+function functionExpression(node: ts.FunctionExpression, isTopLevel: boolean): DepthOfChildren {
     const children = node.getChildren();
     const functionBody = children.slice(-1);
     const functionDecl = children.slice(0, -1)[0];
 
-    if (isTopLevel(node)) {
+    if (isTopLevel) {
         [[...functionBody, functionDecl], []];
     }
 
@@ -193,7 +193,7 @@ function ifStatement(node: ts.IfStatement): DepthOfChildren {
     return [[condition], [thenCode]];
 }
 
-function methodDeclaration(node: ts.MethodDeclaration): DepthOfChildren {
+function methodDeclaration(node: ts.MethodDeclaration, isTopLevel: boolean): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
@@ -202,7 +202,7 @@ function methodDeclaration(node: ts.MethodDeclaration): DepthOfChildren {
     while (true) {
         const child = nextChild();
         if (ts.isBlock(child)) {
-            if (isTopLevel(node)) {
+            if (isTopLevel) {
                 same.push(child);
             } else {
                 below.push(child);

@@ -63,7 +63,7 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
 
     // Aggregate score of this node's children.
     // Aggregate the inner functions of this node's children.
-    const [same, below] = getChildrenByDepth(node);
+    const [same, below] = getChildrenByDepth(node, depth);
     aggregateScoreAndInnerForChildren(same, depth);
     aggregateScoreAndInnerForChildren(below, depth + 1);
 
