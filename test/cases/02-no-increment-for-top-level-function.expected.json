@@ -12,7 +12,7 @@
                 "name": "g",
                 "score": 1,
                 "line": 5,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "N",
@@ -38,7 +38,7 @@
                         "name": "f",
                         "score": 1,
                         "line": 17,
-                        "column": 5
+                        "column": 9
                     },
                     {
                         "name": "g",
