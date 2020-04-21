@@ -1,6 +1,6 @@
 {
     "12-if-else.ts": {
-        "score": 8,
+        "score": 12,
         "inner": [
             {
                 "name": "f",
@@ -10,7 +10,7 @@
             },
             {
                 "name": "g",
-                "score": 7,
+                "score": 9,
                 "line": 8,
                 "column": 1
             }

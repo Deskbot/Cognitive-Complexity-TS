@@ -84,12 +84,21 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         || ts.isForInStatement(node)
         || ts.isForOfStatement(node)
         || ts.isForStatement(node)
-        || ts.isIfStatement(node)
         || ts.isSwitchStatement(node)
         || ts.isWhileStatement(node)
         || isBreakOrContinueToLabel(node)
     ) {
         score += 1;
+    }
+
+    if (ts.isIfStatement(node)) {
+        score += 1;
+
+        const containsElse = node.getChildren()
+            .find(child => child.kind === ts.SyntaxKind.ElseKeyword);
+        if (containsElse) {
+            score += 1;
+        }
     }
 
     // increment for nesting level
