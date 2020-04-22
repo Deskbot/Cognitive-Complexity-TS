@@ -4,6 +4,7 @@ export function sum(a: number, b: number): number {
     return a + b;
 }
 
+// TODO retire the need for this
 export function throwingIterator<T>(iter: Iterator<T>): () => T {
     return () => {
         const { value, done } = iter.next();
