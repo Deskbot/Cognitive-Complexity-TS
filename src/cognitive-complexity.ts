@@ -27,48 +27,6 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
     let score = 0;
 
-    // TODO use separate functions for score and inner
-
-    // The inner functions of a node is defined as the concat of:
-    // * all child nodes that are functions/namespaces/classes
-    // * all functions declared directly under a non function child node
-    const inner = [] as FunctionOutput[];
-
-    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
-        for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth);
-
-            score += childCost.score;
-
-            let name: string;
-
-            // a function/class/namespace is part of the inner scope we want to output
-            if (isFunctionNode(child)) {
-                name = getFunctionNodeName(child);
-            } else if (ts.isClassDeclaration(child)) {
-                name = getClassDeclarationName(child);
-            } else if (ts.isModuleDeclaration(child)) {
-                name = getModuleDeclarationName(child);
-            } else {
-                // the child's inner is all part of this node's direct inner scope
-                inner.push(...childCost.inner);
-                continue;
-            }
-
-            inner.push({
-                ...getColumnAndLine(child),
-                ...childCost,
-                name,
-            });
-        }
-    }
-
-    // Aggregate score of this node's children.
-    // Aggregate the inner functions of this node's children.
-    const [same, below] = getChildrenByDepth(node, depth);
-    aggregateScoreAndInnerForChildren(same, depth);
-    aggregateScoreAndInnerForChildren(below, depth + 1);
-
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
     // BinaryExpressions have 1 child that is the operator
     // BinaryExpressions have their last child as a sub expression
@@ -123,6 +81,48 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     )) {
         score += depth;
     }
+
+    // TODO use separate functions for score and inner
+
+    // The inner functions of a node is defined as the concat of:
+    // * all child nodes that are functions/namespaces/classes
+    // * all functions declared directly under a non function child node
+    const inner = [] as FunctionOutput[];
+
+    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
+        for (const child of nodesInsideNode) {
+            const childCost = nodeCost(child, localDepth);
+
+            score += childCost.score;
+
+            let name: string;
+
+            // a function/class/namespace is part of the inner scope we want to output
+            if (isFunctionNode(child)) {
+                name = getFunctionNodeName(child);
+            } else if (ts.isClassDeclaration(child)) {
+                name = getClassDeclarationName(child);
+            } else if (ts.isModuleDeclaration(child)) {
+                name = getModuleDeclarationName(child);
+            } else {
+                // the child's inner is all part of this node's direct inner scope
+                inner.push(...childCost.inner);
+                continue;
+            }
+
+            inner.push({
+                ...getColumnAndLine(child),
+                ...childCost,
+                name,
+            });
+        }
+    }
+
+    // Aggregate score of this node's children.
+    // Aggregate the inner functions of this node's children.
+    const [same, below] = getChildrenByDepth(node, depth);
+    aggregateScoreAndInnerForChildren(same, depth);
+    aggregateScoreAndInnerForChildren(below, depth + 1);
 
     return {
         inner,
