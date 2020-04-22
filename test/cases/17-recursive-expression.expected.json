@@ -1,0 +1,25 @@
+{
+    "07-recursion.ts": {
+        "score": 3,
+        "inner": [
+            {
+                "name": "i",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "j",
+                "score": 2,
+                "line": 5,
+                "column": 1
+            },
+            {
+                "name": "k",
+                "score": 0,
+                "line": 10,
+                "column": 1
+            }
+        ]
+    }
+}
