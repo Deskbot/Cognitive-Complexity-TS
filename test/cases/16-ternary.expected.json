@@ -1,6 +1,6 @@
 {
-    "12-if-else.ts": {
-        "score": 8,
+    "16-ternary.ts": {
+        "score": 17,
         "inner": [
             {
                 "name": "f",
