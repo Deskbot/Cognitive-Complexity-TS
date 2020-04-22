@@ -10,3 +10,15 @@ function g() {
 function h() {
     f();
 }
+
+class C {
+    i() {
+        this.i();
+    }
+}
+
+const D = {
+    j() {
+        j();
+    }
+};

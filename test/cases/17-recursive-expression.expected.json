@@ -1,6 +1,6 @@
 {
     "07-recursion.ts": {
-        "score": 3,
+        "score": 6,
         "inner": [
             {
                 "name": "i",
@@ -18,6 +18,24 @@
                 "name": "k",
                 "score": 0,
                 "line": 10,
+                "column": 1
+            },
+            {
+                "name": "l",
+                "score": 1,
+                "line": 14,
+                "column": 1
+            },
+            {
+                "name": "m",
+                "score": 2,
+                "line": 18,
+                "column": 1
+            },
+            {
+                "name": "n",
+                "score": 0,
+                "line": 23,
                 "column": 1
             }
         ]

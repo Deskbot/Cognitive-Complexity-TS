@@ -10,3 +10,16 @@ const j = () => {
 const k = () => {
     i();
 };
+
+const l = function() {
+    l();
+};
+
+const m = function() {
+    m();
+    m();
+};
+
+const n = function() {
+    i();
+};
