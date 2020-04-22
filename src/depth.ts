@@ -74,31 +74,13 @@ function catchClause(node: ts.CatchClause): DepthOfChildren {
 }
 
 function conditionalExpression(node: ts.ConditionalExpression): DepthOfChildren {
-    const same = [] as ts.Node[];
-    const below = [] as ts.Node[];
+    const children = node.getChildren();
 
-    let childNodesToAggregate = [] as ts.Node[];
+    const condition = children[0];
+    const thenCode = children[2];
+    const elseCode = children[4];
 
-    for (const child of node.getChildren()) {
-        if (ts.isToken(child) && child.kind === ts.SyntaxKind.QuestionToken) {
-            // aggregate condition
-            same.push(...childNodesToAggregate);
-            childNodesToAggregate = [];
-
-        } else if (ts.isToken(child) && child.kind === ts.SyntaxKind.ColonToken) {
-            // aggregate then
-            below.push(...childNodesToAggregate);
-            childNodesToAggregate = [];
-
-        } else {
-            childNodesToAggregate.push(child);
-        }
-    }
-
-    // aggregate else
-    below.push(node);
-
-    return [same, below];
+    return [[condition], [thenCode, elseCode]];
 }
 
 function doStatement(node: ts.DoStatement): DepthOfChildren {
