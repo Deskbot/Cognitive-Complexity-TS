@@ -22,3 +22,17 @@ const D = {
         j();
     }
 };
+
+const k = function l() {
+    l();
+}
+
+const m = function n() {
+    n();
+    n();
+}
+
+const o = function p() {
+    p();
+}
+
