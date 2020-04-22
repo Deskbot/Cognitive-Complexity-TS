@@ -9,13 +9,14 @@ function g() {
 }
 
 function h() {
-    const x = true
-        ? // depth 1
-            h() // +1 +1
-        : // depth 1
-            false // +1 +1
-            ? // depth 2
-                h() // +1 +2
-            : // depth 2
-                h(); // +1 +2
+    // depth 0
+    const x = true // +1 inherent +0 depth
+        ?
+            h() // +1 inherent
+        :
+            false // +1 inherent +1 depth
+            ?
+                h() // +1 inherent
+            :
+                h(); // +1 inherent
 }

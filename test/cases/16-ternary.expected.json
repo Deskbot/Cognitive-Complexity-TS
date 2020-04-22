@@ -1,6 +1,6 @@
 {
     "16-ternary.ts": {
-        "score": 17,
+        "score": 10,
         "inner": [
             {
                 "name": "f",
@@ -10,13 +10,13 @@
             },
             {
                 "name": "g",
-                "score": 5,
+                "score": 3,
                 "line": 5,
                 "column": 1
             },
             {
                 "name": "h",
-                "score": 11,
+                "score": 6,
                 "line": 11,
                 "column": 1
             }
