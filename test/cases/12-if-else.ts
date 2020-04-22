@@ -18,3 +18,22 @@ function g() {
         while (true); // +1 +1
     }
 }
+
+function h() {
+    if (true) {
+    }
+}
+
+
+function i() {
+    if (true) {
+    } else if (true) {
+    }
+}
+
+function j() {
+    if (true) {
+    } else {
+
+    }
+}

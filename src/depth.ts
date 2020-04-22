@@ -178,6 +178,17 @@ function ifStatement(node: ts.IfStatement): DepthOfChildren {
 
     const condition = children[2];
     const thenCode = children[4];
+    const elseCode = children[6];
+
+    if (elseCode) {
+        if (ts.isIfStatement(elseCode)) {
+            // an else if structure is on the same depth
+            return [[condition, elseCode], [thenCode]];
+        } else {
+            // the contents of a solo else are at one depth below
+            return [[condition], [thenCode, elseCode]];
+        }
+    }
 
     return [[condition], [thenCode]];
 }

@@ -27,6 +27,8 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
     let score = 0;
 
+    // TODO use separate functions for score and inner
+
     // The inner functions of a node is defined as the concat of:
     // * all child nodes that are functions/namespaces/classes
     // * all functions declared directly under a non function child node
@@ -91,13 +93,21 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
         score += 1;
     }
 
+    // An `if` may contain an else keyword followed by else code.
+    // An `else if` is just the else keyword followed by an if statement.
+    // Therefore this block is entered for both `if` and `else if`.
     if (ts.isIfStatement(node)) {
+        // increment for `if` and `else if`
         score += 1;
 
-        const containsElse = node.getChildren()
-            .find(child => child.kind === ts.SyntaxKind.ElseKeyword);
-        if (containsElse) {
-            score += 1;
+        // increment for solo else
+        const children = node.getChildren();
+        const elseIndex = children.findIndex(child => child.kind === ts.SyntaxKind.ElseKeyword);
+        if (elseIndex !== -1) {
+            const elseIf = ts.isIfStatement(children[elseIndex + 1]);
+            if (!elseIf) {
+                score += 1;
+            }
         }
     }
 
