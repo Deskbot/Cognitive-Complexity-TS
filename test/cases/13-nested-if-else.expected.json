@@ -1,10 +1,10 @@
 {
     "13-nested-if-else.ts": {
-        "score": 18,
+        "score": 19,
         "inner": [
             {
                 "name": "f",
-                "score": 6,
+                "score": 5,
                 "line": 1,
                 "column": 1
             },
