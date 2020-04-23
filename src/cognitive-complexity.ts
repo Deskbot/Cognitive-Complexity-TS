@@ -71,7 +71,8 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
 
     // increment for nesting level
     if (depth > 0 && (
-        ts.isConditionalExpression(node)
+        ts.isCatchClause(node)
+        || ts.isConditionalExpression(node)
         || ts.isForInStatement(node)
         || ts.isForOfStatement(node)
         || ts.isForStatement(node)
