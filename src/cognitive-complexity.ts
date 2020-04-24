@@ -80,7 +80,13 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
             || ts.isWhileStatement(node)
             || (
 
-            // todo add comment, and explain/test if () if ()
+            // increment for `if`, but not `else if`
+            // The parent of the `if` within an `else if`
+            // is the `if` the `else` belongs to.
+            // However `if (...) if (...)` is treated as false here
+            // even though technically there should be 2 increments.
+            // This quirky syntax produces the same score as using `&&`,
+            // so maybe it doesn't matter.
             ts.isIfStatement(node) && !ts.isIfStatement(node.parent)
             )
         ) {
