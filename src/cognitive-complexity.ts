@@ -33,8 +33,7 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 function nodeCost(
     node: ts.Node,
     depth = 0,
-    ancestorFuncs = [] as ReadonlyArray<string>,
-    variablesBeingDefined = [] as ReadonlyArray<string>,
+    ancestorFuncs = [] as ReadonlyArray<string>
 ): ScoreAndInner {
     let score = 0;
 
@@ -123,15 +122,15 @@ function nodeCost(
     const inner = [] as FunctionOutput[];
 
     // get the ancestors function names from the perspective of this node's children
-    const ancestorFuncsOfChildren = maybeAddNodeToAncestorFuncs(node, ancestorFuncs);
+    let ancestorFuncsOfChildren = maybeAddNodeToAncestorFuncs(node, ancestorFuncs);
 
     if (ts.isVariableDeclaration(node)) {
-        variablesBeingDefined = [...variablesBeingDefined, getVariableDeclarationName(node)];
+        ancestorFuncsOfChildren = [...ancestorFuncsOfChildren, getVariableDeclarationName(node)];
     }
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth, ancestorFuncsOfChildren, variablesBeingDefined);
+            const childCost = nodeCost(child, localDepth, ancestorFuncsOfChildren);
 
             score += childCost.score;
 
@@ -139,7 +138,7 @@ function nodeCost(
 
             // a function/class/namespace is part of the inner scope we want to output
             if (isFunctionNode(child)) {
-                const variableBeingDefined = variablesBeingDefined[variablesBeingDefined.length - 1];
+                const variableBeingDefined = ancestorFuncsOfChildren[ancestorFuncsOfChildren.length - 1];
                 name = getFunctionNodeName(child, variableBeingDefined);
             } else if (ts.isClassDeclaration(child)) {
                 name = getClassDeclarationName(child);
