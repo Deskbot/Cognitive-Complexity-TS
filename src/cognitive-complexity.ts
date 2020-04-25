@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, FunctionNode, getCalledFunctionName } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -24,7 +24,7 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-function nodeCost(node: ts.Node, depth = 0): ScoreAndInner {
+function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodes: FunctionNode[] = []): ScoreAndInner {
     let score = 0;
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
@@ -50,12 +50,20 @@ function nodeCost(node: ts.Node, depth = 0): ScoreAndInner {
         || isBreakOrContinueToLabel(node)
     ) {
         score += 1;
+    } else if (ts.isCallExpression(node)) {
+        const calledFunctionName = getCalledFunctionName(node);
+        for (const ancestor of ancestorFunctionNodes) {
+            if (getFunctionNodeName(ancestor) === calledFunctionName) {
+                score += 1;
+                break;
+            }
+        }
     }
 
     // An `if` may contain an else keyword followed by else code.
     // An `else if` is just the else keyword followed by an if statement.
     // Therefore this block is entered for both `if` and `else if`.
-    if (ts.isIfStatement(node)) {
+    else if (ts.isIfStatement(node)) {
         // increment for `if` and `else if`
         score += 1;
 
@@ -104,8 +112,12 @@ function nodeCost(node: ts.Node, depth = 0): ScoreAndInner {
     const inner = [] as FunctionOutput[];
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
+        const ancestorFunctionsOfChildren = isFunctionNode(node)
+            ? [...ancestorFunctionNodes, node]
+            : ancestorFunctionNodes;
+
         for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth);
+            const childCost = nodeCost(child, localDepth, ancestorFunctionsOfChildren);
 
             score += childCost.score;
 

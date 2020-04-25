@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { FunctionNodeInfo, ColumnAndLine } from "./types";
+import { ColumnAndLine } from "./types";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
@@ -7,6 +7,22 @@ export type FunctionNode = ts.ArrowFunction
     | ts.FunctionDeclaration
     | ts.FunctionExpression
     | ts.MethodDeclaration;
+
+export function getCalledFunctionName(node: ts.CallExpression): string {
+    const children = node.getChildren();
+    const calledExpression = children[0];
+
+    if (ts.isIdentifier(calledExpression)) {
+        return calledExpression.getText();
+    }
+
+    if (ts.isPropertyAccessExpression(calledExpression)) {
+        const identifier = children[children.length - 1];
+        return identifier.getText();
+    }
+
+    return "";
+}
 
 export function getClassDeclarationName(node: ts.ClassDeclaration): string {
     return node.getChildren()[1].getText();
