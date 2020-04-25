@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, maybeAddNodeToAncestorFuncs, getVariableDeclarationName } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getVariableDeclarationName } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -24,16 +24,10 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-/**
- *
- * @param node
- * @param depth
- * @param ancestorFuncs This array's values are treated as immutable.
- */
 function nodeCost(
     node: ts.Node,
     depth = 0,
-    ancestorFuncs = [] as ReadonlyArray<string>
+    namedAncestors = [] as ReadonlyArray<string>
 ): ScoreAndInner {
     let score = 0;
 
@@ -62,8 +56,8 @@ function nodeCost(
         score += 1;
     } else if (ts.isCallExpression(node)) {
         const calledFunctionName = getCalledFunctionName(node);
-        for (const ancestorName of ancestorFuncs) {
-            if (ancestorName === calledFunctionName) {
+        for (const name of namedAncestors) {
+            if (name === calledFunctionName) {
                 score += 1;
                 break;
             }
@@ -122,11 +116,11 @@ function nodeCost(
     const inner = [] as FunctionOutput[];
 
     // get the ancestors function names from the perspective of this node's children
-    const ancestorFuncsOfChildren = maybeAddNodeToAncestorFuncs(node, ancestorFuncs);
+    const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth, ancestorFuncsOfChildren);
+            const childCost = nodeCost(child, localDepth, namedAncestorsOfChildren);
 
             score += childCost.score;
 
@@ -134,7 +128,7 @@ function nodeCost(
 
             // a function/class/namespace is part of the inner scope we want to output
             if (isFunctionNode(child)) {
-                const variableBeingDefined = ancestorFuncsOfChildren[ancestorFuncsOfChildren.length - 1];
+                const variableBeingDefined = namedAncestorsOfChildren[namedAncestorsOfChildren.length - 1];
                 name = getFunctionNodeName(child, variableBeingDefined);
             } else if (ts.isClassDeclaration(child)) {
                 name = getClassDeclarationName(child);
@@ -164,4 +158,23 @@ function nodeCost(
         inner,
         score,
     };
+}
+
+export function maybeAddNodeToNamedAncestors(
+    node: ts.Node,
+    ancestorsOfNode: ReadonlyArray<string>
+): ReadonlyArray<string> {
+    if (ts.isVariableDeclaration(node)) {
+        return [...ancestorsOfNode, getVariableDeclarationName(node)];
+    }
+
+    if (isFunctionNode(node)) {
+        const nodeNameIfCallable = getFunctionNodeName(node);
+
+        if (nodeNameIfCallable !== undefined && nodeNameIfCallable.length !== 0) {
+            return [...ancestorsOfNode, nodeNameIfCallable];
+        }
+    }
+
+    return ancestorsOfNode;
 }

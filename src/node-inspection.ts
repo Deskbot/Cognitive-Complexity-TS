@@ -109,22 +109,3 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
 export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
-
-export function maybeAddNodeToAncestorFuncs(
-    node: ts.Node,
-    ancestorsOfNode: ReadonlyArray<string>
-): ReadonlyArray<string> {
-    if (ts.isVariableDeclaration(node)) {
-        return [...ancestorsOfNode, getVariableDeclarationName(node)];
-    }
-
-    if (isFunctionNode(node)) {
-        const nodeNameIfCallable = getFunctionNodeName(node);
-
-        if (nodeNameIfCallable !== undefined && nodeNameIfCallable.length !== 0) {
-            return [...ancestorsOfNode, nodeNameIfCallable];
-        }
-    }
-
-    return ancestorsOfNode;
-}
