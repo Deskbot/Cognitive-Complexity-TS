@@ -1,5 +1,9 @@
 class EndOfIteratorError extends Error {}
 
+export function* emptyIterator<T>(): IterableIterator<T> {
+    return;
+}
+
 export function sum(a: number, b: number): number {
     return a + b;
 }

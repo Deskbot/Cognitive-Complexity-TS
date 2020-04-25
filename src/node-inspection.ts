@@ -8,6 +8,20 @@ export type FunctionNode = ts.ArrowFunction
     | ts.FunctionExpression
     | ts.MethodDeclaration;
 
+export function getCallableName(node: ts.Node): string | undefined {
+    if (isFunctionNode(node)) {
+        const name = getFunctionNodeName(node);
+        if (name.length !== 0) {
+            return name;
+        }
+    } else if (ts.isVariableDeclaration(node)) {
+        const identifier = node.getChildAt(0).getText();
+        return identifier;
+    }
+
+    return undefined;
+}
+
 export function getCalledFunctionName(node: ts.CallExpression): string {
     const children = node.getChildren();
     const calledExpression = children[0];

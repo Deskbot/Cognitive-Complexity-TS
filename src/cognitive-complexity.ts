@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
-import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, FunctionNode, getCalledFunctionName } from "./node-inspection";
+import { sum, emptyIterator } from "./util";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, FunctionNode, getCalledFunctionName, getCallableName } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -24,7 +24,17 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodeNames: string[] = []): ScoreAndInner {
+/**
+ *
+ * @param node
+ * @param depth
+ * @param ancestorFunctionNodeNames This array's values are treated as immutable.
+ */
+function nodeCost(
+    node: ts.Node,
+    depth = 0,
+    ancestorFunctionNodeNames = emptyIterator<string>()
+): ScoreAndInner {
     let score = 0;
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
@@ -111,16 +121,13 @@ function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodeNames: string[] 
     // * all functions declared directly under a non function child node
     const inner = [] as FunctionOutput[];
 
-    let ancestorFunctionNamesOfChildren: string[];
-    if (isFunctionNode(node)) {
-        const name = getFunctionNodeName(node);
-        if (name.length !== 0) {
-            ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, name];
-        }
-    } else if (ts.isVariableDeclaration(node)) {
-        const identifier = node.getChildAt(0).getText();
-        ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, identifier];
+    // get the ancestors function names from the perspective of this node's children
+    let ancestorFunctionNamesOfChildren: IterableIterator<string>;
+    const nodeNameIfCallable = getCallableName(node);
+    if (nodeNameIfCallable !== undefined) {
+        ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, nodeNameIfCallable].values();
     } else {
+        // don't duplicate lists
         ancestorFunctionNamesOfChildren = ancestorFunctionNodeNames;
     }
 
