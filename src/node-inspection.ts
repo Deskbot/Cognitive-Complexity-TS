@@ -8,20 +8,6 @@ export type FunctionNode = ts.ArrowFunction
     | ts.FunctionExpression
     | ts.MethodDeclaration;
 
-export function getCallableName(node: ts.Node): string | undefined {
-    if (isFunctionNode(node)) {
-        const name = getFunctionNodeName(node);
-        if (name.length !== 0) {
-            return name;
-        }
-    } else if (ts.isVariableDeclaration(node)) {
-        const identifier = node.getChildAt(0).getText();
-        return identifier;
-    }
-
-    return undefined;
-}
-
 export function getCalledFunctionName(node: ts.CallExpression): string {
     const children = node.getChildren();
     const calledExpression = children[0];
@@ -52,9 +38,12 @@ export function getColumnAndLine(node: ts.Node): ColumnAndLine {
     };
 }
 
-export function getFunctionNodeName(func: FunctionNode): string {
+export function getFunctionNodeName(
+    func: FunctionNode,
+    variableBeingDefined: string | undefined = undefined
+): string {
     if (ts.isArrowFunction(func)) {
-        return ""; // TODO figure out a decent name for this
+        return variableBeingDefined ?? "";
     }
 
     if (ts.isFunctionDeclaration(func)) {
@@ -66,7 +55,7 @@ export function getFunctionNodeName(func: FunctionNode): string {
         if (ts.isIdentifier(maybeIdentifier)) {
             return maybeIdentifier.getText();
         } else {
-            return ""; // TODO figure out a decent name for this
+            return variableBeingDefined ?? "";
         }
     }
 
@@ -85,6 +74,11 @@ export function getFunctionNodeName(func: FunctionNode): string {
 
 export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return node.getChildren()[1].getText();
+}
+
+export function getVariableDeclarationName(node: ts.VariableDeclaration): string {
+    const identifier = node.getChildAt(0).getText();
+    return identifier;
 }
 
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
@@ -116,9 +110,18 @@ export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
 
-export function maybeAddNodeToAncestorFuncs(node: ts.Node, ancestorsOfNode: ReadonlyArray<string>): ReadonlyArray<string> {
-    const nodeNameIfCallable = getCallableName(node);
-    if (nodeNameIfCallable !== undefined) {
+export function maybeAddNodeToAncestorFuncs(
+    node: ts.Node,
+    ancestorsOfNode: ReadonlyArray<string>
+): ReadonlyArray<string> {
+    if (!isFunctionNode(node)) {
+        return ancestorsOfNode;
+    }
+
+    const nodeNameIfCallable = getFunctionNodeName(node);
+
+    /// TODO check may be removable if functions always are given a name
+    if (nodeNameIfCallable !== undefined && nodeNameIfCallable.length !== 0) {
         return [...ancestorsOfNode, nodeNameIfCallable];
     }
 

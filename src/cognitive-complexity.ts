@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, FunctionNode, getCalledFunctionName, getCallableName, maybeAddNodeToAncestorFuncs } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, maybeAddNodeToAncestorFuncs, getVariableDeclarationName } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -30,7 +30,12 @@ export function fileCost(file: ts.SourceFile): FileOutput {
  * @param depth
  * @param ancestorFuncs This array's values are treated as immutable.
  */
-function nodeCost(node: ts.Node, depth = 0, ancestorFuncs: ReadonlyArray<string> = []): ScoreAndInner {
+function nodeCost(
+    node: ts.Node,
+    depth = 0,
+    ancestorFuncs = [] as ReadonlyArray<string>,
+    variablesBeingDefined = [] as ReadonlyArray<string>,
+): ScoreAndInner {
     let score = 0;
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
@@ -120,9 +125,13 @@ function nodeCost(node: ts.Node, depth = 0, ancestorFuncs: ReadonlyArray<string>
     // get the ancestors function names from the perspective of this node's children
     const ancestorFuncsOfChildren = maybeAddNodeToAncestorFuncs(node, ancestorFuncs);
 
+    if (ts.isVariableDeclaration(node)) {
+        variablesBeingDefined = [...variablesBeingDefined, getVariableDeclarationName(node)];
+    }
+
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth, ancestorFuncsOfChildren);
+            const childCost = nodeCost(child, localDepth, ancestorFuncsOfChildren, variablesBeingDefined);
 
             score += childCost.score;
 
@@ -130,7 +139,8 @@ function nodeCost(node: ts.Node, depth = 0, ancestorFuncs: ReadonlyArray<string>
 
             // a function/class/namespace is part of the inner scope we want to output
             if (isFunctionNode(child)) {
-                name = getFunctionNodeName(child);
+                const variableBeingDefined = variablesBeingDefined[variablesBeingDefined.length - 1];
+                name = getFunctionNodeName(child, variableBeingDefined);
             } else if (ts.isClassDeclaration(child)) {
                 name = getClassDeclarationName(child);
             } else if (ts.isModuleDeclaration(child)) {

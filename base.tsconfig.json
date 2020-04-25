@@ -9,6 +9,6 @@
         "noImplicitReturns": true,
         "sourceMap": true,
         "strict": true,
-        "target": "ESNEXT"
+        "target": "ES2019"
     }
 }
