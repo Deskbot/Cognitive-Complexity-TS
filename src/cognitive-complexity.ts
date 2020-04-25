@@ -24,7 +24,7 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodes: FunctionNode[] = []): ScoreAndInner {
+function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodeNames: string[] = []): ScoreAndInner {
     let score = 0;
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
@@ -52,8 +52,8 @@ function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodes: FunctionNode[
         score += 1;
     } else if (ts.isCallExpression(node)) {
         const calledFunctionName = getCalledFunctionName(node);
-        for (const ancestor of ancestorFunctionNodes) {
-            if (getFunctionNodeName(ancestor) === calledFunctionName) {
+        for (const ancestorName of ancestorFunctionNodeNames) {
+            if (ancestorName === calledFunctionName) {
                 score += 1;
                 break;
             }
@@ -111,11 +111,11 @@ function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodes: FunctionNode[
     // * all functions declared directly under a non function child node
     const inner = [] as FunctionOutput[];
 
-    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
-        const ancestorFunctionsOfChildren = isFunctionNode(node)
-            ? [...ancestorFunctionNodes, node]
-            : ancestorFunctionNodes;
+    const ancestorFunctionsOfChildren = isFunctionNode(node)
+        ? [...ancestorFunctionNodeNames, getFunctionNodeName(node)]
+        : ancestorFunctionNodeNames;
 
+    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {
             const childCost = nodeCost(child, localDepth, ancestorFunctionsOfChildren);
 
