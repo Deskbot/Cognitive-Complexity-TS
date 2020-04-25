@@ -116,10 +116,10 @@ export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
 
-export function maybeAddNodeToAncestorFuncs(node: ts.Node, ancestorsOfNode: IterableIterator<string>): IterableIterator<string> {
+export function maybeAddNodeToAncestorFuncs(node: ts.Node, ancestorsOfNode: ReadonlyArray<string>): ReadonlyArray<string> {
     const nodeNameIfCallable = getCallableName(node);
     if (nodeNameIfCallable !== undefined) {
-        return [...ancestorsOfNode, nodeNameIfCallable].values();
+        return [...ancestorsOfNode, nodeNameIfCallable];
     }
 
     return ancestorsOfNode;

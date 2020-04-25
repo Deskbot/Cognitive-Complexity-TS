@@ -1,6 +1,6 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
-import { sum, emptyIterator } from "./util";
+import { sum } from "./util";
 import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, FunctionNode, getCalledFunctionName, getCallableName, maybeAddNodeToAncestorFuncs } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
@@ -30,11 +30,7 @@ export function fileCost(file: ts.SourceFile): FileOutput {
  * @param depth
  * @param ancestorFuncs This array's values are treated as immutable.
  */
-function nodeCost(
-    node: ts.Node,
-    depth = 0,
-    ancestorFuncs = emptyIterator<string>()
-): ScoreAndInner {
+function nodeCost(node: ts.Node, depth = 0, ancestorFuncs: ReadonlyArray<string> = []): ScoreAndInner {
     let score = 0;
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment
