@@ -1,5 +1,5 @@
 import * as ts from "typescript"
-import { FileOutput, FunctionOutput } from "./types";
+import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum } from "./util";
 import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
@@ -24,7 +24,7 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOutput[] } {
+function nodeCost(node: ts.Node, depth = 0): ScoreAndInner {
     let score = 0;
 
     // TODO write isSequenceOfBinaryOperators to check whether to do an inherent increment

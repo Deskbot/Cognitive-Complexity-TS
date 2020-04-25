@@ -25,3 +25,8 @@ export interface FileOutput {
 export interface ProgramOutput {
     [fileName: string]: FileOutput;
 }
+
+export interface ScoreAndInner {
+    score: number;
+    inner: FunctionOutput[];
+}
