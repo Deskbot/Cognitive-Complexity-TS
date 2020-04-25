@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, emptyIterator } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, FunctionNode, getCalledFunctionName, getCallableName } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, FunctionNode, getCalledFunctionName, getCallableName, maybeAddNodeToAncestorFuncs } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -28,12 +28,12 @@ export function fileCost(file: ts.SourceFile): FileOutput {
  *
  * @param node
  * @param depth
- * @param ancestorFunctionNodeNames This array's values are treated as immutable.
+ * @param ancestorFuncs This array's values are treated as immutable.
  */
 function nodeCost(
     node: ts.Node,
     depth = 0,
-    ancestorFunctionNodeNames = emptyIterator<string>()
+    ancestorFuncs = emptyIterator<string>()
 ): ScoreAndInner {
     let score = 0;
 
@@ -62,7 +62,7 @@ function nodeCost(
         score += 1;
     } else if (ts.isCallExpression(node)) {
         const calledFunctionName = getCalledFunctionName(node);
-        for (const ancestorName of ancestorFunctionNodeNames) {
+        for (const ancestorName of ancestorFuncs) {
             if (ancestorName === calledFunctionName) {
                 score += 1;
                 break;
@@ -122,18 +122,11 @@ function nodeCost(
     const inner = [] as FunctionOutput[];
 
     // get the ancestors function names from the perspective of this node's children
-    let ancestorFunctionNamesOfChildren: IterableIterator<string>;
-    const nodeNameIfCallable = getCallableName(node);
-    if (nodeNameIfCallable !== undefined) {
-        ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, nodeNameIfCallable].values();
-    } else {
-        // don't duplicate lists
-        ancestorFunctionNamesOfChildren = ancestorFunctionNodeNames;
-    }
+    const ancestorFuncsOfChildren = maybeAddNodeToAncestorFuncs(node, ancestorFuncs);
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth, ancestorFunctionNamesOfChildren);
+            const childCost = nodeCost(child, localDepth, ancestorFuncsOfChildren);
 
             score += childCost.score;
 
