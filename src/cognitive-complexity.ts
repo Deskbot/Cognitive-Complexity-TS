@@ -122,11 +122,7 @@ function nodeCost(
     const inner = [] as FunctionOutput[];
 
     // get the ancestors function names from the perspective of this node's children
-    let ancestorFuncsOfChildren = maybeAddNodeToAncestorFuncs(node, ancestorFuncs);
-
-    if (ts.isVariableDeclaration(node)) {
-        ancestorFuncsOfChildren = [...ancestorFuncsOfChildren, getVariableDeclarationName(node)];
-    }
+    const ancestorFuncsOfChildren = maybeAddNodeToAncestorFuncs(node, ancestorFuncs);
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {

@@ -114,15 +114,16 @@ export function maybeAddNodeToAncestorFuncs(
     node: ts.Node,
     ancestorsOfNode: ReadonlyArray<string>
 ): ReadonlyArray<string> {
-    if (!isFunctionNode(node)) {
-        return ancestorsOfNode;
+    if (ts.isVariableDeclaration(node)) {
+        return [...ancestorsOfNode, getVariableDeclarationName(node)];
     }
 
-    const nodeNameIfCallable = getFunctionNodeName(node);
+    if (isFunctionNode(node)) {
+        const nodeNameIfCallable = getFunctionNodeName(node);
 
-    /// TODO check may be removable if functions always are given a name
-    if (nodeNameIfCallable !== undefined && nodeNameIfCallable.length !== 0) {
-        return [...ancestorsOfNode, nodeNameIfCallable];
+        if (nodeNameIfCallable !== undefined && nodeNameIfCallable.length !== 0) {
+            return [...ancestorsOfNode, nodeNameIfCallable];
+        }
     }
 
     return ancestorsOfNode;
