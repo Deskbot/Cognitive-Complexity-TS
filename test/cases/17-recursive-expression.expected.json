@@ -6,37 +6,37 @@
                 "name": "i",
                 "score": 1,
                 "line": 1,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "j",
                 "score": 2,
                 "line": 5,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "k",
                 "score": 0,
                 "line": 10,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "l",
                 "score": 1,
                 "line": 14,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "m",
                 "score": 2,
                 "line": 18,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "n",
                 "score": 0,
                 "line": 23,
-                "column": 1
+                "column": 11
             }
         ]
     }
