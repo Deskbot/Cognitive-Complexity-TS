@@ -111,13 +111,19 @@ function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodeNames: string[] 
     // * all functions declared directly under a non function child node
     const inner = [] as FunctionOutput[];
 
-    const ancestorFunctionsOfChildren = isFunctionNode(node)
-        ? [...ancestorFunctionNodeNames, getFunctionNodeName(node)]
-        : ancestorFunctionNodeNames;
+    let ancestorFunctionNamesOfChildren: string[];
+    if (isFunctionNode(node)) {
+        ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, getFunctionNodeName(node)]
+    } else if (ts.isVariableDeclaration(node)) {
+        const identifier = node.getChildAt(0).getText();
+        ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, identifier];
+    } else {
+        ancestorFunctionNamesOfChildren = ancestorFunctionNodeNames;
+    }
 
     function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
         for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth, ancestorFunctionsOfChildren);
+            const childCost = nodeCost(child, localDepth, ancestorFunctionNamesOfChildren);
 
             score += childCost.score;
 
