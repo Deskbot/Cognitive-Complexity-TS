@@ -23,3 +23,13 @@ const m = function() {
 const n = function() {
     i();
 };
+
+() => {
+    i();
+};
+
+const o = function p() {
+    i();
+    o();
+    p();
+};
