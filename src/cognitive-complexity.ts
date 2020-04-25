@@ -113,7 +113,10 @@ function nodeCost(node: ts.Node, depth = 0, ancestorFunctionNodeNames: string[] 
 
     let ancestorFunctionNamesOfChildren: string[];
     if (isFunctionNode(node)) {
-        ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, getFunctionNodeName(node)]
+        const name = getFunctionNodeName(node);
+        if (name.length !== 0) {
+            ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, name];
+        }
     } else if (ts.isVariableDeclaration(node)) {
         const identifier = node.getChildAt(0).getText();
         ancestorFunctionNamesOfChildren = [...ancestorFunctionNodeNames, identifier];
