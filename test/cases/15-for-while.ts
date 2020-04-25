@@ -23,7 +23,7 @@ function i() {
 }
 
 function j() {
-    for (; ;) {
+    for (;;) {
         j();
     }
 }

@@ -145,14 +145,14 @@ function functionDeclaration(node: ts.FunctionDeclaration, isTopLevel: boolean):
 
 function functionExpression(node: ts.FunctionExpression, isTopLevel: boolean): DepthOfChildren {
     const children = node.getChildren();
-    const functionBody = children.slice(-1);
+    const functionBody = children.slice(-1)[0];
     const functionDecl = children.slice(0, -1)[0];
 
     if (isTopLevel) {
-        [[...functionBody, functionDecl], []];
+        return [[functionBody, functionDecl], []];
+    } else {
+        return [[functionBody], [functionDecl]];
     }
-
-    return [functionBody, [functionDecl]];
 }
 
 function ifStatement(node: ts.IfStatement): DepthOfChildren {

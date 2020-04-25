@@ -41,6 +41,7 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     // certain langauge features carry and inherent cost
     if (ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
+        || ts.isDoStatement(node)
         || ts.isForInStatement(node)
         || ts.isForOfStatement(node)
         || ts.isForStatement(node)
@@ -73,6 +74,7 @@ function nodeCost(node: ts.Node, depth = 0): { score: number, inner: FunctionOut
     if (depth > 0) {
         if (ts.isCatchClause(node)
             || ts.isConditionalExpression(node)
+            || ts.isDoStatement(node)
             || ts.isForInStatement(node)
             || ts.isForOfStatement(node)
             || ts.isForStatement(node)
