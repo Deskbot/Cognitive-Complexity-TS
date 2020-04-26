@@ -9,7 +9,7 @@
                 "column": 1
             },
             {
-                "name": "i",
+                "name": "g",
                 "score": 2,
                 "line": 5,
                 "column": 1
@@ -21,34 +21,42 @@
                 "column": 1
             },
             {
-                "name": "i",
+                "name": "C",
                 "score": 1,
                 "line": 14,
-                "column": 1
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "i",
+                        "score": 1,
+                        "line": 15,
+                        "column": 5
+                    }
+                ]
             },
             {
                 "name": "j",
                 "score": 1,
-                "line": 20,
-                "column": 1
+                "line": 21,
+                "column": 5
             },
             {
                 "name": "l",
-                "score": 0,
+                "score": 1,
                 "line": 26,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "n",
                 "score": 2,
                 "line": 30,
-                "column": 1
+                "column": 11
             },
             {
                 "name": "p",
-                "score": 0,
-                "line": 34,
-                "column": 1
+                "score": 1,
+                "line": 35,
+                "column": 11
             }
         ]
     }
