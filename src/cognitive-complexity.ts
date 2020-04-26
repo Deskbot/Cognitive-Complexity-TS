@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getVariableDeclarationName } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer } from "./node-inspection";
 import { getChildrenByDepth } from "./depth";
 
 // function for file cost returns FileOutput
@@ -164,8 +164,8 @@ export function maybeAddNodeToNamedAncestors(
     node: ts.Node,
     ancestorsOfNode: ReadonlyArray<string>
 ): ReadonlyArray<string> {
-    if (ts.isVariableDeclaration(node)) {
-        return [...ancestorsOfNode, getVariableDeclarationName(node)];
+    if (isNamedDeclarationOfContainer(node)) {
+        return [...ancestorsOfNode, getDeclarationName(node)];
     }
 
     if (isFunctionNode(node)) {

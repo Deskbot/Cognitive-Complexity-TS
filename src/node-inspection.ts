@@ -76,7 +76,7 @@ export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return node.getChildren()[1].getText();
 }
 
-export function getVariableDeclarationName(node: ts.VariableDeclaration): string {
+export function getDeclarationName(node: ts.NamedDeclaration): string {
     const identifier = node.getChildAt(0).getText();
     return identifier;
 }
@@ -91,6 +91,28 @@ export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     }
 
     return false;
+}
+
+/**
+ * @returns true, if the node can be used to assign an anonymous function/class/type with a name.
+ * Here container means function/class/type.
+ */
+export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDeclaration {
+    // This is just a check for a subset of NamedDeclarations.
+    // I don't know whether this includes too few or too many node types.
+    return ts.isTypeParameterDeclaration(node)
+        || ts.isVariableDeclaration(node)
+        || ts.isPropertyDeclaration(node)
+        || ts.isCallSignatureDeclaration(node)
+        || ts.isBindingElement(node)
+        || ts.isObjectLiteralElement(node)
+        || ts.isClassLike(node)
+        || ts.isClassElement(node)
+        || ts.isTypeElement(node)
+        || ts.isInterfaceDeclaration(node)
+        || ts.isTypeAliasDeclaration(node)
+        || ts.isEnumDeclaration(node)
+        || ts.isEnumMember(node);
 }
 
 export function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
