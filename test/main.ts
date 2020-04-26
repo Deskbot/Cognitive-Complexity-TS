@@ -2,6 +2,7 @@ import * as cp from "child_process";
 import { diff } from "deep-diff";
 import * as fs from "fs";
 import glob from "glob";
+import { js_beautify } from "js-beautify";
 import * as path from "path";
 import * as process from "process";
 import tempfile from "tempfile";
@@ -70,7 +71,7 @@ async function main() {
             // output the difference
             // print pass or fail
             if (difference && difference.length > 0) {
-                throw difference;
+                throw js_beautify(JSON.stringify(difference));
             } else {
                 console.log("Pass");
             }
