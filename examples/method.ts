@@ -1,1 +1,5 @@
-class Class { method() {} }
+class Class {
+    method() {
+        this.method();
+    }
+}
