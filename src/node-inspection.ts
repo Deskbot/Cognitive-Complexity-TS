@@ -10,14 +10,15 @@ export type FunctionNode = ts.ArrowFunction
 
 export function getCalledFunctionName(node: ts.CallExpression): string {
     const children = node.getChildren();
-    const calledExpression = children[0];
+    const expressionToCall = children[0];
 
-    if (ts.isIdentifier(calledExpression)) {
-        return calledExpression.getText();
+    if (ts.isIdentifier(expressionToCall)) {
+        return expressionToCall.getText();
     }
 
-    if (ts.isPropertyAccessExpression(calledExpression)) {
-        const identifier = children[children.length - 1];
+    if (ts.isPropertyAccessExpression(expressionToCall)) {
+        const expressionNodes = expressionToCall.getChildren();
+        const identifier = expressionNodes[expressionNodes.length - 1];
         return identifier.getText();
     }
 
