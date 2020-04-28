@@ -12,49 +12,49 @@
                         "name": "ff",
                         "score": 0,
                         "line": 2,
-                        "column": 4
+                        "column": 5
                     }
                 ]
             },
             {
                 "name": "g",
                 "score": 0,
-                "line": 5,
+                "line": 7,
                 "column": 1,
                 "inner": [
                     {
                         "name": "gg",
                         "score": 0,
                         "line": 8,
-                        "column": 4
+                        "column": 16
                     }
                 ]
             },
             {
                 "name": "h",
-                "score": 1,
+                "score": 2,
                 "line": 11,
                 "column": 1,
                 "inner": [
                     {
                         "name": "hh",
-                        "score": 1,
+                        "score": 2,
                         "line": 12,
-                        "column": 4
+                        "column": 5
                     }
                 ]
             },
             {
                 "name": "i",
                 "score": 2,
-                "line": 19,
+                "line": 18,
                 "column": 1,
                 "inner": [
                     {
                         "name": "ii",
-                        "score": 1,
+                        "score": 2,
                         "line": 20,
-                        "column": 4
+                        "column": 16
                     }
                 ]
             }
