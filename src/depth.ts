@@ -3,22 +3,28 @@
  */
 
 import * as ts from "typescript";
-import { isForLikeStatement, ForLikeStatement, isSyntaxList, isFunctionNode } from "./node-inspection";
+import { isForLikeStatement, ForLikeStatement } from "./node-inspection";
 import { throwingIterator } from "./util";
 
-type DepthOfChildren = {
-    below: ts.Node[],
-    same: ts.Node[],
-    top?: ts.Node[],
+interface DepthOfChildren {
+    /**
+     * The same level of depth.
+     */
+    same: ts.Node[];
+
+    /**
+     * One level of depth below.
+     */
+    below: ts.Node[];
 };
 
 /**
  * @param node The node whose children to categorise by depth
  * @returns a tuple of [children and the same depth, children at one level below]
  */
-export function getChildrenByDepth(node: ts.Node, depth: number): DepthOfChildren {
+export function whereAreChildren(node: ts.Node): DepthOfChildren {
     if (ts.isArrowFunction(node)) {
-        return arrowFunction(node, depth === 0);
+        return arrowFunction(node);
     } else if (ts.isCatchClause(node)) {
         return catchClause(node);
     } else if (ts.isConditionalExpression(node)) {
@@ -28,13 +34,13 @@ export function getChildrenByDepth(node: ts.Node, depth: number): DepthOfChildre
     } else if (isForLikeStatement(node)) {
         return forLikeStatement(node);
     } else if (ts.isFunctionDeclaration(node)) {
-        return functionDeclaration(node, depth === 0);
+        return functionDeclaration(node);
     } else if (ts.isFunctionExpression(node)) {
-        return functionExpression(node, depth === 0);
+        return functionExpression(node);
     } else if (ts.isIfStatement(node)) {
         return ifStatement(node);
     } else if (ts.isMethodDeclaration(node)) {
-        return methodDeclaration(node, depth === 0);
+        return methodDeclaration(node);
     } else if (ts.isSwitchStatement(node)) {
         return switchStatement(node);
     } else if (ts.isWhileStatement(node)) {
@@ -47,7 +53,7 @@ export function getChildrenByDepth(node: ts.Node, depth: number): DepthOfChildre
     }
 }
 
-function arrowFunction(node: ts.ArrowFunction, isTopLevel: boolean): DepthOfChildren {
+function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
@@ -62,12 +68,7 @@ function arrowFunction(node: ts.ArrowFunction, isTopLevel: boolean): DepthOfChil
     // consume EqualsGreaterThanToken
     nextChild();
     // aggregate code inside arrow function
-    console.error("arrow", isTopLevel);
-    if (isTopLevel) {
-        same.push(nextChild());
-    } else {
-        below.push(nextChild());
-    }
+    below.push(nextChild());
 
     return { same, below };
 }
@@ -144,41 +145,27 @@ function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
     return { same, below };
 }
 
-function functionDeclaration(node: ts.FunctionDeclaration, isTopLevel: boolean): DepthOfChildren {
+function functionDeclaration(node: ts.FunctionDeclaration): DepthOfChildren {
     const children = node.getChildren();
 
     const params = children[3];
     const body = children[children.length - 1];
 
-    if (isTopLevel) {
-        return {
-            same: [params, body],
-            below: []
-        };
-    } else {
-        return {
-            same: [params],
-            below: [body]
-        };
-    }
+    return {
+        same: [params],
+        below: [body]
+    };
 }
 
-function functionExpression(node: ts.FunctionExpression, isTopLevel: boolean): DepthOfChildren {
+function functionExpression(node: ts.FunctionExpression): DepthOfChildren {
     const children = node.getChildren();
     const functionBody = children.slice(-1)[0];
     const functionDecl = children.slice(0, -1)[0];
 
-    if (isTopLevel) {
-        return {
-            same: [functionBody, functionDecl],
-            below: []
-        };
-    } else {
-        return {
-            same: [functionBody],
-            below: [functionDecl]
-        };
-    }
+    return {
+        same: [functionBody],
+        below: [functionDecl]
+    };
 }
 
 function ifStatement(node: ts.IfStatement): DepthOfChildren {
@@ -210,7 +197,7 @@ function ifStatement(node: ts.IfStatement): DepthOfChildren {
     };
 }
 
-function methodDeclaration(node: ts.MethodDeclaration, isTopLevel: boolean): DepthOfChildren {
+function methodDeclaration(node: ts.MethodDeclaration): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
@@ -219,11 +206,7 @@ function methodDeclaration(node: ts.MethodDeclaration, isTopLevel: boolean): Dep
     while (true) {
         const child = nextChild();
         if (ts.isBlock(child)) {
-            if (isTopLevel) {
-                same.push(child);
-            } else {
-                below.push(child);
-            }
+            below.push(child);
             break;
         }
 

@@ -2,13 +2,13 @@ import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum } from "./util";
 import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer } from "./node-inspection";
-import { getChildrenByDepth } from "./depth";
+import { whereAreChildren } from "./depth";
 
 // function for file cost returns FileOutput
 export function fileCost(file: ts.SourceFile): FileOutput {
     // TODO can I just call nodeCost(file)
     const childCosts = file.getChildren()
-        .map(elem => nodeCost(elem)); // using an arrow so it shows up in call hierarchy
+        .map(elem => nodeCost(elem, true)); // using an arrow so it shows up in call hierarchy
 
     // score is sum of score for all child nodes
     const score = childCosts
@@ -26,8 +26,9 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 
 function nodeCost(
     node: ts.Node,
+    topLevel: boolean,
     depth = 0,
-    namedAncestors = [] as ReadonlyArray<string>
+    namedAncestors = [] as ReadonlyArray<string>,
 ): ScoreAndInner {
     let score = 0;
 
@@ -82,8 +83,6 @@ function nodeCost(
         }
     }
 
-    console.error(depth, ts.SyntaxKind[node.kind], ts.isWhileStatement(node), score)
-
     // increment for nesting level
     if (depth > 0) {
         if (ts.isCatchClause(node)
@@ -120,9 +119,9 @@ function nodeCost(
     // get the ancestors function names from the perspective of this node's children
     const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
 
-    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number) {
+    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number, topLevel: boolean) {
         for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, localDepth, namedAncestorsOfChildren);
+            const childCost = nodeCost(child, topLevel, localDepth, namedAncestorsOfChildren);
 
             score += childCost.score;
 
@@ -152,9 +151,15 @@ function nodeCost(
 
     // Aggregate score of this node's children.
     // Aggregate the inner functions of this node's children.
-    const { same, below } = getChildrenByDepth(node, depth);
-    aggregateScoreAndInnerForChildren(same, depth);
-    aggregateScoreAndInnerForChildren(below, depth + 1);
+    const { same, below } = whereAreChildren(node);
+
+    if (topLevel) {
+        aggregateScoreAndInnerForChildren(same, depth, topLevel);
+        aggregateScoreAndInnerForChildren(below, depth, false);
+    } else {
+        aggregateScoreAndInnerForChildren(same, depth, false);
+        aggregateScoreAndInnerForChildren(below, depth + 1, false);
+    }
 
     return {
         inner,
