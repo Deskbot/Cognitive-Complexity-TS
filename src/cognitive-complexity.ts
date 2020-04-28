@@ -82,6 +82,8 @@ function nodeCost(
         }
     }
 
+    console.error(depth, ts.SyntaxKind[node.kind], ts.isWhileStatement(node), score)
+
     // increment for nesting level
     if (depth > 0) {
         if (ts.isCatchClause(node)
@@ -150,7 +152,7 @@ function nodeCost(
 
     // Aggregate score of this node's children.
     // Aggregate the inner functions of this node's children.
-    const [same, below] = getChildrenByDepth(node, depth);
+    const { same, below } = getChildrenByDepth(node, depth);
     aggregateScoreAndInnerForChildren(same, depth);
     aggregateScoreAndInnerForChildren(below, depth + 1);
 

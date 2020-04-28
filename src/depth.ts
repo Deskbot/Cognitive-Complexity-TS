@@ -6,7 +6,11 @@ import * as ts from "typescript";
 import { isForLikeStatement, ForLikeStatement, isSyntaxList, isFunctionNode } from "./node-inspection";
 import { throwingIterator } from "./util";
 
-type DepthOfChildren = [ts.Node[], ts.Node[]];
+type DepthOfChildren = {
+    below: ts.Node[],
+    same: ts.Node[],
+    top?: ts.Node[],
+};
 
 /**
  * @param node The node whose children to categorise by depth
@@ -36,7 +40,10 @@ export function getChildrenByDepth(node: ts.Node, depth: number): DepthOfChildre
     } else if (ts.isWhileStatement(node)) {
         return whileStatement(node);
     } else {
-        return [node.getChildren(), []];
+        return {
+            same: node.getChildren(),
+            below: []
+        };
     }
 }
 
@@ -55,13 +62,14 @@ function arrowFunction(node: ts.ArrowFunction, isTopLevel: boolean): DepthOfChil
     // consume EqualsGreaterThanToken
     nextChild();
     // aggregate code inside arrow function
+    console.error("arrow", isTopLevel);
     if (isTopLevel) {
         same.push(nextChild());
     } else {
         below.push(nextChild());
     }
 
-    return [same, below];
+    return { same, below };
 }
 
 function catchClause(node: ts.CatchClause): DepthOfChildren {
@@ -70,7 +78,10 @@ function catchClause(node: ts.CatchClause): DepthOfChildren {
     const variableDefinition = children[2];
     const catchCode = children[4];
 
-    return [[variableDefinition], [catchCode]];
+    return {
+        same: [variableDefinition],
+        below: [catchCode]
+    };
 }
 
 function conditionalExpression(node: ts.ConditionalExpression): DepthOfChildren {
@@ -80,7 +91,10 @@ function conditionalExpression(node: ts.ConditionalExpression): DepthOfChildren 
     const thenCode = children[2];
     const elseCode = children[4];
 
-    return [[condition], [thenCode, elseCode]];
+    return {
+        same: [condition],
+        below: [thenCode, elseCode]
+    };
 }
 
 function doStatement(node: ts.DoStatement): DepthOfChildren {
@@ -100,7 +114,7 @@ function doStatement(node: ts.DoStatement): DepthOfChildren {
     // aggregate condition
     same.push(nextChild());
 
-    return [same, below];
+    return { same, below };
 }
 
 function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
@@ -127,7 +141,7 @@ function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
     // consume looped code
     below.push(nextChild());
 
-    return [same, below];
+    return { same, below };
 }
 
 function functionDeclaration(node: ts.FunctionDeclaration, isTopLevel: boolean): DepthOfChildren {
@@ -137,9 +151,15 @@ function functionDeclaration(node: ts.FunctionDeclaration, isTopLevel: boolean):
     const body = children[children.length - 1];
 
     if (isTopLevel) {
-        return [[params, body], []];
+        return {
+            same: [params, body],
+            below: []
+        };
     } else {
-        return [[params], [body]];
+        return {
+            same: [params],
+            below: [body]
+        };
     }
 }
 
@@ -149,9 +169,15 @@ function functionExpression(node: ts.FunctionExpression, isTopLevel: boolean): D
     const functionDecl = children.slice(0, -1)[0];
 
     if (isTopLevel) {
-        return [[functionBody, functionDecl], []];
+        return {
+            same: [functionBody, functionDecl],
+            below: []
+        };
     } else {
-        return [[functionBody], [functionDecl]];
+        return {
+            same: [functionBody],
+            below: [functionDecl]
+        };
     }
 }
 
@@ -165,14 +191,23 @@ function ifStatement(node: ts.IfStatement): DepthOfChildren {
     if (elseCode) {
         if (ts.isIfStatement(elseCode)) {
             // an else if structure is on the same depth
-            return [[condition, elseCode], [thenCode]];
+            return {
+                same: [condition, elseCode],
+                below: [thenCode]
+            };
         } else {
             // the contents of a solo else are at one depth below
-            return [[condition], [thenCode, elseCode]];
+            return {
+                same: [condition],
+                below: [thenCode, elseCode]
+            };
         }
     }
 
-    return [[condition], [thenCode]];
+    return {
+        same: [condition],
+        below: [thenCode]
+    };
 }
 
 function methodDeclaration(node: ts.MethodDeclaration, isTopLevel: boolean): DepthOfChildren {
@@ -195,7 +230,7 @@ function methodDeclaration(node: ts.MethodDeclaration, isTopLevel: boolean): Dep
         same.push(child);
     }
 
-    return [same, below];
+    return { same, below };
 }
 
 function switchStatement(node: ts.SwitchStatement): DepthOfChildren {
@@ -212,7 +247,10 @@ function switchStatement(node: ts.SwitchStatement): DepthOfChildren {
     // consume cases
     const cases = [nextChild()];
 
-    return [condition, cases];
+    return {
+        same: condition,
+        below: cases
+    };
 }
 
 function whileStatement(node: ts.WhileStatement): DepthOfChildren {
@@ -221,5 +259,8 @@ function whileStatement(node: ts.WhileStatement): DepthOfChildren {
     const condition = children[2];
     const loopCode = children[4];
 
-    return [[condition], [loopCode]];
+    return {
+        same: [condition],
+        below: [loopCode]
+    };
 }
