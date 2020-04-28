@@ -42,7 +42,7 @@ function nodeCost(
 
     // TODO check if ConstructorDeclaration and AccessorDeclaration (get,set) need to be added separately
 
-    // certain langauge features carry and inherent cost
+    // certain language features carry and inherent cost
     if (ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
         || ts.isDoStatement(node)

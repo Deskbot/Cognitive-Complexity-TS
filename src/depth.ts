@@ -67,10 +67,10 @@ function arrowFunction(node: ts.ArrowFunction, isTopLevel: boolean): DepthOfChil
 function catchClause(node: ts.CatchClause): DepthOfChildren {
     const children = node.getChildren();
 
-    const variableDefintion = children[2];
+    const variableDefinition = children[2];
     const catchCode = children[4];
 
-    return [[variableDefintion], [catchCode]];
+    return [[variableDefinition], [catchCode]];
 }
 
 function conditionalExpression(node: ts.ConditionalExpression): DepthOfChildren {
