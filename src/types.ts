@@ -22,6 +22,8 @@ export interface FileOutput {
     inner: FunctionOutput[];
 }
 
+export type FolderOutput = FileOutput[];
+
 export interface ProgramOutput {
     [fileName: string]: FileOutput;
 }
