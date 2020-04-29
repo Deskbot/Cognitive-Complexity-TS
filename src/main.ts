@@ -20,9 +20,6 @@ async function main() {
         throw new Error("Usage: arg1: target file path");
     }
 
-    // let filePaths: string[] = await toPromise(cb => glob(`${filePath}/**/*`, cb));
-    // filePaths.push(filePath);
-    // filePaths = filePaths.filter(path => path.match(/.*\.[tj]sx?$/) !== null);
     printCognitiveComplexityJson(filePath);
 }
 
@@ -48,7 +45,9 @@ function getEntryOutput(entryPath: string): FolderOutput | FileOutput {
     const entry = fs.statSync(entryPath);
 
     if (entry.isDirectory()) {
-        const subFiles = fs.readdirSync(entryPath, { withFileTypes: true });
+        const subFiles = fs.readdirSync(entryPath, { withFileTypes: true })
+            .filter(filePath => filePath.name.match(/.*\.[tj]sx?$/) !== null);
+
         const folderOutput: FolderOutput = {};
 
         for (const file of subFiles) {
