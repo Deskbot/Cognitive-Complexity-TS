@@ -11,7 +11,7 @@ export interface FunctionNodeInfo extends ColumnAndLine {
     name: string;
 }
 
-// TOOD rename this because it includes classes and namespaces
+// TODO rename this because it includes classes and namespaces
 export interface FunctionOutput extends FunctionNodeInfo {
     score: number;
     inner: FunctionOutput[];

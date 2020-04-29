@@ -42,6 +42,7 @@ async function main() {
     if (wantedTests.length > 0) {
         caseFilePaths = caseFilePaths
             .filter(path => {
+                // TODO add a generic way of doing something and stopping after first true
                 for (const wantedTest of wantedTests) {
                     if (path.includes(wantedTest)) {
                         return true;
@@ -64,7 +65,7 @@ async function main() {
         const outputPath = tempfile();
         try {
             const resultObj = await runCase(caseFilePath, outputPath);
-            // read json exected for case
+            // read json expected for case
             const expectedObj = getExpectation(caseFilePath);
             // deep compare the 2
             const difference = diff(expectedObj, resultObj);
