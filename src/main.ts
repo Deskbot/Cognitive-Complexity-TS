@@ -1,10 +1,8 @@
 import * as fs from "fs";
-import * as glob from "glob";
 import * as path from "path";
 import * as process from "process";
 import * as ts from "typescript";
-import { toPromise } from "./util";
-import { ProgramOutput } from "./types";
+import { ProgramOutput, FileOutput, FolderOutput } from "./types";
 import { js_beautify } from "js-beautify";
 import { fileCost } from "./cognitive-complexity";
 
@@ -22,30 +20,56 @@ async function main() {
         throw new Error("Usage: arg1: target file path");
     }
 
-    let filePaths: string[] = await toPromise(cb => glob(`${filePath}/**/*`, cb));
-    filePaths.push(filePath);
-    filePaths = filePaths.filter(path => path.match(/.*\.[tj]sx?$/) !== null);
-    printCognitiveComplexityJson(filePaths);
+    // let filePaths: string[] = await toPromise(cb => glob(`${filePath}/**/*`, cb));
+    // filePaths.push(filePath);
+    // filePaths = filePaths.filter(path => path.match(/.*\.[tj]sx?$/) !== null);
+    printCognitiveComplexityJson(filePath);
 }
 
-function printCognitiveComplexityJson(filePaths: string[]) {
+function getFileOutput(filePath: string): FileOutput {
+    const fileContent = fs.readFileSync(filePath).toString();
+
+    const parsedFile = ts.createSourceFile(
+        path.basename(filePath),
+        fileContent,
+        ts.ScriptTarget.Latest,
+        true,
+    );
+
+    return fileCost(parsedFile);
+}
+
+/**
+ * @param entry A file system entry ok unknown type.
+ */
+// todo can maybe get some speed up by being asynchronous and reading files while building the output
+// spawn a bunch of promises and use Promise.all
+function getEntryOutput(entryPath: string): FolderOutput | FileOutput {
+    const entry = fs.statSync(entryPath);
+
+    if (entry.isDirectory()) {
+        const subFiles = fs.readdirSync(entryPath, { withFileTypes: true });
+        const folderOutput: FolderOutput = {};
+
+        for (const file of subFiles) {
+            const innerEntryPath = path.join(entryPath, file.name);
+            folderOutput[file.name] = getEntryOutput(innerEntryPath);
+        }
+
+        return folderOutput;
+    } else {
+        return getFileOutput(entryPath);
+    }
+}
+
+function printCognitiveComplexityJson(fullPath: string) {
     const resultForAllFiles: ProgramOutput = {};
     const cwd = process.cwd();
 
-    for (const filePath of filePaths) {
-        const fileName = path.relative(cwd, filePath);
-        const fileContent = fs.readFileSync(filePath).toString();
+    const filePath = path.relative(cwd, fullPath);
+    const fileName = path.parse(fullPath).base;
 
-        const file = ts.createSourceFile(
-            path.basename(filePath),
-            fileContent,
-            ts.ScriptTarget.Latest,
-            true,
-        );
-
-        const resultForFile = fileCost(file);
-        resultForAllFiles[fileName] = resultForFile;
-    }
+    resultForAllFiles[fileName] = getEntryOutput(filePath);
 
     const outputStructure = JSON.stringify(resultForAllFiles, (key, value) => {
         // don't show empty inner

@@ -1,9 +1,7 @@
 {
-    "00-folder": [
-        {
-            "file-in-folder.ts": {
-                "score": 0
-            }
+    "00-folder": {
+        "file-in-folder.ts": {
+            "score": 0
         }
-    ]
+    }
 }

@@ -22,10 +22,12 @@ export interface FileOutput {
     inner: FunctionOutput[];
 }
 
-export type FolderOutput = FileOutput[];
+export type FolderOutput = {
+    [name: string]: FileOutput | FolderOutput
+};
 
 export interface ProgramOutput {
-    [fileName: string]: FileOutput;
+    [fileName: string]: FileOutput | FolderOutput;
 }
 
 export interface ScoreAndInner {
