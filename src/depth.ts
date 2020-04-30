@@ -53,6 +53,7 @@ export function whereAreChildren(node: ts.Node): DepthOfChildren {
     }
 }
 
+// todo simplify
 function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
@@ -98,6 +99,7 @@ function conditionalExpression(node: ts.ConditionalExpression): DepthOfChildren 
     };
 }
 
+// todo simplify
 function doStatement(node: ts.DoStatement): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
@@ -118,6 +120,7 @@ function doStatement(node: ts.DoStatement): DepthOfChildren {
     return { same, below };
 }
 
+// todo simplify
 function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
@@ -197,6 +200,7 @@ function ifStatement(node: ts.IfStatement): DepthOfChildren {
     };
 }
 
+// todo simplify
 function methodDeclaration(node: ts.MethodDeclaration): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
@@ -216,6 +220,7 @@ function methodDeclaration(node: ts.MethodDeclaration): DepthOfChildren {
     return { same, below };
 }
 
+// todo simplify
 function switchStatement(node: ts.SwitchStatement): DepthOfChildren {
     const nextChild = throwingIterator(node.getChildren().values());
 
