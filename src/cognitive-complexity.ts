@@ -55,6 +55,11 @@ function nodeCost(
         || isBreakOrContinueToLabel(node)
     ) {
         score += 1;
+    } else if (ts.isBinaryExpression(node)
+        // the parent does not use the same operator as this node
+        && node.parent.getChildAt(1)?.kind != node.getChildAt(1).kind
+    ) {
+        score += 1;
     } else if (ts.isCallExpression(node)) {
         const calledFunctionName = getCalledFunctionName(node);
         for (const name of namedAncestors) {
