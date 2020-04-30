@@ -39,6 +39,11 @@ export function getColumnAndLine(node: ts.Node): ColumnAndLine {
     };
 }
 
+export function getDeclarationName(node: ts.NamedDeclaration): string {
+    const identifier = node.getChildAt(0).getText();
+    return identifier;
+}
+
 export function getFunctionNodeName(
     func: FunctionNode,
     variableBeingDefined: string | undefined = undefined
@@ -77,11 +82,6 @@ export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return node.getChildren()[1].getText();
 }
 
-export function getDeclarationName(node: ts.NamedDeclaration): string {
-    const identifier = node.getChildAt(0).getText();
-    return identifier;
-}
-
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     if (ts.isBreakOrContinueStatement(node)) {
         for (const child of node.getChildren()) {
@@ -92,6 +92,19 @@ export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     }
 
     return false;
+}
+
+export function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
+    return ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isForStatement(node);
+}
+
+export function isFunctionNode(node: ts.Node): node is FunctionNode {
+    return ts.isArrowFunction(node)
+        || ts.isFunctionDeclaration(node)
+        || ts.isFunctionExpression(node)
+        || ts.isMethodDeclaration(node);
 }
 
 /**
@@ -114,19 +127,6 @@ export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDe
         || ts.isTypeAliasDeclaration(node)
         || ts.isEnumDeclaration(node)
         || ts.isEnumMember(node);
-}
-
-export function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
-    return ts.isForInStatement(node)
-        || ts.isForOfStatement(node)
-        || ts.isForStatement(node);
-}
-
-export function isFunctionNode(node: ts.Node): node is FunctionNode {
-    return ts.isArrowFunction(node)
-        || ts.isFunctionDeclaration(node)
-        || ts.isFunctionExpression(node)
-        || ts.isMethodDeclaration(node);
 }
 
 export function isSequenceOfDifferentBinaryOperations(node: ts.BinaryExpression): boolean {
