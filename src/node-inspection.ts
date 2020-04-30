@@ -129,6 +129,13 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
         || ts.isMethodDeclaration(node);
 }
 
+export function isSequenceOfDifferentBinaryOperations(node: ts.BinaryExpression): boolean {
+    // the child number 1 is the operator token
+    // true if the parent does not use the same operator as this node
+    // presumably true if the parent is not a binary expression
+    return node.parent.getChildAt(1)?.kind != node.getChildAt(1).kind;
+}
+
 export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
