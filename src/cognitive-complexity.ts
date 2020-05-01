@@ -44,6 +44,8 @@ function nodeCost(
         || ts.isForStatement(node)
         || ts.isSwitchStatement(node)
         || ts.isWhileStatement(node)
+        || ts.isIntersectionTypeNode(node)
+        || ts.isUnionTypeNode(node)
         || isBreakOrContinueToLabel(node)
     ) {
         score += 1;
