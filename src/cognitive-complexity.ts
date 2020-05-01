@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
-import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBinaryOperations, getTypeAliasName } from "./node-inspection";
+import { sum, countNotAtTheEnds } from "./util";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBinaryOperations, getTypeAliasName, isBinaryTypeOperator, report } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 // function for file cost returns FileOutput
@@ -44,8 +44,6 @@ function nodeCost(
         || ts.isForStatement(node)
         || ts.isSwitchStatement(node)
         || ts.isWhileStatement(node)
-        || ts.isIntersectionTypeNode(node)
-        || ts.isUnionTypeNode(node)
         || isBreakOrContinueToLabel(node)
     ) {
         score += 1;
@@ -75,6 +73,25 @@ function nodeCost(
                 score += 1;
             }
         }
+    }
+
+    else if (isBinaryTypeOperator(node)) {
+        // This node naturally represents a sequence of binary type operators.
+        // (unlike normal binary operators)
+        score += 1;
+
+        // However, this sequence can contain nodes that are a different binary operator.
+        // We can assume that children of the internal syntax list that are binary operators
+        // are not the same kind as this node.
+        // Binary sub-expressions at either end of the syntax list
+        // do not break this sequence of operators in the code; they merely bookend it.
+        const syntaxList = node.getChildren()[0];
+        const numOfSequenceInterrupts = countNotAtTheEnds(
+            syntaxList.getChildren(),
+            isBinaryTypeOperator
+        );
+
+        score += numOfSequenceInterrupts;
     }
 
     // increment for nesting level

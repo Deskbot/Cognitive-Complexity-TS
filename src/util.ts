@@ -1,7 +1,19 @@
 class EndOfIteratorError extends Error {}
 
-export function* emptyIterator<T>(): IterableIterator<T> {
-    return;
+export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): number {
+    if (arr.length <= 2) {
+        return 0;
+    }
+
+    let tot = 0;
+
+    for (let i = 1; i < arr.length - 2; i++) {
+        if (count(arr[i])) {
+            tot += 1;
+        }
+    }
+
+    return tot;
 }
 
 export function sum(a: number, b: number): number {

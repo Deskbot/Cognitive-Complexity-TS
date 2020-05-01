@@ -86,6 +86,10 @@ export function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
     return node.getChildAt(1).getText();
 }
 
+export function isBinaryTypeOperator(node: ts.Node): node is ts.UnionOrIntersectionTypeNode {
+    return ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node);
+}
+
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     if (ts.isBreakOrContinueStatement(node)) {
         for (const child of node.getChildren()) {
@@ -141,4 +145,23 @@ export function isSequenceOfDifferentBinaryOperations(node: ts.BinaryExpression)
 
 export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
+}
+
+function repeat(str: string, times: number): string {
+    let res = "";
+    for (let i = 0; i < times; i++) {
+        res += str;
+    }
+
+    return res;
+}
+
+export function report(node: ts.Node, depth: number = 0) {
+    const toLog = [repeat("\t", depth), ts.SyntaxKind[node.kind], node.kind];
+
+    console.error(...toLog);
+
+    for (const child of node.getChildren()) {
+        report(child, depth + 1);
+    }
 }
