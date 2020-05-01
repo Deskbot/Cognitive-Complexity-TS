@@ -25,6 +25,12 @@
                 "score": 3,
                 "line": 7,
                 "column": 1
+            },
+            {
+                "name": "E",
+                "score": 3,
+                "line": 9,
+                "column": 1
             }
         ]
     }

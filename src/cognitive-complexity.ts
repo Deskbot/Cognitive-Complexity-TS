@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBinaryOperations } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBinaryOperations, getTypeAliasName } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 // function for file cost returns FileOutput
@@ -129,6 +129,8 @@ function nodeCost(
                 name = getClassDeclarationName(child);
             } else if (ts.isModuleDeclaration(child)) {
                 name = getModuleDeclarationName(child);
+            } else if (ts.isTypeAliasDeclaration(child)) {
+                name = getTypeAliasName(child);
             } else {
                 // the child's inner is all part of this node's direct inner scope
                 inner.push(...childCost.inner);
@@ -167,6 +169,10 @@ export function maybeAddNodeToNamedAncestors(
 ): ReadonlyArray<string> {
     if (isNamedDeclarationOfContainer(node)) {
         return [...ancestorsOfNode, getDeclarationName(node)];
+    }
+
+    if (ts.isTypeAliasDeclaration(node)) {
+        return [...ancestorsOfNode, getTypeAliasName(node)];
     }
 
     if (isFunctionNode(node)) {

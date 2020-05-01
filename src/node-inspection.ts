@@ -79,7 +79,11 @@ export function getFunctionNodeName(
 }
 
 export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
-    return node.getChildren()[1].getText();
+    return node.getChildAt(1).getText();
+}
+
+export function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
+    return node.getChildAt(1).getText();
 }
 
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
@@ -124,7 +128,6 @@ export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDe
         || ts.isClassElement(node)
         || ts.isTypeElement(node)
         || ts.isInterfaceDeclaration(node)
-        || ts.isTypeAliasDeclaration(node)
         || ts.isEnumDeclaration(node)
         || ts.isEnumMember(node);
 }
