@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, countNotAtTheEnds } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBinaryOperations, getTypeAliasName, isBinaryTypeOperator, report } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBinaryOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 // function for file cost returns FileOutput
@@ -175,17 +175,10 @@ function nodeCost(
     // Aggregate the inner functions of this node's children.
     const { same, below } = whereAreChildren(node);
 
-    // todo clean this
     aggregateScoreAndInnerForChildren(same, depth, topLevel);
-    if (topLevel) {
-        if (isFunctionNode(node) || ts.isClassDeclaration(node) || ts.isModuleDeclaration(node) || ts.isTypeAliasDeclaration(node) || ts.isSourceFile(node) || ts.isSourceFile(node.parent)) {
-            aggregateScoreAndInnerForChildren(below, depth, false);
-        } else {
-            aggregateScoreAndInnerForChildren(below, depth + 1, false);
-        }
-    } else {
-        aggregateScoreAndInnerForChildren(below, depth + 1, false);
-    }
+    const container = isContainer(node);
+    const depthOfBelow = depth + (topLevel && container ? 0 : 1);
+    aggregateScoreAndInnerForChildren(below, depthOfBelow, false);
 
     return {
         inner,

@@ -102,6 +102,15 @@ export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     return false;
 }
 
+export function isContainer(node: ts.Node): boolean {
+    return isFunctionNode(node)
+        || ts.isClassDeclaration(node)
+        || ts.isModuleDeclaration(node)
+        || ts.isTypeAliasDeclaration(node)
+        || ts.isSourceFile(node)
+        || ts.isSourceFile(node.parent);
+}
+
 export function isForLikeStatement(node: ts.Node): node is ForLikeStatement {
     return ts.isForInStatement(node)
         || ts.isForOfStatement(node)
