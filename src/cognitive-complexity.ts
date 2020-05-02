@@ -38,6 +38,7 @@ function nodeCost(
     if (ts.isBinaryExpression(node) && isSequenceOfDifferentBinaryOperations(node)
         || ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
+        || ts.isConditionalTypeNode(node)
         || ts.isDoStatement(node)
         || ts.isForInStatement(node)
         || ts.isForOfStatement(node)
@@ -47,6 +48,7 @@ function nodeCost(
         || isBreakOrContinueToLabel(node)
     ) {
         score += 1;
+        console.error("general +1")
     } else if (ts.isCallExpression(node)) {
         const calledFunctionName = getCalledFunctionName(node);
         for (const name of namedAncestors) {
@@ -79,6 +81,7 @@ function nodeCost(
         // This node naturally represents a sequence of binary type operators.
         // (unlike normal binary operators)
         score += 1;
+        console.error("type +1")
 
         // However, this sequence can contain nodes that are a different binary operator.
         // We can assume that children of the internal syntax list that are binary operators
@@ -92,12 +95,17 @@ function nodeCost(
         );
 
         score += numOfSequenceInterrupts;
+        console.error("+", numOfSequenceInterrupts, "interrupts")
     }
 
+    console.error("depth", depth)
+    console.error(ts.SyntaxKind[node.kind], node.getText())
     // increment for nesting level
     if (depth > 0) {
+        console.error(ts.isConditionalTypeNode(node));
         if (ts.isCatchClause(node)
             || ts.isConditionalExpression(node)
+            || ts.isConditionalTypeNode(node)
             || ts.isDoStatement(node)
             || ts.isForInStatement(node)
             || ts.isForOfStatement(node)
@@ -117,6 +125,7 @@ function nodeCost(
             )
         ) {
             score += depth;
+            console.error("+depth", depth)
         }
     }
 
@@ -166,11 +175,15 @@ function nodeCost(
     // Aggregate the inner functions of this node's children.
     const { same, below } = whereAreChildren(node);
 
+    // todo clean this
+    aggregateScoreAndInnerForChildren(same, depth, topLevel);
     if (topLevel) {
-        aggregateScoreAndInnerForChildren(same, depth, topLevel);
-        aggregateScoreAndInnerForChildren(below, depth, false);
+        if (isFunctionNode(node) || ts.isClassDeclaration(node) || ts.isModuleDeclaration(node) || ts.isTypeAliasDeclaration(node) || ts.isSourceFile(node) || ts.isSourceFile(node.parent)) {
+            aggregateScoreAndInnerForChildren(below, depth, false);
+        } else {
+            aggregateScoreAndInnerForChildren(below, depth + 1, false);
+        }
     } else {
-        aggregateScoreAndInnerForChildren(same, depth, false);
         aggregateScoreAndInnerForChildren(below, depth + 1, false);
     }
 

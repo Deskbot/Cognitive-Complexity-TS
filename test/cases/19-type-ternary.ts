@@ -7,4 +7,4 @@ type F<T> = T extends boolean
         ? // +1 inherent +1 depth
             "true" | "t" // +1 inherent
             : "false"
-        : "undefined";
+    : "undefined";

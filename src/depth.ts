@@ -29,6 +29,8 @@ export function whereAreChildren(node: ts.Node): DepthOfChildren {
         return catchClause(node);
     } else if (ts.isConditionalExpression(node)) {
         return conditionalExpression(node);
+    } else if (ts.isConditionalTypeNode(node)) {
+        return conditionalType(node);
     } else if (ts.isDoStatement(node)) {
         return doStatement(node);
     } else if (isForLikeStatement(node)) {
@@ -96,6 +98,31 @@ function conditionalExpression(node: ts.ConditionalExpression): DepthOfChildren 
     return {
         same: [condition],
         below: [thenCode, elseCode]
+    };
+}
+
+function conditionalType(node: ts.ConditionalTypeNode): DepthOfChildren {
+    const children = node.getChildren();
+
+    const endOfCondition = children
+        .findIndex(child => child.kind === ts.SyntaxKind.QuestionToken);
+    const endOfThen = children
+        .findIndex(child => child.kind === ts.SyntaxKind.ColonToken);
+
+    console.error(children.map(child => child.getText()))
+    console.error(children.map(child => ts.SyntaxKind[child.kind]))
+    const condition = children.slice(0, endOfCondition);
+    // then code
+    const below = children.slice(endOfCondition + 1, endOfThen);
+    // else code
+    below.push(...children.slice(endOfThen + 1));
+
+    console.error(condition.map(child => ts.SyntaxKind[child.kind]))
+    console.error(below.map(child => ts.SyntaxKind[child.kind]))
+
+    return {
+        same: condition,
+        below,
     };
 }
 
