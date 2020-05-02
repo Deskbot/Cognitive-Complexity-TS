@@ -176,6 +176,7 @@ function nodeCost(
     const { same, below } = whereAreChildren(node);
 
     aggregateScoreAndInnerForChildren(same, depth, topLevel);
+    // todo can I pass the information needed here into whereAreChildren
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
     aggregateScoreAndInnerForChildren(below, depthOfBelow, false);
