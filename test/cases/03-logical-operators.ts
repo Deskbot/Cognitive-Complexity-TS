@@ -6,6 +6,10 @@ function allOr() {
     true || !true || !!true;
 }
 
+function allNullCoalescence() {
+    true ?? !true ?? !!true;
+}
+
 function twoSequences() {
     true && !true && !!true || !true || true;
 }

@@ -1,6 +1,6 @@
 {
     "03-logical-operators.ts": {
-        "score": 7,
+        "score": 8,
         "inner": [
             {
                 "name": "allAnd",
@@ -15,21 +15,27 @@
                 "column": 1
             },
             {
+                "name": "allNullCoalescence",
+                "score": 1,
+                "line": 9,
+                "column": 1
+            },
+            {
                 "name": "twoSequences",
                 "score": 2,
-                "line": 9,
+                "line": 13,
                 "column": 1
             },
             {
                 "name": "threeSequences",
                 "score": 3,
-                "line": 13,
+                "line": 17,
                 "column": 1
             },
             {
                 "name": "noOp",
                 "score": 0,
-                "line": 17,
+                "line": 21,
                 "column": 1
             }
         ]
