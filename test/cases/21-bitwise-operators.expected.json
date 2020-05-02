@@ -1,0 +1,37 @@
+{
+    "21-bitwise-operators.ts": {
+        "score": 7,
+        "inner": [
+            {
+                "name": "allAnd",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "allOr",
+                "score": 1,
+                "line": 5,
+                "column": 1
+            },
+            {
+                "name": "twoSequences",
+                "score": 2,
+                "line": 9,
+                "column": 1
+            },
+            {
+                "name": "threeSequences",
+                "score": 3,
+                "line": 13,
+                "column": 1
+            },
+            {
+                "name": "noOp",
+                "score": 0,
+                "line": 17,
+                "column": 1
+            }
+        ]
+    }
+}
