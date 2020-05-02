@@ -1,0 +1,13 @@
+{
+    "22-optional-chaining.ts": {
+        "score": 0,
+        "inner": [
+            {
+                "name": "optionalChaining",
+                "score": 0,
+                "line": 3,
+                "column": 1
+            }
+        ]
+    }
+}
