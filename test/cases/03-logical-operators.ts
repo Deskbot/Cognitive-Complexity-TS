@@ -21,3 +21,11 @@ function threeSequences() {
 function noOp() {
     true;
 }
+
+function parenthesesDoesNotBreakSequence() {
+    true && (true && true)
+}
+
+function parenthesesAroundASequenceBreak() {
+    true && (true || true)
+}
