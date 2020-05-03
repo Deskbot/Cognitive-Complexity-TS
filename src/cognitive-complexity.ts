@@ -4,6 +4,57 @@ import { sum, countNotAtTheEnds } from "./util";
 import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer, getInterfaceDeclarationName } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
+function aggregateCostOfChildren(
+    children: ts.Node[],
+    childDepth: number,
+    topLevel: boolean,
+    ancestorsOfChild: ReadonlyArray<string>
+): ScoreAndInner {
+    let score = 0;
+
+    // The inner functions of a node is defined as the concat of:
+    // * all child nodes that are functions/namespaces/classes
+    // * all functions declared directly under a non function child node
+    const inner = [] as FunctionOutput[];
+
+    for (const child of children) {
+        const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild);
+
+        score += childCost.score;
+
+        let name: string;
+
+        // a function/class/namespace/type is part of the inner scope we want to output
+        if (isFunctionNode(child)) {
+            const variableBeingDefined = ancestorsOfChild[ancestorsOfChild.length - 1];
+            name = getFunctionNodeName(child, variableBeingDefined);
+        } else if (ts.isClassDeclaration(child)) {
+            name = getClassDeclarationName(child);
+        } else if (ts.isInterfaceDeclaration(child)) {
+            name = getInterfaceDeclarationName(child);
+        } else if (ts.isModuleDeclaration(child)) {
+            name = getModuleDeclarationName(child);
+        } else if (ts.isTypeAliasDeclaration(child)) {
+            name = getTypeAliasName(child);
+        } else {
+            // the child's inner is all part of this node's direct inner scope
+            inner.push(...childCost.inner);
+            continue;
+        }
+
+        inner.push({
+            ...getColumnAndLine(child),
+            ...childCost,
+            name,
+        });
+    }
+
+    return {
+        score,
+        inner
+    };
+}
+
 function costOfDepth(node: ts.Node, depth: number): number {
     // increment for nesting level
     if (depth > 0) {
@@ -156,63 +207,15 @@ function nodeCost(
     // get the ancestors function names from the perspective of this node's children
     const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
 
-    function aggregateCostOfChildren(nodesInsideNode: ts.Node[], localDepth: number, topLevel: boolean): ScoreAndInner {
-        let score = 0;
-
-        // The inner functions of a node is defined as the concat of:
-        // * all child nodes that are functions/namespaces/classes
-        // * all functions declared directly under a non function child node
-        const inner = [] as FunctionOutput[];
-
-        for (const child of nodesInsideNode) {
-            const childCost = nodeCost(child, topLevel, localDepth, namedAncestorsOfChildren);
-
-            score += childCost.score;
-
-            let name: string;
-
-            // a function/class/namespace/type is part of the inner scope we want to output
-            if (isFunctionNode(child)) {
-                const variableBeingDefined = namedAncestorsOfChildren[namedAncestorsOfChildren.length - 1];
-                name = getFunctionNodeName(child, variableBeingDefined);
-            } else if (ts.isClassDeclaration(child)) {
-                name = getClassDeclarationName(child);
-            } else if (ts.isInterfaceDeclaration(child)) {
-                name = getInterfaceDeclarationName(child);
-            } else if (ts.isModuleDeclaration(child)) {
-                name = getModuleDeclarationName(child);
-            } else if (ts.isTypeAliasDeclaration(child)) {
-                name = getTypeAliasName(child);
-            } else {
-                // the child's inner is all part of this node's direct inner scope
-                inner.push(...childCost.inner);
-                continue;
-            }
-
-            inner.push({
-                ...getColumnAndLine(child),
-                ...childCost,
-                name,
-            });
-        }
-
-        return {
-            score,
-            inner
-        };
-    }
-
-    // Aggregate score of this node's children.
-    // Aggregate the inner functions of this node's children.
     const { same, below } = whereAreChildren(node);
 
-    const costOfSameDepthChildren =  aggregateCostOfChildren(same, depth, topLevel);
+    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren);
     score += costOfSameDepthChildren.score;
 
     // todo can I pass the information needed here into whereAreChildren
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren);
     score += costOfBelowChildren.score;
 
     const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.inner];
