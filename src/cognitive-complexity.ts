@@ -204,18 +204,18 @@ function nodeCost(
     score += inherentCost(node, namedAncestors);
     score += costOfDepth(node, depth);
 
-    // get the ancestors function names from the perspective of this node's children
+    // get the ancestors container names from the perspective of this node's children
     const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
-
     const { same, below } = whereAreChildren(node);
 
     const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren);
-    score += costOfSameDepthChildren.score;
 
     // todo can I pass the information needed here into whereAreChildren
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
     const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren);
+
+    score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.score;
 
     const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.inner];
@@ -226,6 +226,7 @@ function nodeCost(
     };
 }
 
+// todo reduce the amount of checks for container types
 export function maybeAddNodeToNamedAncestors(
     node: ts.Node,
     ancestorsOfNode: ReadonlyArray<string>
