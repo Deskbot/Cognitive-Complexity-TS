@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import { ColumnAndLine } from "./types";
+import { repeat } from "./util";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
@@ -156,14 +157,15 @@ export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {
         return false;
     }
 
-    if (operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
+    const operatorIsBoolean = operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
         || operatorToken.kind === ts.SyntaxKind.BarBarToken
-        || operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
-    ) {
-        // the child number 1 is the operator token
-        // true if the parent does not use the same operator as this node
-        // presumably true if the parent is not a binary expression
-        return node.parent.getChildAt(1)?.kind != node.getChildAt(1).kind;
+        || operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken;
+
+    if (operatorIsBoolean) {
+        // True if the parent does not use the same operator as this node.
+        // Presumably true if the parent is not a binary expression.
+        // Child number 1 is the operator token.
+        return node.parent.getChildAt(1)?.kind != operatorToken.kind;
     }
 
     return false;
@@ -171,15 +173,6 @@ export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {
 
 export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
-}
-
-function repeat(str: string, times: number): string {
-    let res = "";
-    for (let i = 0; i < times; i++) {
-        res += str;
-    }
-
-    return res;
 }
 
 export function report(node: ts.Node, depth: number = 0) {

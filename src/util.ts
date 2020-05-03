@@ -16,6 +16,15 @@ export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): num
     return tot;
 }
 
+export function repeat(str: string, times: number): string {
+    let res = "";
+    for (let i = 0; i < times; i++) {
+        res += str;
+    }
+
+    return res;
+}
+
 export function sum(a: number, b: number): number {
     return a + b;
 }
