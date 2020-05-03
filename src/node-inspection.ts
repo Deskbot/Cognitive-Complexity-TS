@@ -79,6 +79,10 @@ export function getFunctionNodeName(
     return "";
 }
 
+export function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
+    return node.getChildren()[1].getText();
+}
+
 export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return node.getChildAt(1).getText();
 }
@@ -106,6 +110,7 @@ export function isBreakOrContinueToLabel(node: ts.Node): boolean {
 export function isContainer(node: ts.Node): boolean {
     return isFunctionNode(node)
         || ts.isClassDeclaration(node)
+        || ts.isInterfaceDeclaration(node)
         || ts.isModuleDeclaration(node)
         || ts.isTypeAliasDeclaration(node)
         || ts.isSourceFile(node)

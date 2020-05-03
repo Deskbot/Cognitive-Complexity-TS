@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, countNotAtTheEnds } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer, getInterfaceDeclarationName } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 // function for file cost returns FileOutput
@@ -148,6 +148,8 @@ function nodeCost(
                 name = getFunctionNodeName(child, variableBeingDefined);
             } else if (ts.isClassDeclaration(child)) {
                 name = getClassDeclarationName(child);
+            } else if (ts.isInterfaceDeclaration(child)) {
+                name = getInterfaceDeclarationName(child);
             } else if (ts.isModuleDeclaration(child)) {
                 name = getModuleDeclarationName(child);
             } else if (ts.isTypeAliasDeclaration(child)) {
