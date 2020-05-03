@@ -57,6 +57,14 @@ function nodeCost(
                 break;
             }
         }
+    } else if (ts.isTypeReferenceNode(node)) {
+        const calledReferencedType = node.getChildAt(0).getText();
+        for (const name of namedAncestors) {
+            if (name === calledReferencedType) {
+                score += 1;
+                break;
+            }
+        }
     }
 
     // An `if` may contain an else keyword followed by else code.
@@ -190,6 +198,14 @@ export function maybeAddNodeToNamedAncestors(
 ): ReadonlyArray<string> {
     if (isNamedDeclarationOfContainer(node)) {
         return [...ancestorsOfNode, getDeclarationName(node)];
+    }
+
+    if (ts.isClassDeclaration(node)) {
+        return [...ancestorsOfNode, getClassDeclarationName(node)];
+    }
+
+    if (ts.isInterfaceDeclaration(node)) {
+        return [...ancestorsOfNode, getInterfaceDeclarationName(node)];
     }
 
     if (ts.isTypeAliasDeclaration(node)) {

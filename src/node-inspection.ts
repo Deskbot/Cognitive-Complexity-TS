@@ -27,7 +27,7 @@ export function getCalledFunctionName(node: ts.CallExpression): string {
 }
 
 export function getClassDeclarationName(node: ts.ClassDeclaration): string {
-    return node.getChildren()[1].getText();
+    return node.getChildAt(1).getText();
 }
 
 export function getColumnAndLine(node: ts.Node): ColumnAndLine {
@@ -40,6 +40,7 @@ export function getColumnAndLine(node: ts.Node): ColumnAndLine {
     };
 }
 
+// todo this only works for some declarations
 export function getDeclarationName(node: ts.NamedDeclaration): string {
     const identifier = node.getChildAt(0).getText();
     return identifier;
@@ -80,7 +81,7 @@ export function getFunctionNodeName(
 }
 
 export function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
-    return node.getChildren()[1].getText();
+    return node.getChildAt(1).getText();
 }
 
 export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
@@ -134,6 +135,7 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
  * @returns true, if the node can be used to assign an anonymous function/class/type with a name.
  * Here container means function/class/type.
  */
+// todo check that the first child is the identifier for all of these
 export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDeclaration {
     // This is just a check for a subset of NamedDeclarations.
     // I don't know whether this includes too few or too many node types.
@@ -143,10 +145,8 @@ export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDe
         || ts.isCallSignatureDeclaration(node)
         || ts.isBindingElement(node)
         || ts.isObjectLiteralElement(node)
-        || ts.isClassLike(node)
         || ts.isClassElement(node)
         || ts.isTypeElement(node)
-        || ts.isInterfaceDeclaration(node)
         || ts.isEnumDeclaration(node)
         || ts.isEnumMember(node);
 }
