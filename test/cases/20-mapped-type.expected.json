@@ -1,6 +1,6 @@
 {
     "20-mapped-type.ts": {
-        "score": 5,
+        "score": 6,
         "inner": [
             {
                 "name": "G",
@@ -16,7 +16,7 @@
             },
             {
                 "name": "I",
-                "score": 2,
+                "score": 3,
                 "line": 11,
                 "column": 1
             }

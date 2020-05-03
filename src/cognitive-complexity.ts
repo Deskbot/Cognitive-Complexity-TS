@@ -43,6 +43,7 @@ function nodeCost(
         || ts.isForInStatement(node)
         || ts.isForOfStatement(node)
         || ts.isForStatement(node)
+        || ts.isMappedTypeNode(node)
         || ts.isSwitchStatement(node)
         || ts.isWhileStatement(node)
         || isBreakOrContinueToLabel(node)
@@ -104,6 +105,7 @@ function nodeCost(
             || ts.isForInStatement(node)
             || ts.isForOfStatement(node)
             || ts.isForStatement(node)
+            || ts.isMappedTypeNode(node)
             || ts.isSwitchStatement(node)
             || ts.isWhileStatement(node)
             || (
