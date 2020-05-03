@@ -153,17 +153,17 @@ function nodeCost(
     score += inherentCost(node, namedAncestors);
     score += costOfDepth(node, depth);
 
-    // TODO use separate functions for score and inner
-
-    // The inner functions of a node is defined as the concat of:
-    // * all child nodes that are functions/namespaces/classes
-    // * all functions declared directly under a non function child node
-    const inner = [] as FunctionOutput[];
-
     // get the ancestors function names from the perspective of this node's children
     const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
 
-    function aggregateScoreAndInnerForChildren(nodesInsideNode: ts.Node[], localDepth: number, topLevel: boolean) {
+    function aggregateCostOfChildren(nodesInsideNode: ts.Node[], localDepth: number, topLevel: boolean): ScoreAndInner {
+        let score = 0;
+
+        // The inner functions of a node is defined as the concat of:
+        // * all child nodes that are functions/namespaces/classes
+        // * all functions declared directly under a non function child node
+        const inner = [] as FunctionOutput[];
+
         for (const child of nodesInsideNode) {
             const childCost = nodeCost(child, topLevel, localDepth, namedAncestorsOfChildren);
 
@@ -171,7 +171,7 @@ function nodeCost(
 
             let name: string;
 
-            // a function/class/namespace is part of the inner scope we want to output
+            // a function/class/namespace/type is part of the inner scope we want to output
             if (isFunctionNode(child)) {
                 const variableBeingDefined = namedAncestorsOfChildren[namedAncestorsOfChildren.length - 1];
                 name = getFunctionNodeName(child, variableBeingDefined);
@@ -195,17 +195,27 @@ function nodeCost(
                 name,
             });
         }
+
+        return {
+            score,
+            inner
+        };
     }
 
     // Aggregate score of this node's children.
     // Aggregate the inner functions of this node's children.
     const { same, below } = whereAreChildren(node);
 
-    aggregateScoreAndInnerForChildren(same, depth, topLevel);
+    const costOfSameDepthChildren =  aggregateCostOfChildren(same, depth, topLevel);
+    score += costOfSameDepthChildren.score;
+
     // todo can I pass the information needed here into whereAreChildren
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    aggregateScoreAndInnerForChildren(below, depthOfBelow, false);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false);
+    score += costOfBelowChildren.score;
+
+    const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.inner];
 
     return {
         inner,
