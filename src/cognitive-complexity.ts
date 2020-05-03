@@ -4,6 +4,38 @@ import { sum, countNotAtTheEnds } from "./util";
 import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer, getInterfaceDeclarationName } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
+function costOfDepth(node: ts.Node, depth: number): number {
+    // increment for nesting level
+    if (depth > 0) {
+        if (ts.isCatchClause(node)
+            || ts.isConditionalExpression(node)
+            || ts.isConditionalTypeNode(node)
+            || ts.isDoStatement(node)
+            || ts.isForInStatement(node)
+            || ts.isForOfStatement(node)
+            || ts.isForStatement(node)
+            || ts.isMappedTypeNode(node)
+            || ts.isSwitchStatement(node)
+            || ts.isWhileStatement(node)
+            || (
+
+                // increment for `if`, but not `else if`
+                // The parent of the `if` within an `else if`
+                // is the `if` the `else` belongs to.
+                // However `if (...) if (...)` is treated as false here
+                // even though technically there should be 2 increments.
+                // This quirky syntax produces the same score as using `&&`,
+                // so maybe it doesn't matter.
+                ts.isIfStatement(node) && !ts.isIfStatement(node.parent)
+            )
+        ) {
+            return depth;
+        }
+    }
+
+    return 0;
+}
+
 // function for file cost returns FileOutput
 export function fileCost(file: ts.SourceFile): FileOutput {
     // TODO can I just call nodeCost(file)
@@ -119,34 +151,7 @@ function nodeCost(
     let score = 0;
 
     score += inherentCost(node, namedAncestors);
-
-    // increment for nesting level
-    if (depth > 0) {
-        if (ts.isCatchClause(node)
-            || ts.isConditionalExpression(node)
-            || ts.isConditionalTypeNode(node)
-            || ts.isDoStatement(node)
-            || ts.isForInStatement(node)
-            || ts.isForOfStatement(node)
-            || ts.isForStatement(node)
-            || ts.isMappedTypeNode(node)
-            || ts.isSwitchStatement(node)
-            || ts.isWhileStatement(node)
-            || (
-
-            // increment for `if`, but not `else if`
-            // The parent of the `if` within an `else if`
-            // is the `if` the `else` belongs to.
-            // However `if (...) if (...)` is treated as false here
-            // even though technically there should be 2 increments.
-            // This quirky syntax produces the same score as using `&&`,
-            // so maybe it doesn't matter.
-            ts.isIfStatement(node) && !ts.isIfStatement(node.parent)
-            )
-        ) {
-            score += depth;
-        }
-    }
+    score += costOfDepth(node, depth);
 
     // TODO use separate functions for score and inner
 
