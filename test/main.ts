@@ -19,7 +19,7 @@ function allCaseFilePaths(): Promise<string[]> {
 }
 
 function getExpectation(fileName: string): any {
-    const tsIndex = fileName.indexOf(".ts")
+    const tsIndex = fileName.lastIndexOf(".");
     if (tsIndex !== -1) {
         fileName = fileName.substr(0, tsIndex);
     }
