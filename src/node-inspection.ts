@@ -145,11 +145,28 @@ export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDe
         || ts.isEnumMember(node);
 }
 
-export function isSequenceOfDifferentBinaryOperations(node: ts.BinaryExpression): boolean {
-    // the child number 1 is the operator token
-    // true if the parent does not use the same operator as this node
-    // presumably true if the parent is not a binary expression
-    return node.parent.getChildAt(1)?.kind != node.getChildAt(1).kind;
+export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {
+    if (!ts.isBinaryExpression(node)) {
+        return false;
+    }
+
+    const operatorToken = node.getChildAt(1);
+
+    if (!ts.isToken(operatorToken)) {
+        return false;
+    }
+
+    if (operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
+        || operatorToken.kind === ts.SyntaxKind.BarBarToken
+        || operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken
+    ) {
+        // the child number 1 is the operator token
+        // true if the parent does not use the same operator as this node
+        // presumably true if the parent is not a binary expression
+        return node.parent.getChildAt(1)?.kind != node.getChildAt(1).kind;
+    }
+
+    return false;
 }
 
 export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {

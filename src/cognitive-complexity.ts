@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, countNotAtTheEnds } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBinaryOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 // function for file cost returns FileOutput
@@ -35,7 +35,7 @@ function nodeCost(
     // TODO check if ConstructorDeclaration and AccessorDeclaration (get,set) need to be added separately
 
     // certain language features carry and inherent cost
-    if (ts.isBinaryExpression(node) && isSequenceOfDifferentBinaryOperations(node)
+    if (isSequenceOfDifferentBooleanOperations(node)
         || ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
         || ts.isConditionalTypeNode(node)
