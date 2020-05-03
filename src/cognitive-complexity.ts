@@ -24,14 +24,7 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     };
 }
 
-function nodeCost(
-    node: ts.Node,
-    topLevel: boolean,
-    depth = 0,
-    namedAncestors = [] as ReadonlyArray<string>,
-): ScoreAndInner {
-    let score = 0;
-
+function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): number {
     // TODO check if ConstructorDeclaration and AccessorDeclaration (get,set) need to be added separately
 
     // certain language features carry and inherent cost
@@ -48,21 +41,23 @@ function nodeCost(
         || ts.isWhileStatement(node)
         || isBreakOrContinueToLabel(node)
     ) {
-        score += 1;
-    } else if (ts.isCallExpression(node)) {
+        return 1;
+    }
+
+    if (ts.isCallExpression(node)) {
         const calledFunctionName = getCalledFunctionName(node);
         for (const name of namedAncestors) {
             if (name === calledFunctionName) {
-                score += 1;
-                break;
+                return 1;
             }
         }
-    } else if (ts.isTypeReferenceNode(node)) {
+    }
+
+    if (ts.isTypeReferenceNode(node)) {
         const calledReferencedType = node.getChildAt(0).getText();
         for (const name of namedAncestors) {
             if (name === calledReferencedType) {
-                score += 1;
-                break;
+                return 1;
             }
         }
     }
@@ -70,7 +65,9 @@ function nodeCost(
     // An `if` may contain an else keyword followed by else code.
     // An `else if` is just the else keyword followed by an if statement.
     // Therefore this block is entered for both `if` and `else if`.
-    else if (ts.isIfStatement(node)) {
+    if (ts.isIfStatement(node)) {
+        let score = 0;
+
         // increment for `if` and `else if`
         score += 1;
 
@@ -83,9 +80,13 @@ function nodeCost(
                 score += 1;
             }
         }
+
+        return score;
     }
 
-    else if (isBinaryTypeOperator(node)) {
+    if (isBinaryTypeOperator(node)) {
+        let score = 0;
+
         // This node naturally represents a sequence of binary type operators.
         // (unlike normal binary operators)
         score += 1;
@@ -102,7 +103,22 @@ function nodeCost(
         );
 
         score += numOfSequenceInterrupts;
+
+        return score;
     }
+
+    return 0;
+}
+
+function nodeCost(
+    node: ts.Node,
+    topLevel: boolean,
+    depth = 0,
+    namedAncestors = [] as ReadonlyArray<string>,
+): ScoreAndInner {
+    let score = 0;
+
+    score += inherentCost(node, namedAncestors);
 
     // increment for nesting level
     if (depth > 0) {
