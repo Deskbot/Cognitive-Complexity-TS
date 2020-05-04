@@ -36,3 +36,14 @@ const o = function p() {
     p();
 }
 
+class NewSelf {
+    constructor() {
+        new NewSelf();
+    }
+}
+
+class RecursiveConstructor {
+    constructor() {
+        this.constructor();
+    }
+}
