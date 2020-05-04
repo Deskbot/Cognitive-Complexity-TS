@@ -24,7 +24,6 @@ function getExpectation(fileName: string): any {
         fileName = fileName.substr(0, tsIndex);
     }
     const caseExpectationFile = fileName + ".expected.json";
-    console.log(caseExpectationFile);
     const expectedJsonFileContent = fs.readFileSync(caseExpectationFile).toString();
     return JSON.parse(expectedJsonFileContent);
 }
