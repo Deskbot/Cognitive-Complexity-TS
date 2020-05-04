@@ -166,11 +166,22 @@ export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {
         || operatorToken.kind === ts.SyntaxKind.BarBarToken
         || operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken;
 
+    // todo encapsulate getting this ancestor
+    let firstNonParenthesisAncestor = node.parent;
+
+    if (firstNonParenthesisAncestor === undefined) {
+        return false;
+    }
+
+    while (ts.isParenthesizedExpression(firstNonParenthesisAncestor)) {
+        firstNonParenthesisAncestor = firstNonParenthesisAncestor.parent;
+    }
+
     if (operatorIsBoolean) {
         // True if the parent does not use the same operator as this node.
         // Presumably true if the parent is not a binary expression.
         // Child number 1 is the operator token.
-        return node.parent.getChildAt(1)?.kind != operatorToken.kind;
+        return firstNonParenthesisAncestor.getChildAt(1)?.kind != operatorToken.kind;
     }
 
     return false;

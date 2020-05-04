@@ -1,6 +1,6 @@
 {
     "03-logical-operators.ts": {
-        "score": 8,
+        "score": 11,
         "inner": [
             {
                 "name": "allAnd",
