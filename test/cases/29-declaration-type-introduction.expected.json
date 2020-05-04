@@ -1,0 +1,100 @@
+{
+    "29-declaration-type-introduction.ts": {
+        "score": 1,
+        "inner": [
+            {
+                "name": "declaration",
+                "score": 1,
+                "line": 1,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "T",
+                        "score": 1,
+                        "line": 1,
+                        "column": 1
+                    }
+
+                ]
+            },
+            {
+                "name": "ClassWithDeclaration",
+                "score": 2,
+                "line": 1,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "abs",
+                        "score": 1,
+                        "line": 7,
+                        "column": 5,
+                        "inner": [
+                            {
+                                "name": "T",
+                                "score": 1,
+                                "line": 7,
+                                "column": 18
+                            }
+                        ]
+                    },
+                    {
+                        "name": "abs",
+                        "score": 0,
+                        "line": 8,
+                        "column": 5,
+                        "inner": [
+                            {
+                                "name": "T",
+                                "score": 0,
+                                "line": 8,
+                                "column": 18
+                            }
+                        ]
+                    },
+                    {
+                        "name": "method",
+                        "score": 1,
+                        "line": 10,
+                        "column": 5,
+                        "inner": [
+                            {
+                                "name": "T",
+                                "score": 1,
+                                "line": 10,
+                                "column": 18
+                            }
+                        ]
+                    },
+                    {
+                        "name": "method",
+                        "score": 0,
+                        "line": 11,
+                        "column": 5,
+                        "inner": [
+                            {
+                                "name": "T",
+                                "score": 0,
+                                "line": 11,
+                                "column": 18
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "GenericClass",
+                "score": 1,
+                "line": 16,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "T",
+                        "score": 1,
+                        "line": 16,
+                        "column": 20
+                    }
+                ]
+            }
+        ]
+    }
+}

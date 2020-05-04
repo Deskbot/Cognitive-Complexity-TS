@@ -108,8 +108,6 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 }
 
 function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): number {
-    // TODO check if ConstructorDeclaration and AccessorDeclaration (get,set) need to be added separately
-
     // certain language features carry and inherent cost
     if (isSequenceOfDifferentBooleanOperations(node)
         || ts.isCatchClause(node)
