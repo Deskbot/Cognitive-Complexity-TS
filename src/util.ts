@@ -1,5 +1,3 @@
-class EndOfIteratorError extends Error {}
-
 export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): number {
     if (arr.length <= 2) {
         return 0;
@@ -27,17 +25,6 @@ export function repeat(str: string, times: number): string {
 
 export function sum(a: number, b: number): number {
     return a + b;
-}
-
-// TODO retire the need for this
-export function throwingIterator<T>(iter: Iterator<T>): () => T {
-    return () => {
-        const { value, done } = iter.next();
-
-        if (done) throw new EndOfIteratorError();
-
-        return value;
-    };
 }
 
 export function toPromise<T, E>(

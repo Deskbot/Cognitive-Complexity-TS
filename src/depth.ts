@@ -3,8 +3,7 @@
  */
 
 import * as ts from "typescript";
-import { isForLikeStatement, ForLikeStatement, isBinaryTypeOperator } from "./node-inspection";
-import { throwingIterator } from "./util";
+import { isForLikeStatement, ForLikeStatement } from "./node-inspection";
 
 interface DepthOfChildren {
     /**
@@ -55,23 +54,16 @@ export function whereAreChildren(node: ts.Node): DepthOfChildren {
     }
 }
 
-// todo simplify
 function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
-    const nextChild = throwingIterator(node.getChildren().values());
+    const children = node.getChildren();
 
-    // consume OpenParenToken
-    nextChild();
     // aggregate code inside SyntaxList
-    same.push(nextChild());
-    // consume CloseParenToken
-    nextChild();
-    // consume EqualsGreaterThanToken
-    nextChild();
+    same.push(children[1]);
     // aggregate code inside arrow function
-    below.push(nextChild());
+    below.push(children[4]);
 
     return { same, below };
 }
@@ -121,42 +113,31 @@ function conditionalType(node: ts.ConditionalTypeNode): DepthOfChildren {
     };
 }
 
-// todo simplify
 function doStatement(node: ts.DoStatement): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
-    const nextChild = throwingIterator(node.getChildren().values());
+    const children = node.getChildren();
 
-    // consume do token
-    nextChild();
     // aggregate block
-    below.push(nextChild());
-    // consume while keyword
-    nextChild();
-    // consume open paren
-    nextChild();
+    below.push(children[1]);
     // aggregate condition
-    same.push(nextChild());
+    same.push(children[4]);
 
     return { same, below };
 }
 
-// todo simplify
 function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
-    const nextChild = throwingIterator(node.getChildren().values());
+    const children = node.getChildren();
 
-    // consume for keyword
-    nextChild();
-    // consume open parenthesis
-    nextChild();
-
-    // consume everything up to the close parenthesis
+    // consume everything form the open parenthesis to the close parenthesis
+    let i = 2;
     while (true) {
-        const child = nextChild();
+        const child = children[i++];
+
         if (ts.isToken(child) && child.kind === ts.SyntaxKind.CloseParenToken) {
             break;
         }
@@ -165,7 +146,7 @@ function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
     }
 
     // consume looped code
-    below.push(nextChild());
+    below.push(children[i]);
 
     return { same, below };
 }
@@ -222,15 +203,11 @@ function ifStatement(node: ts.IfStatement): DepthOfChildren {
     };
 }
 
-// todo simplify
 function methodDeclaration(node: ts.MethodDeclaration): DepthOfChildren {
     const same = [] as ts.Node[];
     const below = [] as ts.Node[];
 
-    const nextChild = throwingIterator(node.getChildren().values());
-
-    while (true) {
-        const child = nextChild();
+    for (const child of node.getChildren()) {
         if (ts.isBlock(child)) {
             below.push(child);
             break;
@@ -242,20 +219,13 @@ function methodDeclaration(node: ts.MethodDeclaration): DepthOfChildren {
     return { same, below };
 }
 
-// todo simplify
 function switchStatement(node: ts.SwitchStatement): DepthOfChildren {
-    const nextChild = throwingIterator(node.getChildren().values());
+    const children = node.getChildren();
 
-    // consume switch keyword
-    nextChild();
-    // consume open parenthesis
-    nextChild();
     // aggregate condition
-    const condition = [nextChild()];
-    // consume close parenthesis
-    nextChild();
+    const condition = [children[2]];
     // consume cases
-    const cases = [nextChild()];
+    const cases = [children[4]];
 
     return {
         same: condition,
