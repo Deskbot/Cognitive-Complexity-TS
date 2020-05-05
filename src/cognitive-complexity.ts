@@ -30,6 +30,8 @@ function aggregateCostOfChildren(
             name = getFunctionNodeName(child, variableBeingDefined);
         } else if (ts.isClassDeclaration(child)) {
             name = getClassDeclarationName(child);
+        } else if (ts.isConstructorDeclaration(child)) {
+            name = "constructor";
         } else if (ts.isInterfaceDeclaration(child)) {
             name = getInterfaceDeclarationName(child);
         } else if (ts.isModuleDeclaration(child)) {
@@ -235,6 +237,10 @@ export function maybeAddNodeToNamedAncestors(
 
     if (ts.isClassDeclaration(node)) {
         return [...ancestorsOfNode, getClassDeclarationName(node)];
+    }
+
+    if (ts.isConstructorDeclaration(node)) {
+        return [...ancestorsOfNode, "constructor"];
     }
 
     if (ts.isInterfaceDeclaration(node)) {

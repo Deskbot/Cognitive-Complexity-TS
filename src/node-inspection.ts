@@ -111,6 +111,7 @@ export function isBreakOrContinueToLabel(node: ts.Node): boolean {
 export function isContainer(node: ts.Node): boolean {
     return isFunctionNode(node)
         || ts.isClassDeclaration(node)
+        || ts.isConstructorDeclaration(node)
         || ts.isInterfaceDeclaration(node)
         || ts.isModuleDeclaration(node)
         || ts.isTypeAliasDeclaration(node)
