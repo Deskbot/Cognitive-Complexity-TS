@@ -129,38 +129,22 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
 
     if (ts.isCallExpression(node)) {
         const calledFunctionName = getCalledFunctionName(node);
-        for (const name of namedAncestors) {
-            if (name === calledFunctionName) {
-                return 1;
-            }
-        }
+        return namedAncestors.includes(calledFunctionName) ? 1 : 0;
     }
 
     if (ts.isNewExpression(node)) {
         const constructorName = getNewedConstructorName(node);
-        for (const name of namedAncestors) {
-            if (name === constructorName) {
-                return 1;
-            }
-        }
+        return namedAncestors.includes(constructorName) ? 1 : 0;
     }
 
     if (ts.isPropertyAccessExpression(node)) {
         const referencedPropertyName = getPropertyAccessName(node);
-        for (const name of namedAncestors) {
-            if (name === referencedPropertyName) {
-                return 1;
-            }
-        }
+        return namedAncestors.includes(referencedPropertyName) ? 1 : 0;
     }
 
     if (ts.isTypeReferenceNode(node)) {
         const calledReferencedType = node.getChildAt(0).getText();
-        for (const name of namedAncestors) {
-            if (name === calledReferencedType) {
-                return 1;
-            }
-        }
+        return namedAncestors.includes(calledReferencedType) ? 1 : 0;
     }
 
     // An `if` may contain an else keyword followed by else code.
