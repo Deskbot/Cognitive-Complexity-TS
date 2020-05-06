@@ -55,7 +55,7 @@ export function getFunctionNodeName(
     }
 
     if (ts.isFunctionDeclaration(func)) {
-        return func.getChildren()[1].getText();
+        return func.getChildAt(1).getText();
     }
 
     if (ts.isFunctionExpression(func)) {
@@ -68,7 +68,7 @@ export function getFunctionNodeName(
     }
 
     if (ts.isMethodDeclaration(func)) {
-        return func.getChildren()[0].getText();
+        return func.getChildAt(0).getText();
     }
 
     // unreachable
