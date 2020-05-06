@@ -4,7 +4,8 @@ import { repeat } from "./util";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
-export type FunctionNode = ts.ArrowFunction
+export type FunctionNode = ts.AccessorDeclaration
+    | ts.ArrowFunction
     | ts.FunctionDeclaration
     | ts.FunctionExpression
     | ts.MethodDeclaration;
@@ -19,9 +20,7 @@ export function getCalledFunctionName(node: ts.CallExpression): string {
     }
 
     if (ts.isPropertyAccessExpression(expressionToCall)) {
-        const expressionNodes = expressionToCall.getChildren();
-        const identifier = expressionNodes[expressionNodes.length - 1];
-        return identifier.getText();
+        return getPropertyAccessName(expressionToCall);
     }
 
     return "";
@@ -51,6 +50,10 @@ export function getFunctionNodeName(
     func: FunctionNode,
     variableBeingDefined: string | undefined = undefined
 ): string {
+    if (ts.isAccessor(func)) {
+        return func.getChildAt(1).getText();
+    }
+
     if (ts.isArrowFunction(func)) {
         return variableBeingDefined ?? "";
     }
@@ -91,6 +94,12 @@ export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
 
 export function getNewedConstructorName(node: ts.NewExpression): string {
     return node.getChildAt(1).getText();
+}
+
+export function getPropertyAccessName(node: ts.PropertyAccessExpression): string {
+    const expressionNodes = node.getChildren();
+    const identifier = expressionNodes[expressionNodes.length - 1];
+    return identifier.getText();
 }
 
 export function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
@@ -134,7 +143,8 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
     return ts.isArrowFunction(node)
         || ts.isFunctionDeclaration(node)
         || ts.isFunctionExpression(node)
-        || ts.isMethodDeclaration(node);
+        || ts.isMethodDeclaration(node)
+        || ts.isAccessor(node);
 }
 
 /**
@@ -150,8 +160,8 @@ export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDe
         || ts.isPropertyDeclaration(node)
         || ts.isCallSignatureDeclaration(node)
         || ts.isBindingElement(node)
-        || ts.isObjectLiteralElement(node)
-        || ts.isClassElement(node)
+        // || ts.isObjectLiteralElement(node)
+        // || ts.isClassElement(node)
         || ts.isTypeElement(node)
         || ts.isEnumDeclaration(node)
         || ts.isEnumMember(node);

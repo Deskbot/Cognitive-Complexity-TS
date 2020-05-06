@@ -8,6 +8,6 @@ class Getter {
 
 class Setter {
     set f(value) {
-        this.f = () => {};
+        this.f = 1;
     }
 }
