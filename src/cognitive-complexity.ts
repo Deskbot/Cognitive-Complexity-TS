@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, countNotAtTheEnds } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer, getInterfaceDeclarationName } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, report, isContainer, getInterfaceDeclarationName, getNewedConstructorName } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 function aggregateCostOfChildren(
@@ -135,6 +135,16 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
             }
         }
     }
+
+    if (ts.isNewExpression(node)) {
+        const constructorName = getNewedConstructorName(node);
+        for (const name of namedAncestors) {
+            if (name === constructorName) {
+                return 1;
+            }
+        }
+    }
+
 
     if (ts.isTypeReferenceNode(node)) {
         const calledReferencedType = node.getChildAt(0).getText();

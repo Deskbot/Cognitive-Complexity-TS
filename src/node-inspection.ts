@@ -11,6 +11,7 @@ export type FunctionNode = ts.ArrowFunction
 
 export function getCalledFunctionName(node: ts.CallExpression): string {
     const children = node.getChildren();
+
     const expressionToCall = children[0];
 
     if (ts.isIdentifier(expressionToCall)) {
@@ -85,6 +86,10 @@ export function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): stri
 }
 
 export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
+    return node.getChildAt(1).getText();
+}
+
+export function getNewedConstructorName(node: ts.NewExpression): string {
     return node.getChildAt(1).getText();
 }
 
