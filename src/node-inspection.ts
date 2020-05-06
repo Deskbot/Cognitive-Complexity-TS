@@ -19,10 +19,6 @@ export function getCalledFunctionName(node: ts.CallExpression): string {
         return expressionToCall.getText();
     }
 
-    if (ts.isPropertyAccessExpression(expressionToCall)) {
-        return getPropertyAccessName(expressionToCall);
-    }
-
     return "";
 }
 
@@ -160,8 +156,6 @@ export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDe
         || ts.isPropertyDeclaration(node)
         || ts.isCallSignatureDeclaration(node)
         || ts.isBindingElement(node)
-        // || ts.isObjectLiteralElement(node)
-        // || ts.isClassElement(node)
         || ts.isTypeElement(node)
         || ts.isEnumDeclaration(node)
         || ts.isEnumMember(node);
