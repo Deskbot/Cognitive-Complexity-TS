@@ -102,6 +102,10 @@ export function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
     return node.getChildAt(1).getText();
 }
 
+export function getTypeParameter(node: ts.TypeParameterDeclaration): string {
+    return node.getChildAt(0).getText();
+}
+
 export function isBinaryTypeOperator(node: ts.Node): node is ts.UnionOrIntersectionTypeNode {
     return ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node);
 }

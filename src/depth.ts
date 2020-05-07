@@ -55,15 +55,12 @@ export function whereAreChildren(node: ts.Node): DepthOfChildren {
 }
 
 function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
-    const same = [] as ts.Node[];
-    const below = [] as ts.Node[];
-
     const children = node.getChildren();
 
     // aggregate code inside SyntaxList
-    same.push(children[1]);
+    const same = children.slice(1,-1);
     // aggregate code inside arrow function
-    below.push(children[4]);
+    const below = [children[children.length - 1]];
 
     return { same, below };
 }
@@ -154,23 +151,23 @@ function forLikeStatement(node: ForLikeStatement): DepthOfChildren {
 function functionDeclaration(node: ts.FunctionDeclaration): DepthOfChildren {
     const children = node.getChildren();
 
-    const params = children[3];
-    const body = children[children.length - 1];
+    const same = children.slice(1,-1);
+    const below = [children[children.length - 1]];
 
     return {
-        same: [params],
-        below: [body]
+        below,
+        same,
     };
 }
 
 function functionExpression(node: ts.FunctionExpression): DepthOfChildren {
     const children = node.getChildren();
-    const functionBody = children.slice(-1)[0];
-    const functionDecl = children.slice(0, -1)[0];
+    const functionBody = children.slice(-1);
+    const functionDecl = children.slice(0, -1);
 
     return {
-        same: [functionBody],
-        below: [functionDecl]
+        same: functionBody,
+        below: functionDecl
     };
 }
 
