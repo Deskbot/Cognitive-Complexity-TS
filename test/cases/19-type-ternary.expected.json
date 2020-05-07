@@ -6,13 +6,27 @@
                 "name": "E",
                 "score": 1,
                 "line": 1,
-                "column": 1
+                "column": 1,
+                "inner": [{
+                    "name": "T",
+                    "score": 0,
+                    "line": 1,
+                    "column": 8
+                }]
             },
             {
                 "name": "F",
                 "score": 4,
                 "line": 4,
-                "column": 1
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "T",
+                        "score": 0,
+                        "line": 4,
+                        "column": 8
+                    }
+                ]
             }
         ]
     }

@@ -231,41 +231,46 @@ function nodeCost(
 }
 
 // todo reduce the amount of checks for container types
-export function maybeAddNodeToNamedAncestors(
+function maybeAddNodeToNamedAncestors(
     node: ts.Node,
     ancestorsOfNode: ReadonlyArray<string>
 ): ReadonlyArray<string> {
-    if (isNamedDeclarationOfContainer(node)) {
-        return [...ancestorsOfNode, getDeclarationName(node)];
-    }
-
-    if (ts.isClassDeclaration(node)) {
-        return [...ancestorsOfNode, getClassDeclarationName(node)];
-    }
-
-    if (ts.isConstructorDeclaration(node)) {
-        return [...ancestorsOfNode, "constructor"];
-    }
-
-    if (ts.isInterfaceDeclaration(node)) {
-        return [...ancestorsOfNode, getInterfaceDeclarationName(node)];
-    }
-
-    if (ts.isTypeAliasDeclaration(node)) {
-        return [...ancestorsOfNode, getTypeAliasName(node)];
-    }
-
-    if (ts.isTypeParameterDeclaration(node)) {
-        return [...ancestorsOfNode, getTypeParameter(node)];
-    }
-
-    if (isFunctionNode(node)) {
-        const nodeNameIfCallable = getFunctionNodeName(node);
-
-        if (nodeNameIfCallable !== undefined && nodeNameIfCallable.length !== 0) {
-            return [...ancestorsOfNode, nodeNameIfCallable];
-        }
+    const containerNameMaybe = getNameIfContainer(node);
+    if (containerNameMaybe) {
+        return [...ancestorsOfNode, containerNameMaybe];
     }
 
     return ancestorsOfNode;
+}
+
+function getNameIfContainer(node: ts.Node): string | undefined {
+    if (isNamedDeclarationOfContainer(node)) {
+        return getDeclarationName(node);
+    }
+
+    if (ts.isClassDeclaration(node)) {
+        return getClassDeclarationName(node);
+    }
+
+    if (ts.isConstructorDeclaration(node)) {
+        return "constructor";
+    }
+
+    if (ts.isInterfaceDeclaration(node)) {
+        return getInterfaceDeclarationName(node);
+    }
+
+    if (ts.isTypeAliasDeclaration(node)) {
+        return getTypeAliasName(node);
+    }
+
+    if (ts.isTypeParameterDeclaration(node)) {
+        return getTypeParameter(node);
+    }
+
+    if (isFunctionNode(node)) {
+        return getFunctionNodeName(node);
+    }
+
+    return undefined;
 }
