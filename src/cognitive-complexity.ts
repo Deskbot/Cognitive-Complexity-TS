@@ -36,6 +36,8 @@ function aggregateCostOfChildren(
             name = getInterfaceDeclarationName(child);
         } else if (ts.isModuleDeclaration(child)) {
             name = getModuleDeclarationName(child);
+        } else if (ts.isTypeParameterDeclaration(child)) {
+            name = getTypeParameter(child);
         } else if (ts.isTypeAliasDeclaration(child)) {
             name = getTypeAliasName(child);
         } else {
