@@ -150,6 +150,11 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
         return namedAncestors.includes(calledReferencedType) ? 1 : 0;
     }
 
+    if (ts.isTaggedTemplateExpression(node)) {
+        const calledReferencedType = node.getChildAt(0).getText();
+        return namedAncestors.includes(calledReferencedType) ? 1 : 0;
+    }
+
     // An `if` may contain an else keyword followed by else code.
     // An `else if` is just the else keyword followed by an if statement.
     // Therefore this block is entered for both `if` and `else if`.
