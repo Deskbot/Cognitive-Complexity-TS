@@ -43,3 +43,13 @@ class BracketedConstructor {
 const val = function func() {
     (val)();
 }
+
+const Obj = {
+    bracketedConst() {
+        (Obj).bracketedConst();
+    },
+
+    bracketedMethodCall() {
+        (Obj.bracketedMethodCall)();
+    }
+};

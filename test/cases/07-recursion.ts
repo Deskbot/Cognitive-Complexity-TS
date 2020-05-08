@@ -19,7 +19,7 @@ class C {
 
 const D = {
     j() {
-        j();
+        D.j();
     }
 };
 
@@ -33,7 +33,7 @@ const m = function n() {
 }
 
 const o = function p() {
-    p();
+    o();
 }
 
 class NewSelf {

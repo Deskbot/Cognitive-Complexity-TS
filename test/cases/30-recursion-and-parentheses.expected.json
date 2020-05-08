@@ -1,6 +1,6 @@
 {
     "30-recursion-and-parentheses.ts": {
-        "score": 7,
+        "score": 9,
         "inner": [
             {
                 "name": "parens",
@@ -95,6 +95,26 @@
                 "score": 1,
                 "line": 43,
                 "column": 13
+            },
+            {
+                "name": "Obj",
+                "score": 1,
+                "line": 47,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "bracketedConst",
+                        "score": 1,
+                        "line": 48,
+                        "column": 5
+                    },
+                    {
+                        "name": "bracketedMethodCall",
+                        "score": 1,
+                        "line": 52,
+                        "column": 5
+                    }
+                ]
             }
         ]
     }
