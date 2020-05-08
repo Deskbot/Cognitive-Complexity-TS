@@ -1,3 +1,5 @@
+// todo split this file by node naming and other inspection
+
 import * as ts from "typescript";
 import { ColumnAndLine } from "./types";
 import { repeat, Unreachable } from "./util";
@@ -24,7 +26,6 @@ export function getCalledFunctionName(node: ts.CallExpression): string {
 
 export function getClassDeclarationName(node: ts.ClassDeclaration): string {
     const name = getIdentifier(node);
-
     return name ?? ""; // anonymous class
 }
 

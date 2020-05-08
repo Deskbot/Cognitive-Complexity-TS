@@ -22,33 +22,20 @@ function aggregateCostOfChildren(
 
         score += childCost.score;
 
-        let name: string;
-
         // a function/class/namespace/type is part of the inner scope we want to output
-        if (isFunctionNode(child)) {
-            const variableBeingDefined = ancestorsOfChild[ancestorsOfChild.length - 1];
-            name = getFunctionNodeName(child, variableBeingDefined);
-        } else if (ts.isClassDeclaration(child)) {
-            name = getClassDeclarationName(child);
-        } else if (ts.isConstructorDeclaration(child)) {
-            name = "constructor";
-        } else if (ts.isInterfaceDeclaration(child)) {
-            name = getInterfaceDeclarationName(child);
-        } else if (ts.isModuleDeclaration(child)) {
-            name = getModuleDeclarationName(child);
-        } else if (ts.isTypeAliasDeclaration(child)) {
-            name = getTypeAliasName(child);
+        const variableBeingDefined = ancestorsOfChild[ancestorsOfChild.length - 1];
+        const name = getNameIfContainer2(child, variableBeingDefined);
+
+        if (name !== undefined) {
+            inner.push({
+                ...getColumnAndLine(child),
+                ...childCost,
+                name,
+            });
         } else {
             // the child's inner is all part of this node's direct inner scope
             inner.push(...childCost.inner);
-            continue;
         }
-
-        inner.push({
-            ...getColumnAndLine(child),
-            ...childCost,
-            name,
-        });
     }
 
     return {
@@ -268,6 +255,35 @@ function getNameIfContainer(node: ts.Node): string | undefined {
 
     if (isFunctionNode(node)) {
         return getFunctionNodeName(node);
+    }
+
+    return undefined;
+}
+
+// todo find a decent name for these 2 functions
+function getNameIfContainer2(node: ts.Node, variableBeingDefined: string): string | undefined {
+    if (isFunctionNode(node)) {
+        return getFunctionNodeName(node, variableBeingDefined);
+    }
+
+    if (ts.isClassDeclaration(node)) {
+        return getClassDeclarationName(node);
+    }
+
+    if (ts.isConstructorDeclaration(node)) {
+        return "constructor";
+    }
+
+    if (ts.isInterfaceDeclaration(node)) {
+        return getInterfaceDeclarationName(node);
+    }
+
+    if (ts.isModuleDeclaration(node)) {
+        return getModuleDeclarationName(node);
+    }
+
+    if (ts.isTypeAliasDeclaration(node)) {
+        return getTypeAliasName(node);
     }
 
     return undefined;
