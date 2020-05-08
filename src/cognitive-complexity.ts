@@ -139,10 +139,8 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
     // An `else if` is just the else keyword followed by an if statement.
     // Therefore this block is entered for both `if` and `else if`.
     if (ts.isIfStatement(node)) {
-        let score = 0;
-
         // increment for `if` and `else if`
-        score += 1;
+        let score = 1;
 
         // increment for solo else
         const children = node.getChildren();
@@ -158,11 +156,9 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
     }
 
     if (isBinaryTypeOperator(node)) {
-        let score = 0;
-
         // This node naturally represents a sequence of binary type operators.
         // (unlike normal binary operators)
-        score += 1;
+        let score = 1;
 
         // However, this sequence can contain nodes that are a different binary operator.
         // We can assume that children of the internal syntax list that are binary operators
