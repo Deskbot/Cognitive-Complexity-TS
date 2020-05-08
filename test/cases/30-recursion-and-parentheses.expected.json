@@ -1,6 +1,6 @@
 {
     "30-recursion-and-parentheses.ts": {
-        "score": 9,
+        "score": 11,
         "inner": [
             {
                 "name": "parens",
@@ -30,7 +30,7 @@
             },
             {
                 "name": "l",
-                "score": 0,
+                "score": 1,
                 "line": 15,
                 "column": 11
             },
