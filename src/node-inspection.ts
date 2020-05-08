@@ -39,12 +39,6 @@ export function getColumnAndLine(node: ts.Node): ColumnAndLine {
     };
 }
 
-// todo this only works for some declarations
-export function getDeclarationName(node: ts.NamedDeclaration): string {
-    const identifier = node.getChildAt(0).getText();
-    return identifier;
-}
-
 export function getFunctionNodeName(
     func: FunctionNode,
     variableBeingDefined: string | undefined = undefined
@@ -154,22 +148,6 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
         || ts.isFunctionExpression(node)
         || ts.isMethodDeclaration(node)
         || ts.isAccessor(node);
-}
-
-/**
- * @returns true, if the node can be used to assign an anonymous function/class/type with a name.
- * Here container means function/class/type.
- */
-// todo check that the first child is the identifier for all of these
-export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDeclaration {
-    // This is just a check for a subset of NamedDeclarations.
-    // I don't know whether this includes too few or too many node types.
-    return ts.isVariableDeclaration(node)
-        || ts.isCallSignatureDeclaration(node)
-        || ts.isBindingElement(node)
-        || ts.isTypeElement(node)
-        || ts.isEnumDeclaration(node)
-        || ts.isEnumMember(node);
 }
 
 export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {

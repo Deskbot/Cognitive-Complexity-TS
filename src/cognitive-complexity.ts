@@ -1,7 +1,23 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, countNotAtTheEnds } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, isContainer, getInterfaceDeclarationName, getNewedConstructorName, getPropertyAccessName, getIdentifier } from "./node-inspection";
+import {
+    isFunctionNode,
+    isBreakOrContinueToLabel,
+    getColumnAndLine,
+    getFunctionNodeName,
+    getClassDeclarationName,
+    getModuleDeclarationName,
+    getCalledFunctionName,
+    isSequenceOfDifferentBooleanOperations,
+    getTypeAliasName,
+    isBinaryTypeOperator,
+    isContainer,
+    getInterfaceDeclarationName,
+    getNewedConstructorName,
+    getPropertyAccessName,
+    getIdentifier
+} from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 function aggregateCostOfChildren(
@@ -234,8 +250,15 @@ function maybeAddNodeToNamedAncestors(
 }
 
 function getNameIfNameDeclaration(node: ts.Node): string | undefined {
-    if (isNamedDeclarationOfContainer(node)) {
-        return getDeclarationName(node);
+    if (ts.isVariableDeclaration(node)
+        || ts.isCallSignatureDeclaration(node)
+        || ts.isBindingElement(node)
+        || ts.isTypeElement(node)
+        || ts.isEnumDeclaration(node)
+        || ts.isEnumMember(node)
+    ) {
+        const identifier = node.getChildAt(0).getText();
+        return identifier;
     }
 
     if (ts.isPropertyDeclaration(node)) {
