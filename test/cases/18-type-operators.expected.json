@@ -31,6 +31,18 @@
                 "score": 3,
                 "line": 9,
                 "column": 1
+            },
+            {
+                "name": "F",
+                "score": 1,
+                "line": 11,
+                "column": 1
+            },
+            {
+                "name": "G",
+                "score": 1,
+                "line": 13,
+                "column": 1
             }
         ]
     }

@@ -29,7 +29,6 @@ const n = function() {
 };
 
 const o = function p() {
-    const poop = 1;
     i();
     o();
     p();
