@@ -1,6 +1,6 @@
 {
     "29-declaration-type-introduction.ts": {
-        "score": 1,
+        "score": 4,
         "inner": [
             {
                 "name": "declaration",
@@ -9,9 +9,15 @@
                 "column": 1
             },
             {
-                "name": "ClassWithDeclaration",
+                "name": "declaration",
+                "score": 0,
+                "line": 2,
+                "column": 1
+            },
+            {
+                "name": "ClassWithDeclarations",
                 "score": 2,
-                "line": 1,
+                "line": 6,
                 "column": 1,
                 "inner": [
                     {

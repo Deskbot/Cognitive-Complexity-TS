@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import { ColumnAndLine } from "./types";
-import { repeat } from "./util";
+import { repeat, Unreachable } from "./util";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
@@ -23,7 +23,13 @@ export function getCalledFunctionName(node: ts.CallExpression): string {
 }
 
 export function getClassDeclarationName(node: ts.ClassDeclaration): string {
-    return node.getChildAt(1).getText();
+    for (const child of node.getChildren()) {
+        if (ts.isIdentifier(child)) {
+            return child.getText();
+        }
+    }
+
+    return ""; // anonymous class
 }
 
 export function getColumnAndLine(node: ts.Node): ColumnAndLine {
@@ -68,16 +74,16 @@ export function getFunctionNodeName(
     }
 
     if (ts.isMethodDeclaration(func)) {
-        return func.getChildAt(0).getText();
+        for (const child of func.getChildren()) {
+            if (ts.isIdentifier(child)) {
+                return child.getText();
+            }
+        }
+
+        throw new Unreachable("Method has no identifier.");
     }
 
-    // unreachable
-
-    console.error("Unreachable code branch reached.");
-    console.error("FunctionNode is not of a recognised type.");
-    console.trace();
-
-    return "";
+    throw new Unreachable("FunctionNode is not of a recognised type.");
 }
 
 export function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
