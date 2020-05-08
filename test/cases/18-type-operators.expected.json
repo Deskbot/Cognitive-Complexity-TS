@@ -1,6 +1,6 @@
 {
     "18-type-operators.ts": {
-        "score": 11,
+        "score": 13,
         "inner": [
             {
                 "name": "A",
@@ -34,13 +34,13 @@
             },
             {
                 "name": "F",
-                "score": 1,
+                "score": 2,
                 "line": 11,
                 "column": 1
             },
             {
                 "name": "G",
-                "score": 1,
+                "score": 2,
                 "line": 13,
                 "column": 1
             }

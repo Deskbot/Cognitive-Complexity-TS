@@ -8,6 +8,6 @@ type D = true | true & false & false | true | true; // series of 3 operators
 
 type E = true & true | false | false & true & true; // series of 3 operators
 
-type F = (true | true) | true;
+type F = (true | true) | true; // this would ideally cost 1, but it's hard
 
 type G = true | (true & false);
