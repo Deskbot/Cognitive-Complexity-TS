@@ -6,16 +6,7 @@
                 "name": "declaration",
                 "score": 1,
                 "line": 1,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "T",
-                        "score": 1,
-                        "line": 1,
-                        "column": 1
-                    }
-
-                ]
+                "column": 1
             },
             {
                 "name": "ClassWithDeclaration",
@@ -27,57 +18,25 @@
                         "name": "abs",
                         "score": 1,
                         "line": 7,
-                        "column": 5,
-                        "inner": [
-                            {
-                                "name": "T",
-                                "score": 1,
-                                "line": 7,
-                                "column": 18
-                            }
-                        ]
+                        "column": 5
                     },
                     {
                         "name": "abs",
                         "score": 0,
                         "line": 8,
-                        "column": 5,
-                        "inner": [
-                            {
-                                "name": "T",
-                                "score": 0,
-                                "line": 8,
-                                "column": 18
-                            }
-                        ]
+                        "column": 5
                     },
                     {
                         "name": "method",
                         "score": 1,
                         "line": 10,
-                        "column": 5,
-                        "inner": [
-                            {
-                                "name": "T",
-                                "score": 1,
-                                "line": 10,
-                                "column": 18
-                            }
-                        ]
+                        "column": 5
                     },
                     {
                         "name": "method",
                         "score": 0,
                         "line": 11,
-                        "column": 5,
-                        "inner": [
-                            {
-                                "name": "T",
-                                "score": 0,
-                                "line": 11,
-                                "column": 18
-                            }
-                        ]
+                        "column": 5
                     }
                 ]
             },
@@ -85,15 +44,7 @@
                 "name": "GenericClass",
                 "score": 1,
                 "line": 16,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "T",
-                        "score": 1,
-                        "line": 16,
-                        "column": 20
-                    }
-                ]
+                "column": 1
             }
         ]
     }

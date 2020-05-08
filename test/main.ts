@@ -76,7 +76,7 @@ async function main() {
                 console.log("Pass");
             }
         } catch (err) {
-            console.error(outputPath);
+            console.error("Result", outputPath);
             console.error("Fail");
             console.error(err);
             console.trace();

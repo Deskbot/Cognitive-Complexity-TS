@@ -102,10 +102,6 @@ export function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
     return node.getChildAt(1).getText();
 }
 
-export function getTypeParameter(node: ts.TypeParameterDeclaration): string {
-    return node.getChildAt(0).getText();
-}
-
 export function isBinaryTypeOperator(node: ts.Node): node is ts.UnionOrIntersectionTypeNode {
     return ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node);
 }
@@ -155,8 +151,7 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
 export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDeclaration {
     // This is just a check for a subset of NamedDeclarations.
     // I don't know whether this includes too few or too many node types.
-    return ts.isTypeParameterDeclaration(node)
-        || ts.isVariableDeclaration(node)
+    return ts.isVariableDeclaration(node)
         || ts.isPropertyDeclaration(node)
         || ts.isCallSignatureDeclaration(node)
         || ts.isBindingElement(node)

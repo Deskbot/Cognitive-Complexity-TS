@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, countNotAtTheEnds } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, isContainer, getInterfaceDeclarationName, getNewedConstructorName, getPropertyAccessName, getTypeParameter } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, isContainer, getInterfaceDeclarationName, getNewedConstructorName, getPropertyAccessName } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 function aggregateCostOfChildren(
@@ -36,8 +36,6 @@ function aggregateCostOfChildren(
             name = getInterfaceDeclarationName(child);
         } else if (ts.isModuleDeclaration(child)) {
             name = getModuleDeclarationName(child);
-        } else if (ts.isTypeParameterDeclaration(child)) {
-            name = getTypeParameter(child);
         } else if (ts.isTypeAliasDeclaration(child)) {
             name = getTypeAliasName(child);
         } else {
@@ -262,10 +260,6 @@ function getNameIfContainer(node: ts.Node): string | undefined {
 
     if (ts.isTypeAliasDeclaration(node)) {
         return getTypeAliasName(node);
-    }
-
-    if (ts.isTypeParameterDeclaration(node)) {
-        return getTypeParameter(node);
     }
 
     if (isFunctionNode(node)) {

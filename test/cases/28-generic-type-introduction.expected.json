@@ -6,44 +6,19 @@
                 "name": "declaration",
                 "score": 1,
                 "line": 1,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "T",
-                        "score": 1,
-                        "line": 1,
-                        "column": 22
-                    }
-
-                ]
+                "column": 1
             },
             {
                 "name": "expression",
                 "score": 1,
                 "line": 3,
-                "column": 20,
-                "inner": [
-                    {
-                        "name": "T",
-                        "score": 1,
-                        "line": 3,
-                        "column": 29
-                    }
-                ]
+                "column": 20
             },
             {
                 "name": "arrow",
                 "score": 1,
                 "line": 5,
-                "column": 15,
-                "inner": [
-                    {
-                        "name": "T",
-                        "score": 1,
-                        "line": 5,
-                        "column": 16
-                    }
-                ]
+                "column": 15
             },
             {
                 "name": "ClassMethod",
@@ -55,15 +30,7 @@
                         "name": "method",
                         "score": 1,
                         "line": 8,
-                        "column": 5,
-                        "inner": [
-                            {
-                                "name": "T",
-                                "score": 1,
-                                "line": 8,
-                                "column": 12
-                            }
-                        ]
+                        "column": 5
                     }
                 ]
             },
@@ -71,15 +38,7 @@
                 "name": "objectMethod",
                 "score": 1,
                 "line": 11,
-                "column": 22,
-                "inner": [
-                    {
-                        "name": "T",
-                        "score": 1,
-                        "line": 11,
-                        "column": 23
-                    }
-                ]
+                "column": 22
             }
         ]
     }
