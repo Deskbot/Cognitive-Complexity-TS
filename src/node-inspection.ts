@@ -99,6 +99,16 @@ export function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): stri
     return node.getChildAt(1).getText();
 }
 
+export function getFirstNonParenthesizedAncestor(node: ts.Node): ts.Node {
+    let firstNonParenthesisAncestor = node.parent;
+
+    while (ts.isParenthesizedExpression(firstNonParenthesisAncestor)) {
+        firstNonParenthesisAncestor = firstNonParenthesisAncestor.parent;
+    }
+
+    return firstNonParenthesisAncestor;
+}
+
 export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return node.getChildAt(1).getText();
 }
@@ -178,16 +188,7 @@ export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {
         || operatorToken.kind === ts.SyntaxKind.BarBarToken
         || operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken;
 
-    // todo encapsulate getting this ancestor
-    let firstNonParenthesisAncestor = node.parent;
-
-    if (firstNonParenthesisAncestor === undefined) {
-        return false;
-    }
-
-    while (ts.isParenthesizedExpression(firstNonParenthesisAncestor)) {
-        firstNonParenthesisAncestor = firstNonParenthesisAncestor.parent;
-    }
+    const firstNonParenthesisAncestor = getFirstNonParenthesizedAncestor(node);
 
     if (operatorIsBoolean) {
         // True if the parent does not use the same operator as this node.
