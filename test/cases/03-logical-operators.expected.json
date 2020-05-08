@@ -1,6 +1,6 @@
 {
     "03-logical-operators.ts": {
-        "score": 11,
+        "score": 14,
         "inner": [
             {
                 "name": "allAnd",
@@ -48,6 +48,12 @@
                 "name": "parenthesesAroundASequenceBreak",
                 "score": 2,
                 "line": 29,
+                "column": 1
+            },
+            {
+                "name": "parenthesesCanBreakSequence",
+                "score": 3,
+                "line": 33,
                 "column": 1
             }
         ]

@@ -29,3 +29,7 @@ function parenthesesDoesNotBreakSequence() {
 function parenthesesAroundASequenceBreak() {
     true && (true || true)
 }
+
+function parenthesesCanBreakSequence() {
+    true && (true && true || true)
+}
