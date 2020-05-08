@@ -1,7 +1,7 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
 import { sum, countNotAtTheEnds } from "./util";
-import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, isContainer, getInterfaceDeclarationName, getNewedConstructorName, getPropertyAccessName } from "./node-inspection";
+import { isFunctionNode, isBreakOrContinueToLabel, getColumnAndLine, getFunctionNodeName, getClassDeclarationName, getModuleDeclarationName, getCalledFunctionName, getDeclarationName, isNamedDeclarationOfContainer, isSequenceOfDifferentBooleanOperations, getTypeAliasName, isBinaryTypeOperator, isContainer, getInterfaceDeclarationName, getNewedConstructorName, getPropertyAccessName, getIdentifier } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
 function aggregateCostOfChildren(
@@ -244,6 +244,10 @@ function maybeAddNodeToNamedAncestors(
 function getNameIfContainer(node: ts.Node): string | undefined {
     if (isNamedDeclarationOfContainer(node)) {
         return getDeclarationName(node);
+    }
+
+    if (ts.isPropertyDeclaration(node)) {
+        return getIdentifier(node);
     }
 
     if (ts.isClassDeclaration(node)) {

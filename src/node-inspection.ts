@@ -23,13 +23,9 @@ export function getCalledFunctionName(node: ts.CallExpression): string {
 }
 
 export function getClassDeclarationName(node: ts.ClassDeclaration): string {
-    for (const child of node.getChildren()) {
-        if (ts.isIdentifier(child)) {
-            return child.getText();
-        }
-    }
+    const name = getIdentifier(node);
 
-    return ""; // anonymous class
+    return name ?? ""; // anonymous class
 }
 
 export function getColumnAndLine(node: ts.Node): ColumnAndLine {
@@ -74,16 +70,26 @@ export function getFunctionNodeName(
     }
 
     if (ts.isMethodDeclaration(func)) {
-        for (const child of func.getChildren()) {
-            if (ts.isIdentifier(child)) {
-                return child.getText();
-            }
+        const name = getIdentifier(func);
+
+        if (name !== undefined) {
+            return name;
         }
 
         throw new Unreachable("Method has no identifier.");
     }
 
     throw new Unreachable("FunctionNode is not of a recognised type.");
+}
+
+export function getIdentifier(node: ts.Node): string | undefined {
+    for (const child of node.getChildren()) {
+        if (ts.isIdentifier(child)) {
+            return child.getText();
+        }
+    }
+
+    return undefined;
 }
 
 export function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
@@ -158,7 +164,6 @@ export function isNamedDeclarationOfContainer(node: ts.Node): node is ts.NamedDe
     // This is just a check for a subset of NamedDeclarations.
     // I don't know whether this includes too few or too many node types.
     return ts.isVariableDeclaration(node)
-        || ts.isPropertyDeclaration(node)
         || ts.isCallSignatureDeclaration(node)
         || ts.isBindingElement(node)
         || ts.isTypeElement(node)

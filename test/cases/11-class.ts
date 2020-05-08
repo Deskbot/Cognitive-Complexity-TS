@@ -4,7 +4,7 @@ class C {
 
 class D {
     // depth 0
-    f = () => {
+    protected f = () => {
         // depth 0
         while (true);
     }
