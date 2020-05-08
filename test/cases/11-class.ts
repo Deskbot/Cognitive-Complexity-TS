@@ -17,7 +17,7 @@ class E {
         while (true);
     }
 
-    g() {
+    public g() {
         // depth 0
         while (true);
     }
