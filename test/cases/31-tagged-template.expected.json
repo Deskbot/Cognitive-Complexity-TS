@@ -1,0 +1,19 @@
+{
+    "31-tagged-template.ts": {
+        "score": 1,
+        "inner": [
+            {
+                "name": "noRecursion",
+                "score": 0,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "recursion",
+                "score": 1,
+                "line": 5,
+                "column": 1
+            }
+        ]
+    }
+}
