@@ -97,24 +97,16 @@
                 "column": 13
             },
             {
-                "name": "Obj",
+                "name": "bracketedConst",
                 "score": 1,
-                "line": 47,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "bracketedConst",
-                        "score": 1,
-                        "line": 48,
-                        "column": 5
-                    },
-                    {
-                        "name": "bracketedMethodCall",
-                        "score": 1,
-                        "line": 52,
-                        "column": 5
-                    }
-                ]
+                "line": 48,
+                "column": 5
+            },
+            {
+                "name": "bracketedMethodCall",
+                "score": 1,
+                "line": 52,
+                "column": 5
             }
         ]
     }
