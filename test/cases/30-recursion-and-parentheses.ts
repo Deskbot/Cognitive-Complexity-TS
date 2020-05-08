@@ -1,5 +1,5 @@
 function parens() {
-    (parens)();
+    ((((((((parens))))))))();
 }
 
 class C {

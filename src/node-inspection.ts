@@ -104,7 +104,12 @@ export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
 }
 
 export function getNewedConstructorName(node: ts.NewExpression): string {
-    return node.getChildAt(1).getText();
+    const name = getName(node.getChildAt(1));
+    if (name !== undefined) {
+        return name;
+    }
+
+    throw new Unreachable();
 }
 
 export function getPropertyAccessName(node: ts.PropertyAccessExpression): string {
