@@ -130,29 +130,9 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
         return 1;
     }
 
-    if (ts.isCallExpression(node)) {
-        const calledFunctionName = getCalledFunctionName(node);
-        return namedAncestors.includes(calledFunctionName) ? 1 : 0;
-    }
-
-    if (ts.isNewExpression(node)) {
-        const constructorName = getNewedConstructorName(node);
-        return namedAncestors.includes(constructorName) ? 1 : 0;
-    }
-
-    if (ts.isPropertyAccessExpression(node)) {
-        const referencedPropertyName = getPropertyAccessName(node);
-        return namedAncestors.includes(referencedPropertyName) ? 1 : 0;
-    }
-
-    if (ts.isTypeReferenceNode(node)) {
-        const calledReferencedType = node.getChildAt(0).getText();
-        return namedAncestors.includes(calledReferencedType) ? 1 : 0;
-    }
-
-    if (ts.isTaggedTemplateExpression(node)) {
-        const calledReferencedType = node.getChildAt(0).getText();
-        return namedAncestors.includes(calledReferencedType) ? 1 : 0;
+    const calledName = getNameIfCalledNode(node);
+    if (calledName !== undefined) {
+        return namedAncestors.includes(calledName) ? 1 : 0;
     }
 
     // An `if` may contain an else keyword followed by else code.
@@ -314,6 +294,30 @@ function getNameIfContainer2(node: ts.Node, variableBeingDefined: string): strin
 
     if (ts.isTypeAliasDeclaration(node)) {
         return getTypeAliasName(node);
+    }
+
+    return undefined;
+}
+
+function getNameIfCalledNode(node: ts.Node): string | undefined {
+    if (ts.isCallExpression(node)) {
+        return getCalledFunctionName(node);
+    }
+
+    if (ts.isNewExpression(node)) {
+        return getNewedConstructorName(node);
+    }
+
+    if (ts.isPropertyAccessExpression(node)) {
+        return getPropertyAccessName(node);
+    }
+
+    if (ts.isTypeReferenceNode(node)) {
+        return node.getChildAt(0).getText();
+    }
+
+    if (ts.isTaggedTemplateExpression(node)) {
+        return node.getChildAt(0).getText();
     }
 
     return undefined;
