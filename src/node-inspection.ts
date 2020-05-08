@@ -12,16 +12,24 @@ export type FunctionNode = ts.AccessorDeclaration
     | ts.FunctionExpression
     | ts.MethodDeclaration;
 
-export function getCalledFunctionName(node: ts.CallExpression): string {
-    const children = node.getChildren();
-
-    const expressionToCall = children[0];
-
-    if (ts.isIdentifier(expressionToCall)) {
-        return expressionToCall.getText();
+export function getName(node: ts.Node): string | undefined {
+    if (ts.isIdentifier(node)) {
+        return node.getText();
     }
 
-    return "";
+    if (ts.isParenthesizedExpression(node)) {
+        return getName(node.getChildAt(1));
+    }
+
+    return undefined;
+}
+
+export function getCalledFunctionName(node: ts.CallExpression): string {
+    const children = node.getChildren();
+    const expressionToCall = children[0];
+    const name = getName(expressionToCall);
+
+    return name ?? "";
 }
 
 export function getClassDeclarationName(node: ts.ClassDeclaration): string {

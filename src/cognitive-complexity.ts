@@ -299,7 +299,6 @@ function getNameIfContainer2(node: ts.Node, variableBeingDefined: string): strin
     }
 
     const name = getNameIfContainer(node);
-
     if (name !== undefined) {
         return name;
     }
