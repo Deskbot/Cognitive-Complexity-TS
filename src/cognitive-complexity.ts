@@ -312,6 +312,10 @@ function getNameIfCalledNode(node: ts.Node): string | undefined {
         return getPropertyAccessName(node);
     }
 
+    if (ts.isJsxOpeningLikeElement(node)) {
+        return node.getChildAt(1).getText();
+    }
+
     if (ts.isTypeReferenceNode(node)) {
         return node.getChildAt(0).getText();
     }

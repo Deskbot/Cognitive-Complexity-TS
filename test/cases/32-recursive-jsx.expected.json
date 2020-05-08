@@ -1,0 +1,25 @@
+{
+    "32-recursive-jsx.tsx": {
+        "score": 2,
+        "inner": [
+            {
+                "name": "Component",
+                "score": 0,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "RecursiveSelfClosingComponent",
+                "score": 1,
+                "line": 5,
+                "column": 1
+            },
+            {
+                "name": "RecursiveComponent",
+                "score": 1,
+                "line": 9,
+                "column": 1
+            }
+        ]
+    }
+}
