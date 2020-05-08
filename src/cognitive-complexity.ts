@@ -221,14 +221,19 @@ function maybeAddNodeToNamedAncestors(
     ancestorsOfNode: ReadonlyArray<string>
 ): ReadonlyArray<string> {
     const containerNameMaybe = getNameIfContainer(node);
-    if (containerNameMaybe) {
+    if (containerNameMaybe !== undefined) {
         return [...ancestorsOfNode, containerNameMaybe];
+    }
+
+    const variableNameMaybe = getNameIfNameDeclaration(node);
+    if (variableNameMaybe !== undefined) {
+        return [...ancestorsOfNode, variableNameMaybe];
     }
 
     return ancestorsOfNode;
 }
 
-function getNameIfContainer(node: ts.Node): string | undefined {
+function getNameIfNameDeclaration(node: ts.Node): string | undefined {
     if (isNamedDeclarationOfContainer(node)) {
         return getDeclarationName(node);
     }
@@ -237,6 +242,14 @@ function getNameIfContainer(node: ts.Node): string | undefined {
         return getIdentifier(node);
     }
 
+    if (ts.isTypeAliasDeclaration(node)) {
+        return getTypeAliasName(node);
+    }
+
+    return undefined;
+}
+
+function getNameIfContainer(node: ts.Node): string | undefined {
     if (ts.isClassDeclaration(node)) {
         return getClassDeclarationName(node);
     }
@@ -247,10 +260,6 @@ function getNameIfContainer(node: ts.Node): string | undefined {
 
     if (ts.isInterfaceDeclaration(node)) {
         return getInterfaceDeclarationName(node);
-    }
-
-    if (ts.isTypeAliasDeclaration(node)) {
-        return getTypeAliasName(node);
     }
 
     if (isFunctionNode(node)) {
@@ -266,16 +275,10 @@ function getNameIfContainer2(node: ts.Node, variableBeingDefined: string): strin
         return getFunctionNodeName(node, variableBeingDefined);
     }
 
-    if (ts.isClassDeclaration(node)) {
-        return getClassDeclarationName(node);
-    }
+    const name = getNameIfContainer(node);
 
-    if (ts.isConstructorDeclaration(node)) {
-        return "constructor";
-    }
-
-    if (ts.isInterfaceDeclaration(node)) {
-        return getInterfaceDeclarationName(node);
+    if (name !== undefined) {
+        return name;
     }
 
     if (ts.isModuleDeclaration(node)) {
