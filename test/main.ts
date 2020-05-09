@@ -40,15 +40,7 @@ async function main() {
     const wantedTests = process.argv.slice(2);
     if (wantedTests.length > 0) {
         caseFilePaths = caseFilePaths
-            .filter(path => {
-                // TODO add a generic way of doing something and stopping after first true
-                for (const wantedTest of wantedTests) {
-                    if (path.includes(wantedTest)) {
-                        return true;
-                    }
-                }
-                return false;
-            });
+            .filter(path => wantedTests.some(test => path.includes(test)));
     }
 
     const failedCases = [] as string[];
