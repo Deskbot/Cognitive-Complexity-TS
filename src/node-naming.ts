@@ -1,8 +1,112 @@
 import * as ts from "typescript";
 import { Unreachable } from "./util";
-import { getIdentifier, FunctionNode } from "./node-inspection";
+import { getIdentifier, FunctionNode, isFunctionNode } from "./node-inspection";
 
-export function getName(node: ts.Node): string | undefined {
+export function chooseContainerName(node: ts.Node, variableBeingDefined: string): string | undefined {
+    if (isFunctionNode(node)) {
+        return getFunctionNodeName(node, variableBeingDefined);
+    }
+
+    if (ts.isClassDeclaration(node)) {
+        return getClassDeclarationName(node);
+    }
+
+    if (ts.isClassExpression(node)) {
+        return getClassExpressionName(node, variableBeingDefined);
+    }
+
+    const name = findIntroducedName(node);
+    if (name !== undefined) {
+        return name;
+    }
+
+    if (ts.isModuleDeclaration(node)) {
+        return getModuleDeclarationName(node);
+    }
+
+    if (ts.isTypeAliasDeclaration(node)) {
+        return getTypeAliasName(node);
+    }
+
+    return undefined;
+}
+
+export function findIntroducedName(node: ts.Node): string | undefined {
+    if (ts.isClassDeclaration(node)) {
+        return getClassDeclarationName(node);
+    }
+
+    if (ts.isClassExpression(node)) {
+        return getClassExpressionName(node);
+    }
+
+    if (ts.isConstructorDeclaration(node)) {
+        return "constructor";
+    }
+
+    if (ts.isInterfaceDeclaration(node)) {
+        return getInterfaceDeclarationName(node);
+    }
+
+    if (isFunctionNode(node)) {
+        return getFunctionNodeName(node);
+    }
+
+    return undefined;
+}
+
+export function getNameIfCalledNode(node: ts.Node): string | undefined {
+    if (ts.isCallExpression(node)) {
+        return getCalledFunctionName(node);
+    }
+
+    if (ts.isNewExpression(node)) {
+        return getNewedConstructorName(node);
+    }
+
+    if (ts.isPropertyAccessExpression(node)) {
+        return getPropertyAccessName(node);
+    }
+
+    if (ts.isJsxOpeningLikeElement(node)) {
+        return node.getChildAt(1).getText();
+    }
+
+    if (ts.isTypeReferenceNode(node)) {
+        return node.getChildAt(0).getText();
+    }
+
+    if (ts.isTaggedTemplateExpression(node)) {
+        return node.getChildAt(0).getText();
+    }
+
+    return undefined;
+}
+
+export function getNameIfNameDeclaration(node: ts.Node): string | undefined {
+    if (ts.isVariableDeclaration(node)
+        || ts.isCallSignatureDeclaration(node)
+        || ts.isBindingElement(node)
+        || ts.isTypeElement(node)
+        || ts.isEnumDeclaration(node)
+        || ts.isEnumMember(node)
+    ) {
+        const identifier = node.getChildAt(0).getText();
+        return identifier;
+    }
+
+    if (ts.isPropertyDeclaration(node)) {
+        return getIdentifier(node);
+    }
+
+    if (ts.isTypeAliasDeclaration(node)) {
+        return getTypeAliasName(node);
+    }
+
+    return undefined;
+}
+
+function getName(node: ts.Node): string | undefined {
     if (ts.isIdentifier(node)) {
         return node.getText();
     }
@@ -14,7 +118,7 @@ export function getName(node: ts.Node): string | undefined {
     return undefined;
 }
 
-export function getCalledFunctionName(node: ts.CallExpression): string {
+function getCalledFunctionName(node: ts.CallExpression): string {
     const children = node.getChildren();
     const expressionToCall = children[0];
     const name = getName(expressionToCall);
@@ -22,12 +126,12 @@ export function getCalledFunctionName(node: ts.CallExpression): string {
     return name ?? "";
 }
 
-export function getClassDeclarationName(node: ts.ClassDeclaration): string {
+function getClassDeclarationName(node: ts.ClassDeclaration): string {
     const name = getIdentifier(node);
     return name ?? ""; // anonymous class
 }
 
-export function getClassExpressionName(
+function getClassExpressionName(
     node: ts.ClassExpression,
     variableBeingDefined: string | undefined = undefined
 ): string | undefined {
@@ -39,7 +143,7 @@ export function getClassExpressionName(
     return variableBeingDefined ?? undefined;
 }
 
-export function getFunctionNodeName(
+function getFunctionNodeName(
     func: FunctionNode,
     variableBeingDefined: string | undefined = undefined
 ): string {
@@ -77,15 +181,15 @@ export function getFunctionNodeName(
     throw new Unreachable("FunctionNode is not of a recognised type.");
 }
 
-export function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
+function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
     return node.getChildAt(1).getText();
 }
 
-export function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
+function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return node.getChildAt(1).getText();
 }
 
-export function getNewedConstructorName(node: ts.NewExpression): string {
+function getNewedConstructorName(node: ts.NewExpression): string {
     const name = getName(node.getChildAt(1));
     if (name !== undefined) {
         return name;
@@ -94,12 +198,12 @@ export function getNewedConstructorName(node: ts.NewExpression): string {
     throw new Unreachable();
 }
 
-export function getPropertyAccessName(node: ts.PropertyAccessExpression): string {
+function getPropertyAccessName(node: ts.PropertyAccessExpression): string {
     const expressionNodes = node.getChildren();
     const identifier = expressionNodes[expressionNodes.length - 1];
     return identifier.getText();
 }
 
-export function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
+function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
     return node.getChildAt(1).getText();
 }

@@ -2,18 +2,19 @@ import * as ts from "typescript"
 import { FileOutput, ContainerOutput, ScoreAndInner } from "./types";
 import { countNotAtTheEnds } from "./util";
 import {
-    getFunctionNodeName,
-    getClassDeclarationName,
-    getModuleDeclarationName,
-    getCalledFunctionName,
-    getTypeAliasName,
-    getInterfaceDeclarationName,
-    getNewedConstructorName,
-    getPropertyAccessName,
-    getClassExpressionName
+    chooseContainerName,
+    getNameIfCalledNode,
+    findIntroducedName,
+    getNameIfNameDeclaration
 } from "./node-naming";
 import { whereAreChildren } from "./depth";
-import { isContainer, getColumnAndLine, isSequenceOfDifferentBooleanOperations, isBreakOrContinueToLabel, getIdentifier, isFunctionNode, isBinaryTypeOperator } from "./node-inspection";
+import {
+    isContainer,
+    getColumnAndLine,
+    isSequenceOfDifferentBooleanOperations,
+    isBreakOrContinueToLabel,
+    isBinaryTypeOperator
+} from "./node-inspection";
 
 export function fileCost(file: ts.SourceFile): FileOutput {
     return nodeCost(file, true);
@@ -206,108 +207,4 @@ function maybeAddNodeToNamedAncestors(
     }
 
     return ancestorsOfNode;
-}
-
-function getNameIfNameDeclaration(node: ts.Node): string | undefined {
-    if (ts.isVariableDeclaration(node)
-        || ts.isCallSignatureDeclaration(node)
-        || ts.isBindingElement(node)
-        || ts.isTypeElement(node)
-        || ts.isEnumDeclaration(node)
-        || ts.isEnumMember(node)
-    ) {
-        const identifier = node.getChildAt(0).getText();
-        return identifier;
-    }
-
-    if (ts.isPropertyDeclaration(node)) {
-        return getIdentifier(node);
-    }
-
-    if (ts.isTypeAliasDeclaration(node)) {
-        return getTypeAliasName(node);
-    }
-
-    return undefined;
-}
-
-function findIntroducedName(node: ts.Node): string | undefined {
-    if (ts.isClassDeclaration(node)) {
-        return getClassDeclarationName(node);
-    }
-
-    if (ts.isClassExpression(node)) {
-        return getClassExpressionName(node);
-    }
-
-    if (ts.isConstructorDeclaration(node)) {
-        return "constructor";
-    }
-
-    if (ts.isInterfaceDeclaration(node)) {
-        return getInterfaceDeclarationName(node);
-    }
-
-    if (isFunctionNode(node)) {
-        return getFunctionNodeName(node);
-    }
-
-    return undefined;
-}
-
-function chooseContainerName(node: ts.Node, variableBeingDefined: string): string | undefined {
-    if (isFunctionNode(node)) {
-        return getFunctionNodeName(node, variableBeingDefined);
-    }
-
-    if (ts.isClassDeclaration(node)) {
-        return getClassDeclarationName(node);
-    }
-
-    if (ts.isClassExpression(node)) {
-        return getClassExpressionName(node, variableBeingDefined);
-    }
-
-    const name = findIntroducedName(node);
-    if (name !== undefined) {
-        return name;
-    }
-
-    if (ts.isModuleDeclaration(node)) {
-        return getModuleDeclarationName(node);
-    }
-
-    if (ts.isTypeAliasDeclaration(node)) {
-        return getTypeAliasName(node);
-    }
-
-    return undefined;
-}
-
-function getNameIfCalledNode(node: ts.Node): string | undefined {
-    if (ts.isCallExpression(node)) {
-        return getCalledFunctionName(node);
-    }
-
-    if (ts.isNewExpression(node)) {
-        return getNewedConstructorName(node);
-    }
-
-    if (ts.isPropertyAccessExpression(node)) {
-        return getPropertyAccessName(node);
-    }
-
-    if (ts.isJsxOpeningLikeElement(node)) {
-        return node.getChildAt(1).getText();
-    }
-
-    if (ts.isTypeReferenceNode(node)) {
-        return node.getChildAt(0).getText();
-    }
-
-    if (ts.isTaggedTemplateExpression(node)) {
-        return node.getChildAt(0).getText();
-    }
-
-    return undefined;
 }
