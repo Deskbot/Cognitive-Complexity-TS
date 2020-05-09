@@ -171,9 +171,7 @@ function nodeCost(
     depth = 0,
     namedAncestors = [] as ReadonlyArray<string>,
 ): ScoreAndInner {
-    let score = 0;
-
-    score += inherentCost(node, namedAncestors);
+    let score = inherentCost(node, namedAncestors);
     score += costOfDepth(node, depth);
 
     // get the ancestors container names from the perspective of this node's children
