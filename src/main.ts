@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import { promises as fsP } from "fs";
 import * as path from "path";
 import * as process from "process";
 import * as ts from "typescript";
@@ -24,7 +24,7 @@ async function main() {
 }
 
 async function getFileOutput(filePath: string): Promise<FileOutput> {
-    const fileContent = (await fs.promises.readFile(filePath)).toString();
+    const fileContent = (await fsP.readFile(filePath)).toString();
 
     const parsedFile = ts.createSourceFile(
         path.basename(filePath),
@@ -41,10 +41,10 @@ async function getFileOutput(filePath: string): Promise<FileOutput> {
  */
 // todo spawn a bunch of promises and use Promise.all
 async function getEntryOutput(entryPath: string): Promise<FolderOutput | FileOutput> {
-    const entry = await fs.promises.stat(entryPath);
+    const entry = await fsP.stat(entryPath);
 
     if (entry.isDirectory()) {
-        const allSubFiles = await fs.promises.readdir(entryPath, { withFileTypes: true });
+        const allSubFiles = await fsP.readdir(entryPath, { withFileTypes: true });
         const subFiles = allSubFiles
             .filter(filePath => filePath.name.match(/.*\.[tj]sx?$/) !== null);
 
