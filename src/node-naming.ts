@@ -106,13 +106,13 @@ export function getNameIfNameDeclaration(node: ts.Node): string | undefined {
     return undefined;
 }
 
-function getName(node: ts.Node): string | undefined {
+function getIdentifierDespiteBrackets(node: ts.Node): string | undefined {
     if (ts.isIdentifier(node)) {
         return node.getText();
     }
 
     if (ts.isParenthesizedExpression(node)) {
-        return getName(node.getChildAt(1));
+        return getIdentifierDespiteBrackets(node.getChildAt(1));
     }
 
     return undefined;
@@ -121,7 +121,7 @@ function getName(node: ts.Node): string | undefined {
 function getCalledFunctionName(node: ts.CallExpression): string {
     const children = node.getChildren();
     const expressionToCall = children[0];
-    const name = getName(expressionToCall);
+    const name = getIdentifierDespiteBrackets(expressionToCall);
 
     return name ?? "";
 }
@@ -190,7 +190,7 @@ function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
 }
 
 function getNewedConstructorName(node: ts.NewExpression): string {
-    const name = getName(node.getChildAt(1));
+    const name = getIdentifierDespiteBrackets(node.getChildAt(1));
     if (name !== undefined) {
         return name;
     }
