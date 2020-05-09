@@ -21,6 +21,10 @@ import {
 } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
+export function fileCost(file: ts.SourceFile): FileOutput {
+    return nodeCost(file, true);
+}
+
 function aggregateCostOfChildren(
     children: ts.Node[],
     childDepth: number,
@@ -91,26 +95,6 @@ function costOfDepth(node: ts.Node, depth: number): number {
     }
 
     return 0;
-}
-
-// function for file cost returns FileOutput
-export function fileCost(file: ts.SourceFile): FileOutput {
-    // TODO can I just call nodeCost(file)
-    const childCosts = file.getChildren()
-        .map(elem => nodeCost(elem, true)); // using an arrow so it shows up in call hierarchy
-
-    // score is sum of score for all child nodes
-    const score = childCosts
-        .map(childNode => childNode.score)
-        .reduce(sum, 0);
-
-    // inner is concat of all functions declared directly under every child node
-    const inner = childCosts.map(childNode => childNode.inner).flat();
-
-    return {
-        inner,
-        score,
-    };
 }
 
 function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): number {
