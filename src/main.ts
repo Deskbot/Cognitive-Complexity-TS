@@ -23,8 +23,8 @@ async function main() {
     printCognitiveComplexityJson(filePath);
 }
 
-function getFileOutput(filePath: string): FileOutput {
-    const fileContent = fs.readFileSync(filePath).toString();
+async function getFileOutput(filePath: string): Promise<FileOutput> {
+    const fileContent = (await fs.promises.readFile(filePath)).toString();
 
     const parsedFile = ts.createSourceFile(
         path.basename(filePath),
@@ -39,20 +39,20 @@ function getFileOutput(filePath: string): FileOutput {
 /**
  * @param entry A file system entry ok unknown type.
  */
-// todo can maybe get some speed up by being asynchronous and reading files while building the output
-// spawn a bunch of promises and use Promise.all
-function getEntryOutput(entryPath: string): FolderOutput | FileOutput {
-    const entry = fs.statSync(entryPath);
+// todo spawn a bunch of promises and use Promise.all
+async function getEntryOutput(entryPath: string): Promise<FolderOutput | FileOutput> {
+    const entry = await fs.promises.stat(entryPath);
 
     if (entry.isDirectory()) {
-        const subFiles = fs.readdirSync(entryPath, { withFileTypes: true })
+        const allSubFiles = await fs.promises.readdir(entryPath, { withFileTypes: true });
+        const subFiles = allSubFiles
             .filter(filePath => filePath.name.match(/.*\.[tj]sx?$/) !== null);
 
         const folderOutput: FolderOutput = {};
 
         for (const file of subFiles) {
             const innerEntryPath = path.join(entryPath, file.name);
-            folderOutput[file.name] = getEntryOutput(innerEntryPath);
+            folderOutput[file.name] = await getEntryOutput(innerEntryPath);
         }
 
         return folderOutput;
@@ -61,14 +61,14 @@ function getEntryOutput(entryPath: string): FolderOutput | FileOutput {
     }
 }
 
-function printCognitiveComplexityJson(fullPath: string) {
+async function printCognitiveComplexityJson(fullPath: string) {
     const resultForAllFiles: ProgramOutput = {};
     const cwd = process.cwd();
 
     const filePath = path.relative(cwd, fullPath);
     const fileName = path.parse(fullPath).base;
 
-    resultForAllFiles[fileName] = getEntryOutput(filePath);
+    resultForAllFiles[fileName] = await getEntryOutput(filePath);
 
     const outputStructure = JSON.stringify(resultForAllFiles, (key, value) => {
         // don't show empty inner
