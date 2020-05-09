@@ -180,7 +180,8 @@ function nodeCost(
 
     const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren);
 
-    // todo can I pass the information needed here into whereAreChildren
+    // The nodes below this node have the same depth number,
+    // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
     const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren);
