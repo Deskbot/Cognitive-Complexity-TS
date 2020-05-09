@@ -11,15 +11,14 @@ export interface FunctionNodeInfo extends ColumnAndLine {
     name: string;
 }
 
-// TODO rename this because it includes classes and namespaces
-export interface FunctionOutput extends FunctionNodeInfo {
+export interface ContainerOutput extends FunctionNodeInfo {
     score: number;
-    inner: FunctionOutput[];
+    inner: ContainerOutput[];
 }
 
 export interface FileOutput {
     score: number;
-    inner: FunctionOutput[];
+    inner: ContainerOutput[];
 }
 
 export type FolderOutput = {
@@ -32,5 +31,5 @@ export interface ProgramOutput {
 
 export interface ScoreAndInner {
     score: number;
-    inner: FunctionOutput[];
+    inner: ContainerOutput[];
 }

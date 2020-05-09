@@ -1,5 +1,5 @@
 import * as ts from "typescript"
-import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
+import { FileOutput, ContainerOutput, ScoreAndInner } from "./types";
 import { countNotAtTheEnds } from "./util";
 import {
     getFunctionNodeName,
@@ -30,7 +30,7 @@ function aggregateCostOfChildren(
     // The inner functions of a node is defined as the concat of:
     // * all child nodes that are functions/namespaces/classes
     // * all functions declared directly under a non function child node
-    const inner = [] as FunctionOutput[];
+    const inner = [] as ContainerOutput[];
 
     for (const child of children) {
         const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild);
