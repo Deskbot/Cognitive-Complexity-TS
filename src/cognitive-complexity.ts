@@ -39,7 +39,7 @@ function aggregateCostOfChildren(
 
         // a function/class/namespace/type is part of the inner scope we want to output
         const variableBeingDefined = ancestorsOfChild[ancestorsOfChild.length - 1];
-        const name = getNameIfContainer2(child, variableBeingDefined);
+        const name = chooseContainerName(child, variableBeingDefined);
 
         if (name !== undefined) {
             inner.push({
@@ -195,7 +195,7 @@ function maybeAddNodeToNamedAncestors(
     node: ts.Node,
     ancestorsOfNode: ReadonlyArray<string>
 ): ReadonlyArray<string> {
-    const containerNameMaybe = getNameIfContainer(node);
+    const containerNameMaybe = findIntroducedName(node);
     if (containerNameMaybe !== undefined) {
         return [...ancestorsOfNode, containerNameMaybe];
     }
@@ -231,7 +231,7 @@ function getNameIfNameDeclaration(node: ts.Node): string | undefined {
     return undefined;
 }
 
-function getNameIfContainer(node: ts.Node): string | undefined {
+function findIntroducedName(node: ts.Node): string | undefined {
     if (ts.isClassDeclaration(node)) {
         return getClassDeclarationName(node);
     }
@@ -255,8 +255,7 @@ function getNameIfContainer(node: ts.Node): string | undefined {
     return undefined;
 }
 
-// todo find a decent name for these 2 functions
-function getNameIfContainer2(node: ts.Node, variableBeingDefined: string): string | undefined {
+function chooseContainerName(node: ts.Node, variableBeingDefined: string): string | undefined {
     if (isFunctionNode(node)) {
         return getFunctionNodeName(node, variableBeingDefined);
     }
@@ -269,7 +268,7 @@ function getNameIfContainer2(node: ts.Node, variableBeingDefined: string): strin
         return getClassExpressionName(node, variableBeingDefined);
     }
 
-    const name = getNameIfContainer(node);
+    const name = findIntroducedName(node);
     if (name !== undefined) {
         return name;
     }
