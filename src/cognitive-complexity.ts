@@ -18,7 +18,7 @@ import {
     getPropertyAccessName,
     getIdentifier,
     getClassExpressionName
-} from "./node-inspection";
+} from "./node-naming";
 import { whereAreChildren } from "./depth";
 
 export function fileCost(file: ts.SourceFile): FileOutput {
