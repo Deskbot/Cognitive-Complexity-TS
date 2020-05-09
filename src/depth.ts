@@ -3,7 +3,7 @@
  */
 
 import * as ts from "typescript";
-import { isForLikeStatement, ForLikeStatement } from "./node-naming";
+import { isForLikeStatement, ForLikeStatement } from "./node-inspection";
 
 interface DepthOfChildren {
     /**

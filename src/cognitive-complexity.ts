@@ -1,25 +1,19 @@
 import * as ts from "typescript"
 import { FileOutput, FunctionOutput, ScoreAndInner } from "./types";
-import { sum, countNotAtTheEnds } from "./util";
+import { countNotAtTheEnds } from "./util";
 import {
-    isFunctionNode,
-    isBreakOrContinueToLabel,
-    getColumnAndLine,
     getFunctionNodeName,
     getClassDeclarationName,
     getModuleDeclarationName,
     getCalledFunctionName,
-    isSequenceOfDifferentBooleanOperations,
     getTypeAliasName,
-    isBinaryTypeOperator,
-    isContainer,
     getInterfaceDeclarationName,
     getNewedConstructorName,
     getPropertyAccessName,
-    getIdentifier,
     getClassExpressionName
 } from "./node-naming";
 import { whereAreChildren } from "./depth";
+import { isContainer, getColumnAndLine, isSequenceOfDifferentBooleanOperations, isBreakOrContinueToLabel, getIdentifier, isFunctionNode, isBinaryTypeOperator } from "./node-inspection";
 
 export function fileCost(file: ts.SourceFile): FileOutput {
     return nodeCost(file, true);
