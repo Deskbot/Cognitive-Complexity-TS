@@ -22,3 +22,5 @@ class E {
         while (true);
     }
 }
+
+const F = class {}
