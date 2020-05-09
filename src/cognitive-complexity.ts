@@ -180,6 +180,7 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
     return 0;
 }
 
+// todo should this output a name
 function nodeCost(
     node: ts.Node,
     topLevel: boolean,
@@ -213,7 +214,6 @@ function nodeCost(
     };
 }
 
-// todo reduce the amount of checks for container types
 function maybeAddNodeToNamedAncestors(
     node: ts.Node,
     ancestorsOfNode: ReadonlyArray<string>
