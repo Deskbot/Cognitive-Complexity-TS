@@ -16,7 +16,8 @@ import {
     getInterfaceDeclarationName,
     getNewedConstructorName,
     getPropertyAccessName,
-    getIdentifier
+    getIdentifier,
+    getClassExpressionName
 } from "./node-inspection";
 import { whereAreChildren } from "./depth";
 
@@ -258,6 +259,10 @@ function getNameIfContainer(node: ts.Node): string | undefined {
         return getClassDeclarationName(node);
     }
 
+    if (ts.isClassExpression(node)) {
+        return getClassExpressionName(node);
+    }
+
     if (ts.isConstructorDeclaration(node)) {
         return "constructor";
     }
@@ -277,6 +282,14 @@ function getNameIfContainer(node: ts.Node): string | undefined {
 function getNameIfContainer2(node: ts.Node, variableBeingDefined: string): string | undefined {
     if (isFunctionNode(node)) {
         return getFunctionNodeName(node, variableBeingDefined);
+    }
+
+    if (ts.isClassDeclaration(node)) {
+        return getClassDeclarationName(node);
+    }
+
+    if (ts.isClassExpression(node)) {
+        return getClassExpressionName(node, variableBeingDefined);
     }
 
     const name = getNameIfContainer(node);

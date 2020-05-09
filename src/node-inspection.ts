@@ -37,6 +37,18 @@ export function getClassDeclarationName(node: ts.ClassDeclaration): string {
     return name ?? ""; // anonymous class
 }
 
+export function getClassExpressionName(
+    node: ts.ClassExpression,
+    variableBeingDefined: string | undefined = undefined
+): string | undefined {
+    const firstChild = node.getChildAt(1);
+    if (ts.isIdentifier(firstChild)) {
+        return firstChild.getText();
+    }
+
+    return variableBeingDefined ?? undefined;
+}
+
 export function getColumnAndLine(node: ts.Node): ColumnAndLine {
     const lineAndCol = node.getSourceFile()
         .getLineAndCharacterOfPosition(node.getStart());

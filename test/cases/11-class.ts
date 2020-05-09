@@ -24,3 +24,5 @@ class E {
 }
 
 const F = class {}
+
+const G = class H {}

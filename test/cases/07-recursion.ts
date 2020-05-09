@@ -35,15 +35,3 @@ const m = function n() {
 const o = function p() {
     o();
 }
-
-class NewSelf {
-    constructor() {
-        new NewSelf();
-    }
-}
-
-class RecursiveConstructor {
-    constructor() {
-        this.constructor();
-    }
-}

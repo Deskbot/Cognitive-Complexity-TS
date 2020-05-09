@@ -1,6 +1,6 @@
 {
     "07-recursion.ts": {
-        "score": 11,
+        "score": 9,
         "inner": [
             {
                 "name": "f",
@@ -57,34 +57,6 @@
                 "score": 1,
                 "line": 35,
                 "column": 11
-            },
-            {
-                "name": "NewSelf",
-                "score": 1,
-                "line": 39,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "constructor",
-                        "score": 1,
-                        "line": 40,
-                        "column": 5
-                    }
-                ]
-            },
-            {
-                "name": "RecursiveConstructor",
-                "score": 1,
-                "line": 45,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "constructor",
-                        "score": 1,
-                        "line": 46,
-                        "column": 5
-                    }
-                ]
             }
         ]
     }
