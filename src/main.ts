@@ -20,7 +20,7 @@ async function main() {
         throw new Error("Usage: arg1: target file path");
     }
 
-    printCognitiveComplexityJson(filePath);
+    await printCognitiveComplexityJson(filePath);
 }
 
 async function getFileOutput(filePath: string): Promise<FileOutput> {

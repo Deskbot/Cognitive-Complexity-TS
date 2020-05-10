@@ -10,7 +10,7 @@ import { toPromise } from "../src/util";
 import { ProgramOutput } from "../src/types"
 
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
-const programPath = path.normalize(__dirname + "/../../src/main");
+const programPath = path.normalize(__dirname + "/../../../bin/cognitive-complexity-ts.sh");
 
 main();
 
@@ -88,7 +88,7 @@ async function main() {
 
 function runCase(caseFilePath: string, outputPath: string): Promise<ProgramOutput> {
     return new Promise((resolve, reject) => {
-        const procUnderTest = cp.spawn("node", ["-r", "source-map-support/register", programPath, caseFilePath]);
+        const procUnderTest = cp.spawn(programPath, [caseFilePath]);
         const outputStream = fs.createWriteStream(outputPath);
         procUnderTest.stdout.pipe(outputStream);
         procUnderTest.stderr.pipe(process.stdout);
