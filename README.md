@@ -47,11 +47,13 @@ The following structures increase the complexity score by a number equal to the 
 
 The following structures increment the depth by 1.
 
-* `if`, `else`, `else if`, the code after `?` and `:` in conditional expressions
+* code called when the condition is met in `if` and `else if`
+* `else`
+* conditionally executed code in a conditional expression `? ... : ...`
 * `switch`
-* `for`, `while`, `do while`
+* looped code in `for`, `while`, `do while`
 * `catch`
-* nested functions, nested classes
+* nested function body, nested class body
 
 ## Differences
 
