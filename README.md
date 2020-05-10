@@ -75,7 +75,7 @@ Some anonymous classes and functions will appear with names because they are ass
 npm run test [test name]
 ```
 
-The test name can be any substring of a path to a test file.
+The test name can be any substring of a path to a test file. Or the test name can be left blank to run all tests.
 
 ### TypeScript Parser Output
 
