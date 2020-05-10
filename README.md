@@ -8,11 +8,15 @@ Myself and this project are completely unaffiliated with Sonar Source.
 
 ## Install
 
-Not yet published on npm.
+```
+npm i cognitive-complexity-ts
+```
 
 ## Run
 
-`[command] [file path]`
+```
+npx cognitive-complexity-ts [file path]
+```
 
 ## Simple Overview of the Cognitive Complexity Metric
 
