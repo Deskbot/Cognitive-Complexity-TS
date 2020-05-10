@@ -8,7 +8,6 @@
     "complexity",
     "metric"
   ],
-
   "main": "./bin/cognitive-complexity-ts",
   "types": "./build/src",
   "scripts": {
@@ -25,23 +24,21 @@
     "build/src/**",
     "README.md"
   ],
-
   "author": "Thomas Richards",
   "license": "UNLICENSED",
   "bugs": "https://github.com/Deskbot/Cognitive-Complexity-TS/issues",
   "homepage": "https://github.com/Deskbot/Cognitive-Complexity-TS#readme",
   "repository": "https://github.com/Deskbot/Cognitive-Complexity-TS",
-
   "dependencies": {
     "js-beautify": "^1.11.0",
-    "source-map-support": "^0.5.13",
+    "source-map-support": "^0.5.19",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
     "@types/deep-diff": "^1.0.0",
     "@types/glob": "^7.1.1",
     "@types/js-beautify": "^1.8.2",
-    "@types/node": "^10.17.19",
+    "@types/node": "^10.17.21",
     "@types/tempfile": "^3.0.0",
     "deep-diff": "^1.0.2",
     "glob": "^7.1.6",
