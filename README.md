@@ -6,6 +6,13 @@ Right now it creates a JSON output. In future I expect to add an interactive htm
 
 Myself and this project are completely unaffiliated with Sonar Source.
 
+## Install
+
+Not yet published on npm.
+
+## Run
+
+`[command] [file path]`
 
 ## Simple Overview of the Cognitive Complexity Metric
 
@@ -57,5 +64,22 @@ Changes:
     * Mapped types have an inherent and nesting increments
     * Recursive types have an inherent increment
 
-TODO Explain folder structure
-TODO explain what the examples are for
+
+## Development Tools
+
+### Test
+
+```
+npm run test [test name]
+```
+
+The test name can be any substring of a path to a test file.
+
+
+### TypeScript Parser Output
+
+Microsoft doesn't appear to have documentation for what all of the AST nodes are, so I created a tool to output the AST for the code.
+
+```
+npm run what [file path]
+```
