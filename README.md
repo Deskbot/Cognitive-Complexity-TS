@@ -63,6 +63,10 @@ Changes:
     * Mapped types have an inherent and nesting increments
     * Recursive types have an inherent increment
 
+## Output
+
+Some anonymous classes and functions will appear with names because they are assigned to a variable/const.
+
 ## Development Tools
 
 ### Test
