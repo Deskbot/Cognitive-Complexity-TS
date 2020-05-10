@@ -68,6 +68,7 @@ Changes:
     * Union and intersection have an inherent increment
     * Mapped types have an inherent and nesting increments
     * Recursive types have an inherent increment
+* Recursive references have an increment, not just recursive calls
 
 ## Output
 
