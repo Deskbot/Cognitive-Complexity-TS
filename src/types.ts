@@ -22,7 +22,7 @@ export interface FileOutput {
 }
 
 export type FolderOutput = {
-    [name: string]: FileOutput | FolderOutput
+    [name: string]: FileOutput | FolderOutput;
 };
 
 export interface ProgramOutput {
