@@ -21,7 +21,7 @@ The following structures increase the complexity score by 1.
 * `catch`
 * `break label`, `continue label`
 * a sequence of the same operator `&&`, `||`, `??`, intersection `&`, union `|`
-* a recursive call
+* a recursive reference to a function, class, or type
 * mapped type `{ [K in T]: ... }`
 
 ### Nesting Increments
@@ -45,17 +45,17 @@ The following structures increment the depth by 1.
 
 ## Differences
 
-Classes have a score
-Files have a score
+I have taken some liberties with the guidelines set out by Sonar Source in the Cognitive Complexity whitepaper in order to account for TypeScript's features and to improve the user output.
+
+Changes:
+
+* Classes have a score
+* Files have a score
+* Namespaces have a score
+* Types have a score
+    * Union and intersection have an inherent increment
+    * Mapped types have an inherent and nesting increments
+    * Recursive types have an inherent increment
 
 TODO Explain folder structure
 TODO explain what the examples are for
-
-## Type Operators
-
-mapped types have inherent cost
-mapped types don't increase depth
-
-conditionals have cost and increase depth
-
-recursive types have an increment
