@@ -2,6 +2,10 @@ This program analyses TypeScript and JavaScript code according to the [Cognitive
 
 Right now it creates a JSON output. In future I expect to add an interactive html output.
 
+## Disclaimer
+
+Myself and this project are completely unaffiliated with Sonar Source.
+
 
 ## Simple Overview of the Cognitive Complexity Metric
 
