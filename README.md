@@ -49,7 +49,6 @@ The following structures increment the depth by 1.
 * `catch`
 * nested functions, nested classes
 
-
 ## Differences
 
 I have taken some liberties with the guidelines set out by Sonar Source in the Cognitive Complexity whitepaper in order to account for TypeScript's features and to improve the user output.
@@ -64,7 +63,6 @@ Changes:
     * Mapped types have an inherent and nesting increments
     * Recursive types have an inherent increment
 
-
 ## Development Tools
 
 ### Test
@@ -74,7 +72,6 @@ npm run test [test name]
 ```
 
 The test name can be any substring of a path to a test file.
-
 
 ### TypeScript Parser Output
 
