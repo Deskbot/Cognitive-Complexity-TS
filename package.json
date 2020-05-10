@@ -6,22 +6,32 @@
     "typescript",
     "cognitive",
     "complexity",
-    "metrics"
+    "metric"
   ],
-  "main": "./build/src/index.js",
+
+  "main": "./bin/cognitive-complexity-ts",
+  "types": "./build/src",
   "scripts": {
     "build": "tsc -i -p ./src",
     "build-test": "npm run build && tsc -i -p ./test",
     "build-tools": "tsc -i -p ./tools",
+    "prepublishOnly": "npm run test",
     "start": "./bin/cognitive-complexity-ts.sh",
     "test": "npm run build-test && node -r source-map-support/register ./build/test/test/main",
     "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it"
   },
+  "files": [
+    "bin",
+    "build/src/**",
+    "README.md"
+  ],
+
   "author": "Thomas Richards",
   "license": "UNLICENSED",
   "bugs": "https://github.com/Deskbot/Cognitive-Complexity-TS/issues",
   "homepage": "https://github.com/Deskbot/Cognitive-Complexity-TS#readme",
   "repository": "https://github.com/Deskbot/Cognitive-Complexity-TS",
+
   "dependencies": {
     "js-beautify": "^1.11.0",
     "source-map-support": "^0.5.13",
