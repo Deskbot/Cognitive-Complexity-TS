@@ -57,6 +57,12 @@
                 "score": 1,
                 "line": 35,
                 "column": 11
+            },
+            {
+                "name": "f",
+                "score": 0,
+                "line": 40,
+                "column": 5
             }
         ]
     }

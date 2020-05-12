@@ -35,3 +35,9 @@ const m = function n() {
 const o = function p() {
     o();
 }
+
+const Obj = {
+    f() {
+        f();
+    }
+};
