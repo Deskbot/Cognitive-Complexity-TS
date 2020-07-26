@@ -3,6 +3,8 @@
 * Add a html interface
 * Can I run with npx
 * Does global install work
+* Update documentation of best way to run it from the terminal
+* Add documentation on how to use the library programmatically.
 
 # Possible Features
 
