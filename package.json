@@ -14,9 +14,11 @@
     "build": "tsc -i -p ./src",
     "build-test": "npm run build && tsc -i -p ./test",
     "build-tools": "tsc -i -p ./tools",
+    "build-ui": "tsc -i -p ./ui",
     "prepublishOnly": "npm run test",
     "start": "./bin/cognitive-complexity-ts.sh",
     "test": "npm run build-test && node -r source-map-support/register ./build/test/test/main",
+    "ui": "npm run build-ui && node -r source-map-support/register ./build/ui/ui/main",
     "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it"
   },
   "bin": {
