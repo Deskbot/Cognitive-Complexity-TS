@@ -1,7 +1,6 @@
 {
     "extends": "../base.tsconfig.json",
     "compilerOptions": {
-        "declaration": true,
         "outDir": "../build/src",
         "sourceRoot": "."
     },
