@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            const sampleResult = JSON.parse(`{
+                "23-recursive-type.ts": {
+                    "score": 3,
+                    "inner": [
+                        {
+                            "name": "A",
+                            "score": 1,
+                            "line": 1,
+                            "column": 1
+                        },
+                        {
+                            "name": "B",
+                            "score": 0,
+                            "line": 5,
+                            "column": 1
+                        },
+                        {
+                            "name": "C",
+                            "score": 1,
+                            "line": 9,
+                            "column": 1
+                        },
+                        {
+                            "name": "D",
+                            "score": 0,
+                            "line": 13,
+                            "column": 1
+                        },
+                        {
+                            "name": "E",
+                            "score": 1,
+                            "line": 17,
+                            "column": 1
+                        }
+                    ]
+                }
+            }`);
+        </script>
+    </head>
+    <body>
+        <div class="file">
+            <button class="expand" data-expand></button>
+            <h1 class="file-title">23-recursive-type.ts</h1>
+            <h3>Score: 3</h3>
+            <div class="inner">
+                <div class="container">
+                    <h2>A</h2>
+                    <h3>Score: 1</h3>
+                </div>
+                <div class="container">
+                    <h2>A</h2>
+                    <h3>Score: 1</h3>
+                </div>
+                <div class="container">
+                    <h2>A</h2>
+                    <h3>Score: 1</h3>
+                </div>
+                <div class="container">
+                    <h2>A</h2>
+                    <h3>Score: 1</h3>
+                </div>
+                <div class="container">
+                    <h2>A</h2>
+                    <h3>Score: 1</h3>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
