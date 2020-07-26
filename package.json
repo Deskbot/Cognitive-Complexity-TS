@@ -27,7 +27,8 @@
   "files": [
     "bin",
     "build/src/**",
-    "build/ui/**/*.html",
+    "build/ui/**",
+    "ui/html/**",
     "README.md"
   ],
   "author": "Thomas Richards",
