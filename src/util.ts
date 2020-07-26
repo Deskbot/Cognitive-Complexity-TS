@@ -27,6 +27,13 @@ export function sum(a: number, b: number): number {
     return a + b;
 }
 
+export function transferAttributes<R, E>(result: R, extras: E) {
+    const resultRef = result as R & E;
+    for (const key in extras) {
+        resultRef[key] = extras[key] as any;
+    }
+}
+
 export function toPromise<T, E>(
     action: (callback: (err: E, successData: T) => void) => void,
     errorTransformer?: (err: E) => Error
