@@ -2,7 +2,7 @@ import * as path from "path";
 import * as process from "process";
 import { ProgramOutput } from "./types";
 import { js_beautify } from "js-beautify";
-import { getEntryOutput } from "./file";
+import { getFileOrFolderOutput } from "./file-or-folder-output";
 
 main();
 
@@ -28,7 +28,7 @@ async function printCognitiveComplexityJson(fullPath: string) {
     const filePath = path.relative(cwd, fullPath);
     const fileName = path.parse(fullPath).base;
 
-    resultForAllFiles[fileName] = await getEntryOutput(filePath);
+    resultForAllFiles[fileName] = await getFileOrFolderOutput(filePath);
 
     const outputStructure = JSON.stringify(resultForAllFiles, (key, value) => {
         // don't show empty inner
