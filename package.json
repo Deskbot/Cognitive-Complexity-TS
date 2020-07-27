@@ -29,11 +29,11 @@
     "cognitive-complexity-ts": "./bin/cognitive-complexity-ts"
   },
   "files": [
-    "bin",
-    "build/src/**",
-    "build/ui/**",
-    "ui/html/**",
-    "README.md"
+    "/bin",
+    "/build/src/**",
+    "/build/ui/**",
+    "/ui/html/**",
+    "/README.md"
   ],
   "author": "Thomas Richards",
   "license": "UNLICENSED",
