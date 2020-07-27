@@ -2,6 +2,9 @@
     "extends": "../src/tsconfig.json",
     "compilerOptions": {
         "outDir": "../build/ui",
+        "lib": [
+            "DOM"
+        ],
         "sourceRoot": "."
     },
 }

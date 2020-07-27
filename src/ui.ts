@@ -28,7 +28,7 @@ async function main() {
 
     fs.createReadStream(htmlDir + "/noscript.html").pipe(stdout);
     stdout.write(`
-        <script id="cognitive-complexity-ts-output" type="text/json">
+        <script id="cognitive-complexity-ts-json" type="text/json">
             ${JSON.stringify(combinedOutputs)}
         </script>`
     );
