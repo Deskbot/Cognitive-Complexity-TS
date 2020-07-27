@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { stdout } from "process";
-import { getFileOrFolderOutput } from "./file-or-folder-output";
+import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 import { transferAttributes } from "./util";
 import { FileOutput, FolderOutput } from "./types";
 

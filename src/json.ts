@@ -2,7 +2,7 @@ import * as path from "path";
 import * as process from "process";
 import { ProgramOutput } from "./types";
 import { js_beautify } from "js-beautify";
-import { getFileOrFolderOutput } from "./file-or-folder-output";
+import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 
 main();
 

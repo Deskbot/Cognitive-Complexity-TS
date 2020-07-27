@@ -1,12 +1,12 @@
 import * as ts from "typescript"
-import { FileOutput, ContainerOutput, ScoreAndInner } from "./types";
-import { countNotAtTheEnds } from "./util";
+import { FileOutput, ContainerOutput, ScoreAndInner } from "../types";
+import { countNotAtTheEnds } from "../util";
 import {
     chooseContainerName,
     getNameIfCalledNode,
     findIntroducedName,
     getNameIfNameDeclaration
-} from "./node-naming";
+} from "../node-naming";
 import { whereAreChildren } from "./depth";
 import {
     isContainer,

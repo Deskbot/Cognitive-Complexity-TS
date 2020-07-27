@@ -1,6 +1,10 @@
 import * as ts from "typescript";
 import { Unreachable } from "./util";
-import { getIdentifier, FunctionNode, isFunctionNode } from "./node-inspection";
+import {
+    getIdentifier,
+    FunctionNode,
+    isFunctionNode
+} from "./cognitive-complexity/node-inspection";
 
 export function chooseContainerName(node: ts.Node, variableBeingDefined: string): string | undefined {
     if (isFunctionNode(node)) {

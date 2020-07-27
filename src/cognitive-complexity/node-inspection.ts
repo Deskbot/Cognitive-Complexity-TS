@@ -1,6 +1,6 @@
 import * as ts from "typescript";
-import { ColumnAndLine } from "./types";
-import { repeat } from "./util";
+import { ColumnAndLine } from "../types";
+import { repeat } from "../util";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
 
