@@ -1,11 +1,7 @@
-import * as ts from "typescript";
-
 export interface ColumnAndLine {
     column: number;
     line: number;
 }
-
-export type FuncNode = ts.ArrowFunction | ts.FunctionExpression | ts.FunctionDeclaration | ts.MethodDeclaration;
 
 export interface FunctionNodeInfo extends ColumnAndLine {
     name: string;
