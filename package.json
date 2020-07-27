@@ -11,15 +11,19 @@
   "main": "./bin/cognitive-complexity-ts",
   "types": "./build/src",
   "scripts": {
+    "json": "./bin/cognitive-complexity-ts-json",
+    "ui": "./bin/cognitive-complexity-ts-ui",
+
     "build": "tsc -i -p ./src",
     "build-test": "npm run build && tsc -i -p ./test",
     "build-tools": "tsc -i -p ./tools",
-    "build-ui": "tsc -i -p ./ui",
-    "prepublishOnly": "npm run test",
-    "start": "./bin/cognitive-complexity-ts.sh",
+
+    "dev-json": "npm run build && node -r source-map-support/register ./build/src/json",
+    "dev-ui": "npm run build && node -r source-map-support/register ./build/src/ui",
     "test": "npm run build-test && node -r source-map-support/register ./build/test/test/main",
-    "ui": "npm run build-ui && node -r source-map-support/register ./build/ui/ui/main",
-    "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it"
+    "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it",
+
+    "prepublishOnly": "npm run test"
   },
   "bin": {
     "cognitive-complexity-ts": "./bin/cognitive-complexity-ts"

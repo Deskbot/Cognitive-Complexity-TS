@@ -10,7 +10,7 @@ import { toPromise } from "../src/util";
 import { ProgramOutput } from "../src/types"
 
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
-const programPath = path.normalize(__dirname + "/../../../bin/cognitive-complexity-ts");
+const programPath = path.normalize(__dirname + "/../../../bin/cognitive-complexity-ts-json");
 
 main();
 

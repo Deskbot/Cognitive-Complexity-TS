@@ -1,11 +1,11 @@
 import * as fs from "fs";
 import * as path from "path";
 import { stdout } from "process";
-import { getFileOrFolderOutput } from "../src/file-or-folder-output";
-import { transferAttributes } from "../src/util";
-import { FileOutput, FolderOutput } from "../src/types";
+import { getFileOrFolderOutput } from "./file-or-folder-output";
+import { transferAttributes } from "./util";
+import { FileOutput, FolderOutput } from "./types";
 
-const htmlDir = path.normalize(__dirname + "/../../../ui/html");
+const htmlDir = path.normalize(__dirname + "/../../ui/html");
 
 main();
 
