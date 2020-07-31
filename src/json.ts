@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as process from "process";
-import { ProgramOutput } from "./types";
+import { ProgramOutput } from "../shared/types";
 import { js_beautify } from "js-beautify";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 

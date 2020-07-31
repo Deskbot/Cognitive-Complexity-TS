@@ -1,10 +1,10 @@
 import * as fs from "fs";
 import * as http from "http";
-import * as minimist from "minimist";
+import minimist from "minimist";
 import * as path from "path";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 import { transferAttributes, nonNaN } from "./util";
-import { FileOutput, FolderOutput } from "./types";
+import { FileOutput, FolderOutput } from "../shared/types";
 
 const indexFilePath = path.normalize(__dirname + "/../../ui/index.html");
 

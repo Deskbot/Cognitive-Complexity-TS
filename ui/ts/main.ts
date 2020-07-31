@@ -1,4 +1,4 @@
-import { ProgramOutput } from "../../src/types";
+import { ProgramOutput } from "../../shared/types";
 import { CognitiveComplexityUi } from "./component/CognitiveComplexityUi";
 
 main();

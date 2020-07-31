@@ -1,4 +1,5 @@
 /build
+/ui/js
 
 .vscode
 node_modules

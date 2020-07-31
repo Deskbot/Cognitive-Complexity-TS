@@ -7,7 +7,7 @@ import * as path from "path";
 import * as process from "process";
 import tempfile from "tempfile";
 import { toPromise } from "../src/util";
-import { ProgramOutput } from "../src/types"
+import { ProgramOutput } from "../shared/types";
 
 const casesDir = path.normalize(__dirname + "/../../../test/cases");
 const programPath = path.normalize(__dirname + "/../../../bin/cognitive-complexity-ts-json");

@@ -5,7 +5,7 @@
 import { promises as fsP } from "fs";
 import * as path from "path";
 import * as ts from "typescript";
-import { FileOutput, FolderOutput } from "../types";
+import { FileOutput, FolderOutput } from "../../shared/types";
 import { fileCost } from "./cognitive-complexity";
 
 /**

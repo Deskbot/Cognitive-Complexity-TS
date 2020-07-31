@@ -4,4 +4,7 @@
         "outDir": "../build/tools",
         "sourceRoot": "."
     },
+    "include": [
+        "."
+    ]
 }

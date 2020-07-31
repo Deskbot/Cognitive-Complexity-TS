@@ -1,12 +1,10 @@
 {
-    "extends": "../src/tsconfig.json",
+    "extends": "../base.tsconfig.json",
     "compilerOptions": {
-        "outFile": "../build/ui.js",
-        "module": "amd",
         "lib": [
             "DOM"
         ],
-        "removeComments": true,
-        "sourceRoot": ".",
+        "outDir": "./js",
+        "sourceRoot": "./ts"
     },
 }
