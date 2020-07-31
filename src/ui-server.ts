@@ -6,7 +6,7 @@ import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-out
 import { transferAttributes, nonNaN } from "./util";
 import { FileOutput, FolderOutput } from "./types";
 
-const indexFilePath = path.normalize(__dirname + "/../../ui/front/index.html");
+const indexFilePath = path.normalize(__dirname + "/../../ui/index.html");
 
 main();
 
