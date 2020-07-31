@@ -27,7 +27,12 @@
     "prepublishOnly": "npm run test"
   },
   "bin": {
-    "cognitive-complexity-ts": "./bin/cognitive-complexity-ts"
+    "ccts": "./bin/cognitive-complexity-ts",
+    "ccts-json": "./bin/cognitive-complexity-ts-json",
+    "ccts-ui": "./bin/cognitive-complexity-ts-ui",
+    "cognitive-complexity-ts": "./bin/cognitive-complexity-ts",
+    "cognitive-complexity-ts-json": "./bin/cognitive-complexity-ts-json",
+    "cognitive-complexity-ts-ui": "./bin/cognitive-complexity-ts-ui"
   },
   "files": [
     "/bin",
