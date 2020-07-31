@@ -6,6 +6,7 @@
 * Can I run with npx
 * Does global install work
 * Update documentation of best way to run it from the terminal
+* Add documentation for the json output and the UI output.
 * Add documentation on how to use the library programmatically.
 
 # Possible Features
