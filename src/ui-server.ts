@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import * as http from "http";
+import * as minimist from "minimist";
 import * as path from "path";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
-import { transferAttributes } from "./util";
+import { transferAttributes, nonNaN } from "./util";
 import { FileOutput, FolderOutput } from "./types";
 
 const indexFilePath = path.normalize(__dirname + "/../../ui/front/index.html");
@@ -10,11 +11,20 @@ const indexFilePath = path.normalize(__dirname + "/../../ui/front/index.html");
 main();
 
 async function main() {
-    const targets = process.argv.slice(2);
+    const args = minimist(process.argv.slice(2));
+
+    if (args["h"] || args["help"]) {
+        printHelp();
+        return;
+    }
+
+    const givenPort = parseInt(args["port"]);
+    const port = nonNaN(givenPort, 5678);
+    const inputFiles = args["_"];
 
     const combinedOutputs = {} as FileOutput | FolderOutput;
-    for (const target of targets) {
-        transferAttributes(combinedOutputs, await getFileOrFolderOutput(target));
+    for (const file of inputFiles) {
+        transferAttributes(combinedOutputs, await getFileOrFolderOutput(file));
     }
     const combinedOutputsJson = JSON.stringify(combinedOutputs);
 
@@ -34,7 +44,11 @@ async function main() {
         res.end();
     });
 
-    server.listen(5678, () => {
-        console.log("Server started at localhost:5678");
+    server.listen(port, () => {
+        console.log(`Server started at http://localhost:${port}`);
     });
+}
+
+function printHelp() {
+    console.log("Arguments: [-h | --help] [--port <NUMBER>] [FILE]...");
 }

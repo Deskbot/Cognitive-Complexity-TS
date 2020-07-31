@@ -14,6 +14,14 @@ export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): num
     return tot;
 }
 
+export function nonNaN(num: number, fallback: number): number {
+    if (Number.isNaN(num)) {
+        return fallback;
+    }
+
+    return num;
+}
+
 export function repeat(str: string, times: number): string {
     let res = "";
     for (let i = 0; i < times; i++) {
