@@ -9,7 +9,7 @@ Myself and this project are completely unaffiliated with Sonar Source.
 ## Install
 
 ```
-npm i cognitive-complexity-ts
+npm install cognitive-complexity-ts
 ```
 
 ## Run
