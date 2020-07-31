@@ -1,6 +1,8 @@
 # Necessary Features
 
 * Add a html interface
+    * choice of port for ui server
+    * automatically open the web page
 * Can I run with npx
 * Does global install work
 * Update documentation of best way to run it from the terminal

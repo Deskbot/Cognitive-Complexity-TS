@@ -1,11 +1,11 @@
 import * as fs from "fs";
+import * as http from "http";
 import * as path from "path";
-import { stdout } from "process";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 import { transferAttributes } from "./util";
 import { FileOutput, FolderOutput } from "./types";
 
-const htmlDir = path.normalize(__dirname + "/../../ui/html");
+const indexFilePath = path.normalize(__dirname + "/../../ui/front/index.html");
 
 main();
 
@@ -16,25 +16,25 @@ async function main() {
     for (const target of targets) {
         transferAttributes(combinedOutputs, await getFileOrFolderOutput(target));
     }
+    const combinedOutputsJson = JSON.stringify(combinedOutputs);
 
-    // The page structure is very simple and so the following code.
-    // Although I admit that it feels bad.
+    const server = http.createServer((req, res) => {
+        try {
+            if (req.url === "/json") {
+                res.write(combinedOutputsJson);
+            } else {
+                fs.createReadStream(indexFilePath).pipe(res);
+            }
+            res.statusCode = 200;
+        } catch (e) {
+            console.error(e);
+            res.statusCode = 500;
+        }
 
-    stdout.write("<!DOCTYPE html>");
-    stdout.write("<html>");
+        res.end();
+    });
 
-    stdout.write(fs.readFileSync(htmlDir + "/head.html"));
-
-    stdout.write("<body>");
-
-    stdout.write(fs.readFileSync(htmlDir + "/noscript.html"));
-
-    stdout.write(`
-        <script id="cognitive-complexity-ts-json" type="text/json">
-            ${JSON.stringify(combinedOutputs)}
-        </script>`
-    );
-
-    stdout.write("</body>");
-    stdout.write("</html>");
+    server.listen(5678, () => {
+        console.log("Server started at localhost:5678");
+    });
 }
