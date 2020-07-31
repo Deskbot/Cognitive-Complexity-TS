@@ -19,14 +19,16 @@ async function main() {
 
     // The page structure is very simple and so the following code.
     // Although I admit that it feels bad.
+
     stdout.write("<!DOCTYPE html>");
     stdout.write("<html>");
 
-    fs.createReadStream(htmlDir + "/head.html").pipe(stdout);
+    stdout.write(fs.readFileSync(htmlDir + "/head.html"));
 
     stdout.write("<body>");
 
-    fs.createReadStream(htmlDir + "/noscript.html").pipe(stdout);
+    stdout.write(fs.readFileSync(htmlDir + "/noscript.html"));
+
     stdout.write(`
         <script id="cognitive-complexity-ts-json" type="text/json">
             ${JSON.stringify(combinedOutputs)}

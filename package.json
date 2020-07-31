@@ -17,7 +17,7 @@
     "build": "tsc -i -p ./src",
     "build-test": "npm run build && tsc -i -p ./test",
     "build-tools": "tsc -i -p ./tools",
-    "build-ui": "tsc -i -p ./ui",
+    "build-ui": "npm run build && tsc -i -p ./ui",
 
     "dev-json": "npm run build && node -r source-map-support/register ./build/src/json",
     "dev-ui": "npm run build-ui && node -r source-map-support/register ./build/src/ui",
