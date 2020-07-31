@@ -3,4 +3,4 @@
 ## Entry Points
 
 * [json.ts]
-* [ui.ts]
+* [ui-server.ts]
