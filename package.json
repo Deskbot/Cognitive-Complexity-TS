@@ -19,6 +19,9 @@
     "test": "npm run build-test && node -r source-map-support/register ./build/test/test/main",
     "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it"
   },
+  "bin": {
+    "cognitive-complexity-ts": "./bin/cognitive-complexity-ts"
+  },
   "files": [
     "bin",
     "build/src/**",
