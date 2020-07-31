@@ -2,6 +2,8 @@
 
 * Add a html interface
     * automatically open the web page
+* Should be able to compile and run from a fresh checkout
+* Should be able to run when installed as a dependecy
 * Can I run with npx
 * Does global install work
 * Update documentation of best way to run it from the terminal
@@ -10,6 +12,7 @@
 
 # Possible Features
 
+* Gracefully handle incorrect arguments to package.json scripts
 * VSC Plugin
 * Webpack / Rollup Plugin
 
@@ -24,6 +27,7 @@
 
 * is this comment correct: all functions declared directly under a non function child node
 * Add comments to the top of each source file to explain the file purpose.
+* Make the JavaScript served for the UI to be minimised
 * Document utilities.
 * Delete unwanted utilities.
 * there are a bunch of comments where I should just use the word "container"
