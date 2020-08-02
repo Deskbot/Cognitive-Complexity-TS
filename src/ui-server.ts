@@ -49,6 +49,12 @@ function createServer(combinedOutputsJson: string): http.Server {
     });
 }
 
+function endWith404(res: ServerResponse) {
+    res.statusCode = 404;
+    res.write("No such endpoint.")
+    res.end();
+}
+
 async function generateComplexityJson(inputFiles: string[]): Promise<string> {
     const combinedOutputs = {} as FileOutput | FolderOutput;
     for (const file of inputFiles) {
@@ -77,13 +83,13 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
         const prefixLength = 4;
         const urlWithoutPrefix = url.substr(prefixLength);
 
-        let targetFile = jsPath + "/" + urlWithoutPrefix + ".js";
+        const targetFile = jsPath + "/" + urlWithoutPrefix + ".js";
 
         if (!isPathInsideDir(targetFile, jsPath)
             || !fs.existsSync(targetFile)
             || !fs.statSync(targetFile).isFile()
         ) {
-            targetFile = indexFilePath;
+            return endWith404(res);
         }
 
         res.setHeader("Content-Type", "text/javascript");
@@ -92,10 +98,7 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
         return;
     }
 
-    // no endpoint
-    res.statusCode = 404;
-    res.write("No such endpoint.")
-    res.end();
+    return endWith404(res);
 }
 
 function isPathInsideDir(target: string, base: string): boolean {
