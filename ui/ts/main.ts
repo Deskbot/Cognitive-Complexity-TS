@@ -21,5 +21,4 @@ async function main() {
     }
 
     document.body.append(CognitiveComplexityUi(ccResult));
-    document.body.append(ccJson);
 }

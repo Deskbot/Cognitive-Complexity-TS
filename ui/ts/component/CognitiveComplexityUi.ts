@@ -6,6 +6,6 @@ export function CognitiveComplexityUi(complexity: ProgramOutput): Node {
     const files = Object.keys(complexity).sort();
 
     return fragment(
-        files.map(key => FileOrFolderComplexity(complexity[key]))
+        files.map(filePath => FileOrFolderComplexity(filePath, complexity[filePath]))
     );
 }
