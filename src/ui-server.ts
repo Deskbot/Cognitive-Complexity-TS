@@ -7,7 +7,8 @@ import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-out
 import { transferAttributes, nonNaN } from "./util";
 import { FileOutput, FolderOutput } from "../shared/types";
 
-const indexFilePath = path.normalize(__dirname + "/../../ui/index.html");
+const sourcePath = path.normalize(__dirname + "/../../ui");
+const indexFilePath = sourcePath + "/index.html";
 
 main();
 
@@ -32,9 +33,18 @@ async function main() {
     const server = http.createServer((req, res) => {
         try {
             if (req.url === "/json") {
+                res.setHeader("Content-Type", "text/json");
                 res.write(combinedOutputsJson);
             } else {
-                res.write(fs.readFileSync(indexFilePath));
+                const targetFile = sourcePath + (req.url ?? "/");
+                if (isPathInsideDir(targetFile, sourcePath)
+                    && fs.existsSync(targetFile)
+                    && fs.statSync(targetFile).isFile()
+                ) {
+                    res.write(fs.readFileSync(targetFile));
+                } else {
+                    res.write(fs.readFileSync(indexFilePath));
+                }
             }
             res.statusCode = 200;
         } catch (e) {
@@ -51,6 +61,10 @@ async function main() {
         console.log(`Server started at ${url}`);
         open(url);
     });
+}
+
+function isPathInsideDir(target: string, base: string): boolean {
+    return path.normalize(target).startsWith(base);
 }
 
 function printHelp() {
