@@ -7,6 +7,7 @@ import * as path from "path";
 import * as ts from "typescript";
 import { FileOutput, FolderOutput } from "../../shared/types";
 import { fileCost } from "./cognitive-complexity";
+import { keysToAsyncValues } from "../util";
 
 /**
  * @param entry A file system entry ok unknown type.
@@ -39,22 +40,12 @@ async function getFolderOutput(folderPath: string): Promise<FolderOutput> {
     const subFiles = allSubFiles
         .filter(filePath => filePath.name.match(/.*\.[tj]sx?$/) !== null);
 
-    // promises are used instead of await so that spawned promises don't start after the previous ends
-    const folderOutput: FolderOutput = {};
-    const folderOutputPromises: Promise<void>[] = []; // all promises used to build folderOutput
+    const subFilePaths = subFiles.map(file => path.join(folderPath, file.name));
 
-    for (const file of subFiles) {
-        const innerEntryPath = path.join(folderPath, file.name);
-
-        // once we have the entry data, then add it to the output
-        const entryAddedToFolderOutput = getFileOrFolderOutput(innerEntryPath)
-            .then(folderEntry => {
-                folderOutput[file.name] = folderEntry;
-            });
-        folderOutputPromises.push(entryAddedToFolderOutput);
-    }
-
-    await Promise.all(folderOutputPromises);
+    const folderOutput = keysToAsyncValues(
+        subFilePaths,
+        innerEntryPath => getFileOrFolderOutput(innerEntryPath)
+    );
 
     return folderOutput;
 }

@@ -4,7 +4,7 @@ import * as minimist from "minimist";
 import * as open from "open";
 import * as path from "path";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
-import { transferAttributes, nonNaN } from "./util";
+import { transferAttributes, nonNaN, keysToAsyncValues } from "./util";
 import { ProgramOutput, FileOutput, FolderOutput } from "../shared/types";
 import { ServerResponse, IncomingMessage } from "http";
 
@@ -56,14 +56,10 @@ function endWith404(res: ServerResponse) {
 }
 
 async function generateComplexityJson(inputFiles: string[]): Promise<string> {
-    const combinedOutputs = {} as ProgramOutput;
-
-    const combinedOutputsPopulated = inputFiles
-        .map(async (file) => {
-            combinedOutputs[file] = await getFileOrFolderOutput(file);
-        });
-
-    await Promise.all(combinedOutputsPopulated);
+    const combinedOutputs = await keysToAsyncValues(
+        inputFiles,
+        file => getFileOrFolderOutput(file)
+    );
 
     return JSON.stringify(combinedOutputs);
 }

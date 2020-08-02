@@ -14,6 +14,32 @@ export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): num
     return tot;
 }
 
+/**
+ * Builds an object from a list of keys whose values are based on the key itself,
+ * but where that value is produced asynchronously.
+ *
+ * This function starts by spawning a promise to generate the value for each key,
+ * and ends when all values have been produced.
+ * This is faster than spawning promises in sequence.
+ */
+export async function keysToAsyncValues<K extends string | number, V>(
+    keys: K[],
+    toValue: (elem: K) => Promise<V>,
+): Promise<Record<K, V>> {
+    const output = {} as Record<K, V>;
+
+    // Create promises to build the output concurrently.
+    // Each promise has a side effect of adding to the output.
+    const promises = keys.map(async (key) => {
+        output[key] = await toValue(key);
+    });
+
+    // Only return when all effects have been applied.
+    await Promise.all(promises);
+
+    return output;
+}
+
 export function nonNaN(num: number, fallback: number): number {
     if (Number.isNaN(num)) {
         return fallback;
