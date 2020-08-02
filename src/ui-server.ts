@@ -22,15 +22,20 @@ async function main() {
 
     const givenPort = parseInt(args["port"]);
     const port = nonNaN(givenPort, 5678);
+    const url = `http://localhost:${port}`;
+
     const inputFiles = args["_"];
+    const combinedOutputsJson = await generateComplexityJson(inputFiles);
 
-    const combinedOutputs = {} as FileOutput | FolderOutput;
-    for (const file of inputFiles) {
-        transferAttributes(combinedOutputs, await getFileOrFolderOutput(file));
-    }
-    const combinedOutputsJson = JSON.stringify(combinedOutputs);
+    const server = createServer(combinedOutputsJson);
+    server.listen(port, () => {
+        console.log(`Server started at ${url}`);
+        open(url);
+    });
+}
 
-    const server = http.createServer((req, res) => {
+function createServer(combinedOutputsJson: string): http.Server {
+    return http.createServer((req, res) => {
         try {
             if (req.url === "/json") {
                 res.setHeader("Content-Type", "text/json");
@@ -54,13 +59,15 @@ async function main() {
 
         res.end();
     });
+}
 
-    const url = `http://localhost:${port}`;
+async function generateComplexityJson(inputFiles: string[]): Promise<string> {
+    const combinedOutputs = {} as FileOutput | FolderOutput;
+    for (const file of inputFiles) {
+        transferAttributes(combinedOutputs, await getFileOrFolderOutput(file));
+    }
 
-    server.listen(port, () => {
-        console.log(`Server started at ${url}`);
-        open(url);
-    });
+    return JSON.stringify(combinedOutputs);
 }
 
 function isPathInsideDir(target: string, base: string): boolean {
