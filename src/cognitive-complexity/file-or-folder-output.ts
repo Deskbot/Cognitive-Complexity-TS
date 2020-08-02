@@ -34,7 +34,7 @@ async function getFileOutput(filePath: string): Promise<FileOutput> {
     return fileCost(parsedFile);
 }
 
-async function getFolderOutput(folderPath: string) {
+async function getFolderOutput(folderPath: string): Promise<FolderOutput> {
     const allSubFiles = await fsP.readdir(folderPath, { withFileTypes: true });
     const subFiles = allSubFiles
         .filter(filePath => filePath.name.match(/.*\.[tj]sx?$/) !== null);

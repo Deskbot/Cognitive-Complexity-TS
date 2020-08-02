@@ -5,7 +5,7 @@ import * as open from "open";
 import * as path from "path";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 import { transferAttributes, nonNaN } from "./util";
-import { FileOutput, FolderOutput } from "../shared/types";
+import { ProgramOutput } from "../shared/types";
 import { ServerResponse, IncomingMessage } from "http";
 
 const jsPath = path.normalize(__dirname + "/../ui/ts/");
@@ -56,9 +56,10 @@ function endWith404(res: ServerResponse) {
 }
 
 async function generateComplexityJson(inputFiles: string[]): Promise<string> {
-    const combinedOutputs = {} as FileOutput | FolderOutput;
+    const combinedOutputs = {} as ProgramOutput;
     for (const file of inputFiles) {
-        transferAttributes(combinedOutputs, await getFileOrFolderOutput(file));
+        // TODO optimise by awaiting all of them and having each callback add to the object
+        combinedOutputs[file] = await getFileOrFolderOutput(file);
     }
 
     return JSON.stringify(combinedOutputs);

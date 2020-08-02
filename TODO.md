@@ -12,6 +12,10 @@
 # Possible Features
 
 * Gracefully handle incorrect arguments to package.json scripts
+* Choose the TS version used
+* Don't open the ui automatically every time
+    * could have it as an option
+    * might be possible to open it over an existing one
 * VSC Plugin
 * Webpack / Rollup Plugin
 

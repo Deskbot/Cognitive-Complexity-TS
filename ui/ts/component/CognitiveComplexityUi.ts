@@ -1,6 +1,11 @@
 import { ProgramOutput } from "../../../shared/types";
-import { el } from "../framework";
+import { FileOrFolderComplexity } from "./FileOrFolderComplexity";
+import { fragment } from "../framework";
 
-export function CognitiveComplexityUi(complexity: ProgramOutput): HTMLElement {
-    return el("div");
+export function CognitiveComplexityUi(complexity: ProgramOutput): Node {
+    const files = Object.keys(complexity).sort();
+
+    return fragment(
+        files.map(key => FileOrFolderComplexity(complexity[key]))
+    );
 }
