@@ -34,7 +34,7 @@ async function main() {
             if (req.url === "/json") {
                 res.write(combinedOutputsJson);
             } else {
-                fs.createReadStream(indexFilePath).pipe(res);
+                res.write(fs.readFileSync(indexFilePath));
             }
             res.statusCode = 200;
         } catch (e) {
