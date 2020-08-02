@@ -6,6 +6,7 @@ import * as path from "path";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 import { transferAttributes, nonNaN } from "./util";
 import { FileOutput, FolderOutput } from "../shared/types";
+import { ServerResponse, IncomingMessage } from "http";
 
 const sourcePath = path.normalize(__dirname + "/../../ui");
 const indexFilePath = sourcePath + "/index.html";
@@ -37,20 +38,7 @@ async function main() {
 function createServer(combinedOutputsJson: string): http.Server {
     return http.createServer((req, res) => {
         try {
-            if (req.url === "/json") {
-                res.setHeader("Content-Type", "text/json");
-                res.write(combinedOutputsJson);
-            } else {
-                const targetFile = sourcePath + (req.url ?? "/");
-                if (isPathInsideDir(targetFile, sourcePath)
-                    && fs.existsSync(targetFile)
-                    && fs.statSync(targetFile).isFile()
-                ) {
-                    res.write(fs.readFileSync(targetFile));
-                } else {
-                    res.write(fs.readFileSync(indexFilePath));
-                }
-            }
+            handleRequest(req, res, combinedOutputsJson);
             res.statusCode = 200;
         } catch (e) {
             console.error(e);
@@ -68,6 +56,24 @@ async function generateComplexityJson(inputFiles: string[]): Promise<string> {
     }
 
     return JSON.stringify(combinedOutputs);
+}
+
+function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutputsJson: string) {
+    if (req.url === "/json") {
+        res.setHeader("Content-Type", "text/json");
+        res.write(combinedOutputsJson);
+        return;
+    }
+
+    let targetFile = sourcePath + (req.url ?? "/");
+    if (!isPathInsideDir(targetFile, sourcePath)
+        || !fs.existsSync(targetFile)
+        || !fs.statSync(targetFile).isFile()
+    ) {
+        targetFile = indexFilePath;
+    }
+
+    res.write(fs.readFileSync(targetFile));
 }
 
 function isPathInsideDir(target: string, base: string): boolean {
