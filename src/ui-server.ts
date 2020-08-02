@@ -57,16 +57,13 @@ function endWith404(res: ServerResponse) {
 
 async function generateComplexityJson(inputFiles: string[]): Promise<string> {
     const combinedOutputs = {} as ProgramOutput;
-    const promises = [] as Promise<void>[];
 
-    for (const file of inputFiles) {
-        const promise = getFileOrFolderOutput(file).then((output) => {
-            combinedOutputs[file] = output;
+    const combinedOutputsPopulated = inputFiles
+        .map(async (file) => {
+            combinedOutputs[file] = await getFileOrFolderOutput(file);
         });
-        promises.push(promise);
-    }
 
-    await Promise.all(promises);
+    await Promise.all(combinedOutputsPopulated);
 
     return JSON.stringify(combinedOutputs);
 }
