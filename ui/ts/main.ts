@@ -3,16 +3,13 @@ import { CognitiveComplexityUi } from "./component/CognitiveComplexityUi";
 
 main();
 
-function main() {
+async function main() {
+    const result = await fetch("/json");
+
     /**
      * The Cognitive Complexity result as json text.
      */
-    const ccJson = document.getElementById("cognitive-complexity-ts-json")?.innerText;
-
-    if (ccJson === undefined) {
-        alert("No Cognitive Complexity result json was undefined.");
-        return;
-    }
+    const ccJson = await result.text();
 
     try {
         var ccResult = JSON.parse(ccJson) as ProgramOutput;
@@ -24,4 +21,5 @@ function main() {
     }
 
     document.body.append(CognitiveComplexityUi(ccResult));
+    document.body.append(ccJson);
 }

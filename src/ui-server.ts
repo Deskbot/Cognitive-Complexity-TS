@@ -8,8 +8,8 @@ import { transferAttributes, nonNaN } from "./util";
 import { FileOutput, FolderOutput } from "../shared/types";
 import { ServerResponse, IncomingMessage } from "http";
 
-const sourcePath = path.normalize(__dirname + "/../../ui");
-const indexFilePath = sourcePath + "/index.html";
+const jsPath = path.normalize(__dirname + "/../ui/ts/");
+const indexFilePath = path.normalize(__dirname + "/../../ui/html") + "/index.html";
 
 main();
 
@@ -59,21 +59,43 @@ async function generateComplexityJson(inputFiles: string[]): Promise<string> {
 }
 
 function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutputsJson: string) {
-    if (req.url === "/json") {
+    const url = req.url;
+
+    if (url === "/" || url === "index.html") {
+        res.setHeader("Content-Type", "text/html");
+        res.write(fs.readFileSync(indexFilePath));
+        return;
+    }
+
+    if (url === "/json") {
         res.setHeader("Content-Type", "text/json");
         res.write(combinedOutputsJson);
         return;
     }
 
-    let targetFile = sourcePath + (req.url ?? "/");
-    if (!isPathInsideDir(targetFile, sourcePath)
-        || !fs.existsSync(targetFile)
-        || !fs.statSync(targetFile).isFile()
-    ) {
-        targetFile = indexFilePath;
+    if (url?.startsWith("/js/")) {
+        const prefixLength = 4;
+        const urlWithoutPrefix = url.substr(prefixLength);
+
+        let targetFile = jsPath + "/" + urlWithoutPrefix + ".js";
+
+        if (!isPathInsideDir(targetFile, jsPath)
+            || !fs.existsSync(targetFile)
+            || !fs.statSync(targetFile).isFile()
+        ) {
+            targetFile = indexFilePath;
+        }
+
+        res.setHeader("Content-Type", "text/javascript");
+
+        res.write(fs.readFileSync(targetFile));
+        return;
     }
 
-    res.write(fs.readFileSync(targetFile));
+    // no endpoint
+    res.statusCode = 404;
+    res.write("No such endpoint.")
+    res.end();
 }
 
 function isPathInsideDir(target: string, base: string): boolean {
