@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as http from "http";
-import minimist from "minimist";
+import * as minimist from "minimist";
+import * as open from "open";
 import * as path from "path";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
 import { transferAttributes, nonNaN } from "./util";
@@ -44,8 +45,11 @@ async function main() {
         res.end();
     });
 
+    const url = `http://localhost:${port}`;
+
     server.listen(port, () => {
-        console.log(`Server started at http://localhost:${port}`);
+        console.log(`Server started at ${url}`);
+        open(url);
     });
 }
 

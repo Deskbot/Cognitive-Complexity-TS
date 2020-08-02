@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * automatically open the web page
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependecy
 * Can I run with npx
