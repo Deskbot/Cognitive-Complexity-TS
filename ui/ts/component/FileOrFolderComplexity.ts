@@ -1,12 +1,12 @@
 import { FileOutput, FolderOutput } from "../../../shared/types";
-import { CognitiveComplexityUi } from "./CognitiveComplexityUi";
 import { FileComplexity } from "./FileComplexity";
+import { FolderComplexity } from "./FolderComplexity";
 
 export function FileOrFolderComplexity(path: string, complexity: FileOutput | FolderOutput): Node {
     if (isFileOutput(complexity)) {
         return FileComplexity(path, complexity);
     } else {
-        return CognitiveComplexityUi(complexity);
+        return FolderComplexity(path, complexity);
     }
 }
 
