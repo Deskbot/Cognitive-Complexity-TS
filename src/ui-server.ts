@@ -7,7 +7,8 @@ import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-out
 import { nonNaN, keysToAsyncValues } from "./util";
 import { ServerResponse, IncomingMessage } from "http";
 
-const jsPath = path.normalize(__dirname + "/../ui/ts/");
+const cssPath = path.normalize(__dirname + "/../../ui/ts/"); // within source
+const jsPath = path.normalize(__dirname + "/../ui/ts/");     // within build
 const indexFilePath = path.normalize(__dirname + "/../../ui/html") + "/index.html";
 
 main();
@@ -92,6 +93,25 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
         }
 
         res.setHeader("Content-Type", "text/javascript");
+
+        res.write(fs.readFileSync(targetFile));
+        return;
+    }
+
+    if (url?.startsWith("/css/")) {
+        const prefixLength = 5;
+        const urlWithoutPrefix = url.substr(prefixLength);
+
+        const targetFile = cssPath + "/" + urlWithoutPrefix + ".css";
+
+        if (!isPathInsideDir(targetFile, cssPath)
+            || !fs.existsSync(targetFile)
+            || !fs.statSync(targetFile).isFile()
+        ) {
+            return endWith404(res);
+        }
+
+        res.setHeader("Content-Type", "text/css");
 
         res.write(fs.readFileSync(targetFile));
         return;

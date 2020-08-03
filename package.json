@@ -43,6 +43,7 @@
     "/build/src/**",
     "/build/ui/**",
     "/ui/html/**",
+    "/ui/ts/**/*.css",
     "/README.md"
   ],
 

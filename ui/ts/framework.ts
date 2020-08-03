@@ -1,3 +1,10 @@
+export function addStyleSheet(path: string) {
+    document.head.appendChild(element("link", {
+        href: path,
+        rel: "stylesheet",
+    }));
+}
+
 export function element<K extends keyof HTMLElementTagNameMap>(
     tagName: K,
     attrs?: Partial<HTMLElementTagNameMap[K]>,
