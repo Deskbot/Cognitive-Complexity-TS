@@ -2,6 +2,7 @@
 
 * Add a html interface
     * Display score and name on the same line
+    * Folders should be grouped into a single section
     * Expand and collapse sections
     * Everything below the top level starts minimised
     * Copy file names on click
@@ -9,6 +10,7 @@
     * render on expand
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
     * Give relative colours to complexities
+* When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependecy
 * Can I run with npx
