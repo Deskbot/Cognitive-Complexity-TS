@@ -4,8 +4,7 @@ import * as minimist from "minimist";
 import * as open from "open";
 import * as path from "path";
 import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
-import { transferAttributes, nonNaN, keysToAsyncValues } from "./util";
-import { ProgramOutput, FileOutput, FolderOutput } from "../shared/types";
+import { nonNaN, keysToAsyncValues } from "./util";
 import { ServerResponse, IncomingMessage } from "http";
 
 const jsPath = path.normalize(__dirname + "/../ui/ts/");
