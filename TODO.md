@@ -1,6 +1,13 @@
 # Necessary Features
 
 * Add a html interface
+    * Display score and name on the same line
+    * Expand and collapse sections
+    * Everything below the top level starts minimised
+    * Copy file names on click
+    * Copy file name and line and column number on clicking a container name
+    * render on expand
+    * Give relative colours to complexities
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependecy
 * Can I run with npx
@@ -13,6 +20,9 @@
 
 * Gracefully handle incorrect arguments to package.json scripts
 * Choose the TS version used
+* recalculate button
+    * on a per file basis
+    * on a per container basis
 * Don't open the ui automatically every time
     * could have it as an option
     * might be possible to open it over an existing one
