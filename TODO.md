@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * Stylesheets should only be imported once
     * Expand and collapse sections
     * Everything below the top level starts minimised
     * Copy file names on click

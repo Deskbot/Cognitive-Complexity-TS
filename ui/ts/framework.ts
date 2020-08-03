@@ -1,4 +1,10 @@
+const stylesheetsLinked = new Set<string>();
 export function addStyleSheet(path: string) {
+    if (stylesheetsLinked.has(path)) {
+        return;
+    }
+
+    stylesheetsLinked.add(path);
     document.head.appendChild(element("link", {
         href: path,
         rel: "stylesheet",
