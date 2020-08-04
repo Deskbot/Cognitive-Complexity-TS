@@ -7,15 +7,15 @@ import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-out
 import { nonNaN, keysToAsyncValues } from "./util";
 import { ServerResponse, IncomingMessage } from "http";
 
-// it's sad that this is so inconsistent
 const uiSourcePath = __dirname + "/../../ui";
-const buildPath = __dirname + "/../";
+const buildPath = __dirname + "/..";
 
-const cssPath = path.normalize(uiSourcePath + "/ts/");
-const indexFilePath = path.normalize(uiSourcePath + "/html") + "/index.html";
-const jsPath = path.normalize(buildPath + "/ui/ts/");
+// it's sad that this is so inconsistent
+const cssPath = path.normalize(uiSourcePath + "/ts");
+const indexFilePath = path.normalize(uiSourcePath + "/html/index.html");
+const jsPath = path.normalize(buildPath + "/ui/ts");
 // due to importing "shared" the paths begin with "/ui"
-const tsPath = path.normalize(uiSourcePath + "/../");
+const tsPath = path.normalize(uiSourcePath + "/..");
 
 main();
 
@@ -53,6 +53,12 @@ function createServer(combinedOutputsJson: string): http.Server {
 
         res.end();
     });
+}
+
+function doesFileExistInFolder(filePath: string, folderPath: string): boolean {
+    return isPathInsideDir(filePath, folderPath)
+        && fs.existsSync(filePath)
+        && fs.statSync(filePath).isFile();
 }
 
 function endWith404(res: ServerResponse) {
@@ -98,10 +104,7 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
             res.setHeader("Content-Type", "text/javascript");
         }
 
-        if (!isPathInsideDir(targetFile, jsPath)
-            || !fs.existsSync(targetFile)
-            || !fs.statSync(targetFile).isFile()
-        ) {
+        if (!doesFileExistInFolder(targetFile, jsPath)) {
             return endWith404(res);
         }
 
@@ -115,10 +118,9 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
 
         const targetFile = cssPath + "/" + urlWithoutPrefix + ".css";
 
-        if (!isPathInsideDir(targetFile, cssPath)
-            || !fs.existsSync(targetFile)
-            || !fs.statSync(targetFile).isFile()
-        ) {
+        console.log(urlWithoutPrefix, targetFile, cssPath)
+
+        if (!doesFileExistInFolder(targetFile, cssPath)) {
             return endWith404(res);
         }
 
@@ -131,10 +133,7 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
     if (url.endsWith(".ts")) {
         const targetFile = tsPath + "/" + url;
 
-        if (!isPathInsideDir(targetFile, cssPath)
-            || !fs.existsSync(targetFile)
-            || !fs.statSync(targetFile).isFile()
-        ) {
+        if (!doesFileExistInFolder(targetFile, tsPath)) {
             return endWith404(res);
         }
 

@@ -1,6 +1,7 @@
 # Necessary Features
 
 * Add a html interface
+    * Make the server async because multiple files might be produced in sequence
     * Expand and collapse sections
     * Everything below the top level starts minimised
     * Copy file names on click
