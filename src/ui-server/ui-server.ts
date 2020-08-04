@@ -1,7 +1,8 @@
-import * as fs from "fs";
+import { promises as fsP } from "fs";
 import * as http from "http";
 import * as path from "path";
 import { ServerResponse, IncomingMessage } from "http";
+import { doesNotThrow } from "../util";
 
 const uiSourcePath = __dirname + "/../../../ui";
 const buildPath = __dirname + "/../..";
@@ -14,9 +15,9 @@ const jsPath = path.normalize(buildPath + "/ui/ts");
 const tsPath = path.normalize(uiSourcePath + "/..");
 
 export function createUiServer(combinedOutputsJson: string): http.Server {
-    return http.createServer((req, res) => {
+    return http.createServer(async (req, res) => {
         try {
-            handleRequest(req, res, combinedOutputsJson);
+            await handleRequest(req, res, combinedOutputsJson);
             res.statusCode = 200;
         } catch (e) {
             console.error(e);
@@ -27,10 +28,10 @@ export function createUiServer(combinedOutputsJson: string): http.Server {
     });
 }
 
-function doesFileExistInFolder(filePath: string, folderPath: string): boolean {
+async function doesFileExistInFolder(filePath: string, folderPath: string): Promise<boolean> {
     return isPathInsideDir(filePath, folderPath)
-        && fs.existsSync(filePath)
-        && fs.statSync(filePath).isFile();
+        && await doesNotThrow(fsP.access(filePath))
+        && (await fsP.stat(filePath)).isFile();
 }
 
 function endWith404(res: ServerResponse) {
@@ -39,12 +40,12 @@ function endWith404(res: ServerResponse) {
     res.end();
 }
 
-function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutputsJson: string) {
+async function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutputsJson: string) {
     const url = req.url ?? "/";
 
     if (url === "/" || url === "index.html") {
         res.setHeader("Content-Type", "text/html");
-        res.write(fs.readFileSync(indexFilePath));
+        res.write(await fsP.readFile(indexFilePath));
         return;
     }
 
@@ -71,7 +72,7 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
             return endWith404(res);
         }
 
-        res.write(fs.readFileSync(targetFile));
+        res.write(await fsP.readFile(targetFile));
         return;
     }
 
@@ -89,7 +90,7 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
 
         res.setHeader("Content-Type", "text/css");
 
-        res.write(fs.readFileSync(targetFile));
+        res.write(await fsP.readFile(targetFile));
         return;
     }
 
@@ -102,7 +103,7 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
 
         res.setHeader("Content-Type", "text/x-typescript");
 
-        res.write(fs.readFileSync(targetFile));
+        res.write(await fsP.readFile(targetFile));
         return;
     }
 

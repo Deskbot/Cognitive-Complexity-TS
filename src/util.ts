@@ -14,6 +14,15 @@ export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): num
     return tot;
 }
 
+export async function doesNotThrow<T>(promise: Promise<T>): Promise<boolean> {
+    try {
+        await promise;
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
 /**
  * Builds an object from a list of keys whose values are based on the key itself,
  * but where that value is produced asynchronously.
