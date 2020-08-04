@@ -1,14 +1,10 @@
 import * as fs from "fs";
 import * as http from "http";
-import * as minimist from "minimist";
-import * as open from "open";
 import * as path from "path";
-import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
-import { nonNaN, keysToAsyncValues } from "./util";
 import { ServerResponse, IncomingMessage } from "http";
 
-const uiSourcePath = __dirname + "/../../ui";
-const buildPath = __dirname + "/..";
+const uiSourcePath = __dirname + "/../../../ui";
+const buildPath = __dirname + "/../..";
 
 // it's sad that this is so inconsistent
 const cssPath = path.normalize(uiSourcePath + "/ts");
@@ -17,31 +13,7 @@ const jsPath = path.normalize(buildPath + "/ui/ts");
 // due to importing "shared" the paths begin with "/ui"
 const tsPath = path.normalize(uiSourcePath + "/..");
 
-main();
-
-async function main() {
-    const args = minimist(process.argv.slice(2));
-
-    if (args["h"] || args["help"]) {
-        printHelp();
-        return;
-    }
-
-    const givenPort = parseInt(args["port"]);
-    const port = nonNaN(givenPort, 5678);
-    const url = `http://localhost:${port}`;
-
-    const inputFiles = args["_"];
-    const combinedOutputsJson = await generateComplexityJson(inputFiles);
-
-    const server = createServer(combinedOutputsJson);
-    server.listen(port, () => {
-        console.log(`Server started at ${url}`);
-        open(url);
-    });
-}
-
-function createServer(combinedOutputsJson: string): http.Server {
+export function createUiServer(combinedOutputsJson: string): http.Server {
     return http.createServer((req, res) => {
         try {
             handleRequest(req, res, combinedOutputsJson);
@@ -65,15 +37,6 @@ function endWith404(res: ServerResponse) {
     res.statusCode = 404;
     res.write("No such endpoint.")
     res.end();
-}
-
-async function generateComplexityJson(inputFiles: string[]): Promise<string> {
-    const combinedOutputs = await keysToAsyncValues(
-        inputFiles,
-        file => getFileOrFolderOutput(file)
-    );
-
-    return JSON.stringify(combinedOutputs);
 }
 
 function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutputsJson: string) {
@@ -148,8 +111,4 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
 
 function isPathInsideDir(target: string, base: string): boolean {
     return path.normalize(target).startsWith(base);
-}
-
-function printHelp() {
-    console.log("Arguments: [-h | --help] [--port <NUMBER>] [FILE]...");
 }

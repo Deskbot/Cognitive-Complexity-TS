@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../build/src/ui-server');
+require('../build/src/ui');
