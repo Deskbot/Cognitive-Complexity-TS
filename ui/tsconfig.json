@@ -6,7 +6,8 @@
             "DOM"
         ],
         "outDir": "../build",
-        "sourceRoot": "./ts"
+        "removeComments": true,
+        "sourceRoot": ".."
     },
     "include": [
         "./ts"

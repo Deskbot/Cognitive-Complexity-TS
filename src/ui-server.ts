@@ -7,9 +7,15 @@ import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-out
 import { nonNaN, keysToAsyncValues } from "./util";
 import { ServerResponse, IncomingMessage } from "http";
 
-const cssPath = path.normalize(__dirname + "/../../ui/ts/"); // within source
-const jsPath = path.normalize(__dirname + "/../ui/ts/");     // within build
-const indexFilePath = path.normalize(__dirname + "/../../ui/html") + "/index.html";
+// it's sad that this is so inconsistent
+const uiSourcePath = __dirname + "/../../ui";
+const buildPath = __dirname + "/../";
+
+const cssPath = path.normalize(uiSourcePath + "/ts/");
+const indexFilePath = path.normalize(uiSourcePath + "/html") + "/index.html";
+const jsPath = path.normalize(buildPath + "/ui/ts/");
+// due to importing "shared" the paths begin with "/ui"
+const tsPath = path.normalize(uiSourcePath + "/../");
 
 main();
 
@@ -65,7 +71,7 @@ async function generateComplexityJson(inputFiles: string[]): Promise<string> {
 }
 
 function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutputsJson: string) {
-    const url = req.url;
+    const url = req.url ?? "/";
 
     if (url === "/" || url === "index.html") {
         res.setHeader("Content-Type", "text/html");
@@ -79,11 +85,18 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
         return;
     }
 
-    if (url?.startsWith("/js/")) {
+    if (url.startsWith("/js/")) {
         const prefixLength = 4;
         const urlWithoutPrefix = url.substr(prefixLength);
 
-        const targetFile = jsPath + "/" + urlWithoutPrefix + ".js";
+        let targetFile = jsPath + "/" + urlWithoutPrefix;
+
+        if (urlWithoutPrefix.endsWith(".js.map")) {
+            res.setHeader("Content-Type", "application/json");
+        } else {
+            targetFile += ".js";
+            res.setHeader("Content-Type", "text/javascript");
+        }
 
         if (!isPathInsideDir(targetFile, jsPath)
             || !fs.existsSync(targetFile)
@@ -92,13 +105,11 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
             return endWith404(res);
         }
 
-        res.setHeader("Content-Type", "text/javascript");
-
         res.write(fs.readFileSync(targetFile));
         return;
     }
 
-    if (url?.startsWith("/css/")) {
+    if (url.startsWith("/css/")) {
         const prefixLength = 5;
         const urlWithoutPrefix = url.substr(prefixLength);
 
@@ -112,6 +123,22 @@ function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutput
         }
 
         res.setHeader("Content-Type", "text/css");
+
+        res.write(fs.readFileSync(targetFile));
+        return;
+    }
+
+    if (url.endsWith(".ts")) {
+        const targetFile = tsPath + "/" + url;
+
+        if (!isPathInsideDir(targetFile, cssPath)
+            || !fs.existsSync(targetFile)
+            || !fs.statSync(targetFile).isFile()
+        ) {
+            return endWith404(res);
+        }
+
+        res.setHeader("Content-Type", "text/x-typescript");
 
         res.write(fs.readFileSync(targetFile));
         return;

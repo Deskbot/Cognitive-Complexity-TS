@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "alwaysStrict": true,
-        "declaration": true,
         "lib": ["ESNEXT", "ES2019"],
         "module": "commonjs",
         "noImplicitAny": true,
