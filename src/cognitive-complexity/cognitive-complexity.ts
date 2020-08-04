@@ -6,7 +6,7 @@ import {
     getNameIfCalledNode,
     findIntroducedName,
     getNameIfNameDeclaration
-} from "../node-naming";
+} from "./node-naming";
 import { whereAreChildren } from "./depth";
 import {
     isContainer,
