@@ -20,6 +20,7 @@
 # Possible Features
 
 * Gracefully handle incorrect arguments to package.json scripts
+* Turn the interface into a single page application, so that pressing back toggles the expansion state
 * Choose the TS version used
 * recalculate button
     * on a per file basis
@@ -27,6 +28,8 @@
 * Don't open the ui automatically every time
     * could have it as an option
     * might be possible to open it over an existing one
+* Shareable/visitable URLs that link to particular files
+    * possibly with a particular expansion state
 * VSC Plugin
 * Webpack / Rollup Plugin
 
