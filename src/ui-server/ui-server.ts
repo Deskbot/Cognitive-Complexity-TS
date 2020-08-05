@@ -43,7 +43,7 @@ function endWith404(res: ServerResponse) {
 async function handleRequest(req: IncomingMessage, res: ServerResponse, combinedOutputsJson: string) {
     const url = req.url ?? "/";
 
-    if (url === "/" || url === "index.html") {
+    if (url === "/" || url === "/index.html") {
         res.setHeader("Content-Type", "text/html");
         res.write(await fsP.readFile(indexFilePath));
         return;
