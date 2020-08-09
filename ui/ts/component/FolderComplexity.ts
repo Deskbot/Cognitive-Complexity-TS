@@ -5,32 +5,29 @@ import { Box } from "./Box";
 import { ToggleButton } from "./generic/ToggleButton";
 
 export class FolderComplexity implements StatefulNode {
-    private isOpen = false;
+    private showFolderContent = false;
     private box = new Box();
-    private lastRender: [showFolderContent: boolean, name: string, complexity: FolderOutput] | undefined;
-    private toggleButton = ToggleButton(this.isOpen, (newIsOpen) => {
-        this.isOpen = newIsOpen;
-        this.realRender(this.isOpen, this.lastRender![1], this.lastRender![2]);
+    private toggleButton = ToggleButton(this.showFolderContent, (newIsOpen) => {
+        this.showFolderContent = newIsOpen;
+        this.rerender();
     });
 
     readonly dom = this.box.dom;
 
-    render(name: string, complexity: FolderOutput) {
-        this.realRender(this.isOpen, name, complexity);
+    constructor(private name: string, private complexity: FolderOutput) {
+        this.rerender();
     }
 
-    private realRender(showFolderContent: boolean, name: string, complexity: FolderOutput) {
-        this.lastRender = [showFolderContent, name, complexity];
-
+    rerender() {
         const boxContents = [
             this.toggleButton,
-            element("p", {}, [name]),
+            element("p", {}, [this.name]),
         ];
 
-        if (showFolderContent) {
-            boxContents.push(...CognitiveComplexityUi(complexity));
+        if (this.showFolderContent) {
+            boxContents.push(...CognitiveComplexityUi(this.complexity));
         }
 
-        this.box.render(boxContents);
+        this.box.rerender(boxContents);
     }
 }

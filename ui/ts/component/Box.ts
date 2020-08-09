@@ -5,8 +5,8 @@ addStyleSheet("/css/component/Box");
 export class Box implements StatefulNode {
     readonly dom = element("div", { className: "box" });
 
-    render(childNodes: (Node | string)[]) {
-        emptyChildNodes(this.dom)
+    rerender(childNodes: (Node | string)[]) {
+        emptyChildNodes(this.dom);
         this.dom.append(...childNodes);
     }
 }

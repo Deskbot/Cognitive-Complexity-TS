@@ -1,8 +1,8 @@
 import { Constructor } from "./util";
 
-export interface StatefulNode<T extends any[] = any[]> {
+export interface StatefulNode<Muts extends any[] = any[]> {
     readonly dom: Node;
-    render(...args: [...T]): void;
+    rerender(...muts: Muts): void;
 }
 
 const stylesheetsLinked = new Set<string>();
@@ -18,12 +18,12 @@ export function addStyleSheet(path: string) {
     }));
 }
 
-export function constStatefulNode<T extends any[]>(
-    StatefulNodeConstructor: Constructor<StatefulNode<T>>,
-    ...args: [...T]
+export function renderOnce<Muts extends any[]>(
+    StatefulNodeConstructor: Constructor<StatefulNode<Muts>, []>,
+    ...args: Muts
 ) {
     const node = new StatefulNodeConstructor();
-    node.render(...args);
+    node.rerender(...args);
     return node.dom;
 }
 
