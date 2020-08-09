@@ -1,13 +1,10 @@
 import { FileOutput } from "../../../shared/types";
 import { element, addStyleSheet } from "../framework";
 import { ContainerComplexity } from "./ContainerComplexity";
-
-addStyleSheet("/css/component/FileComplexity");
+import { Box } from "./Box";
 
 export function FileComplexity(filePath: string, complexity: FileOutput): Node {
-    return element("div", {
-        className: "file-complexity"
-    }, [
+    return Box([
         element("p", {}, [filePath]),
         element("p", {}, ["score: " + complexity.score]),
         ...complexity.inner.map(ContainerComplexity)

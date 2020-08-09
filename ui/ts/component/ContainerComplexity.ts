@@ -1,12 +1,11 @@
 import { ContainerOutput } from "../../../shared/types";
 import { element, addStyleSheet } from "../framework";
+import { Box } from "./Box";
 
 addStyleSheet("/css/component/ContainerComplexity");
 
 export function ContainerComplexity(complexity: ContainerOutput): Node {
-    return element("div", {
-        className: "container-complexity"
-    }, [
+    return Box([
         element("p", {},
             [`${complexity.name} Line ${complexity.line}, Column ${complexity.column}`]
         ),
