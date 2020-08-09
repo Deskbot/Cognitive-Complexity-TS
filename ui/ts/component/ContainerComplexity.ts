@@ -1,9 +1,9 @@
 import { ContainerOutput } from "../../../shared/types";
-import { renderOnce, element } from "../framework";
+import { renderUnstatefully, element } from "../framework";
 import { Box } from "./Box";
 
 export function ContainerComplexity(complexity: ContainerOutput): Node {
-    return renderOnce(Box, [
+    return renderUnstatefully(Box, [
         element("p", {},
             [`${complexity.name} Line ${complexity.line}, Column ${complexity.column}`]
         ),

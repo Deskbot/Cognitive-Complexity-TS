@@ -18,7 +18,7 @@ export function addStyleSheet(path: string) {
     }));
 }
 
-export function renderOnce<Muts extends any[]>(
+export function renderUnstatefully<Muts extends any[]>(
     StatefulNodeConstructor: Constructor<StatefulNode<Muts>, []>,
     ...args: Muts
 ) {
