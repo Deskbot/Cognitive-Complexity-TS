@@ -10,7 +10,7 @@
     * Give relative colours to complexities
 * When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
 * Should be able to compile and run from a fresh checkout
-* Should be able to run when installed as a dependecy
+* Should be able to run when installed as a dependency
 * Can I run with npx
 * Does global install work
 * Update documentation of best way to run it from the terminal

@@ -1,4 +1,5 @@
 import { FileOutput, FolderOutput } from "../../../shared/types";
+import { constStatefulNode } from "../framework";
 import { FileComplexity } from "./FileComplexity";
 import { FolderComplexity } from "./FolderComplexity";
 
@@ -6,7 +7,7 @@ export function FileOrFolderComplexity(path: string, complexity: FileOutput | Fo
     if (isFileOutput(complexity)) {
         return FileComplexity(path, complexity);
     } else {
-        return FolderComplexity(path, complexity);
+        return constStatefulNode(FolderComplexity, path, complexity);
     }
 }
 

@@ -1,7 +1,12 @@
-import { element, addStyleSheet } from "../framework";
+import { element, addStyleSheet, StatefulNode, emptyChildNodes } from "../framework";
 
 addStyleSheet("/css/component/Box");
 
-export function Box(children: (Node | string)[]): Node {
-    return element("div", { className: "box" }, children);
+export class Box implements StatefulNode {
+    readonly dom = element("div", { className: "box" });
+
+    render(childNodes: (Node | string)[]) {
+        emptyChildNodes(this.dom)
+        this.dom.append(...childNodes);
+    }
 }

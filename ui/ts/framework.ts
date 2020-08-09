@@ -1,3 +1,10 @@
+import { Constructor } from "./util";
+
+export interface StatefulNode<T extends any[] = any[]> {
+    readonly dom: Node;
+    render(...args: [...T]): void;
+}
+
 const stylesheetsLinked = new Set<string>();
 export function addStyleSheet(path: string) {
     if (stylesheetsLinked.has(path)) {
@@ -9,6 +16,15 @@ export function addStyleSheet(path: string) {
         href: path,
         rel: "stylesheet",
     }));
+}
+
+export function constStatefulNode<T extends any[]>(
+    StatefulNodeConstructor: Constructor<StatefulNode<T>>,
+    ...args: [...T]
+) {
+    const node = new StatefulNodeConstructor();
+    node.render(...args);
+    return node.dom;
 }
 
 export function element<K extends keyof HTMLElementTagNameMap>(
@@ -32,8 +48,8 @@ export function element<K extends keyof HTMLElementTagNameMap>(
     return elem;
 }
 
-export function fragment(elems: Node[]): DocumentFragment {
-    const frag = document.createDocumentFragment();
-    frag.append(...elems);
-    return frag;
+export function emptyChildNodes(node: Node) {
+    while (node.childNodes.length > 0) {
+        node.removeChild(node.childNodes[0]);
+    }
 }
