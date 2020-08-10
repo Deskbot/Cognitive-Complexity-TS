@@ -1,26 +1,45 @@
+import { StatefulNode } from "../../framework";
 import { Box } from "../Box";
 import { ToggleButton } from "./ToggleButton";
 
 export function ToggleableBox(visibleContent: Node[], toggleableContent: Node[]): Node {
-    const boxContents = [] as Node[];
+    const poop = new Poop();
+    poop.rerender(visibleContent, toggleableContent);
+    return poop.dom;
+}
 
-    if (toggleableContent.length > 0) {
-        const toggleButton = ToggleButton(false, onNewIsOpen);
-        boxContents.push(toggleButton);
-    }
+class Poop implements StatefulNode {
+    private toggleButton = ToggleButton(false, this.onNewIsOpen.bind(this));
+    private box = new Box();
+    private showToggleable = false;
 
-    boxContents.push(...visibleContent);
+    readonly dom = this.box.dom;
 
-    function onNewIsOpen(newIsOpen: boolean) {
-        if (newIsOpen) {
-            box.rerender([...boxContents, ...toggleableContent]);
-        } else {
-            box.rerender(boxContents);
+    private lastCall: [visibleContent: Node[], toggleableContent: Node[]] | undefined;
+
+    private onNewIsOpen(newIsOpen: boolean) {
+        this.showToggleable = newIsOpen;
+
+        if (this.lastCall) {
+            this.rerender(...this.lastCall);
         }
     }
 
-    const box = new Box();
-    box.rerender(boxContents);
+    rerender(visibleContent: Node[], toggleableContent: Node[]) {
+        this.lastCall = [visibleContent, toggleableContent];
 
-    return box.dom;
+        const boxContents = [] as Node[];
+
+        if (toggleableContent.length > 0) {
+            boxContents.push(this.toggleButton);
+        }
+
+        boxContents.push(...visibleContent);
+
+        if (this.showToggleable) {
+            boxContents.push(...toggleableContent);
+        }
+
+        this.box.rerender(boxContents);
+    }
 }
