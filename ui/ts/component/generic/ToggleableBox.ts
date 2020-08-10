@@ -1,12 +1,15 @@
 import { Box } from "../Box";
 import { ToggleButton } from "./ToggleButton";
 
-export function ToggleableBox(boxContent: Node[], toggleableContent: Node[]): Node {
-    const toggleButton = ToggleButton(false, onNewIsOpen);
-    const boxContents = [
-        toggleButton,
-        ...boxContent,
-    ];
+export function ToggleableBox(visibleContent: Node[], toggleableContent: Node[]): Node {
+    const boxContents = [] as Node[];
+
+    if (toggleableContent.length > 0) {
+        const toggleButton = ToggleButton(false, onNewIsOpen);
+        boxContents.push(toggleButton);
+    }
+
+    boxContents.push(...visibleContent);
 
     function onNewIsOpen(newIsOpen: boolean) {
         if (newIsOpen) {
