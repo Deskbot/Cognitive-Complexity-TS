@@ -18,13 +18,23 @@ export function addStyleSheet(path: string) {
     }));
 }
 
-export function renderUnstatefully<Muts extends any[]>(
-    StatefulNodeConstructor: Constructor<StatefulNode<Muts>, []>,
+export function renderImmutably<Muts extends any[]>(
+    MutNodeConstructor: Constructor<StatefulNode<Muts>, []>,
     ...args: Muts
 ) {
-    const node = new StatefulNodeConstructor();
+    const node = new MutNodeConstructor();
     node.rerender(...args);
     return node.dom;
+}
+
+export function constClassToNodeFunc<Consts extends any[]>(
+    ConstNodeConstructor: Constructor<StatefulNode<[]>, Consts>,
+): (...args: Consts) => Node {
+    return (...args) => {
+        const node = new ConstNodeConstructor(...args);
+        node.rerender();
+        return node.dom;
+    };
 }
 
 export function element<K extends keyof HTMLElementTagNameMap>(

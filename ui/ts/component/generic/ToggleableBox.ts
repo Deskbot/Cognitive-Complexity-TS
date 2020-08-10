@@ -1,11 +1,8 @@
+import { constClassToNodeFunc, StatefulNode } from "../../framework";
 import { Box } from "../Box";
 import { ToggleButton } from "./ToggleButton";
 
-export function ToggleableBox(visibleContent: Node[], toggleableContent: Node[]): Node {
-    return new Poop(visibleContent, toggleableContent).dom;
-}
-
-class Poop {
+export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode {
     private toggleButton = ToggleButton(false, this.onNewIsOpen.bind(this));
     private box = new Box();
     private showToggleable = false;
@@ -15,16 +12,14 @@ class Poop {
     constructor(
         private visibleContent: Node[],
         private toggleableContent: Node[]
-    ) {
-        this.rerender();
-    }
+    ) { }
 
     private onNewIsOpen(newIsOpen: boolean) {
         this.showToggleable = newIsOpen;
         this.rerender();
     }
 
-    private rerender() {
+    rerender() {
         const boxContents = [] as Node[];
 
         if (this.toggleableContent.length > 0) {
@@ -39,4 +34,4 @@ class Poop {
 
         this.box.rerender(boxContents);
     }
-}
+});
