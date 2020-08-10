@@ -1,12 +1,13 @@
 import { FileOutput } from "../../../shared/types";
-import { element, renderUnstatefully } from "../framework";
+import { element } from "../framework";
 import { ContainerComplexity } from "./ContainerComplexity";
-import { Box } from "./Box";
+import { ToggleableBox } from "./generic/ToggleableBox";
 
 export function FileComplexity(filePath: string, complexity: FileOutput): Node {
-    return renderUnstatefully(Box, [
+    return ToggleableBox([
         element("p", {}, [filePath]),
         element("p", {}, ["score: " + complexity.score]),
-        ...complexity.inner.map(ContainerComplexity)
-    ]);
+    ],
+        complexity.inner.map(ContainerComplexity)
+    );
 }
