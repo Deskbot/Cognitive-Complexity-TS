@@ -49,6 +49,10 @@
 * there are a bunch of comments where I should just use the word "container"
 * Some comments inside functions could be moved to documentation of the function.
 
+# Performance
+
+* Should script imports become attached tags to shadow DOM?
+
 # Technical Debt
 
 * Simplify naming code
