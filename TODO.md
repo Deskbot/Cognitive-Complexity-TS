@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * Everything below the top level starts minimised
     * Copy file names on click
     * Copy file name and line and column number on clicking a container name
     * render on expand
