@@ -2,36 +2,33 @@ import { addStyleSheet, element } from "../../framework";
 
 addStyleSheet("/css/component/generic/CopyableText");
 
-let copyText: HTMLInputElement;
+class HiddenCopyText {
+    private readonly copyText = element("input", {
+        className: "hidden-offscreen"
+    });
 
-export function CopyableText(name: string): Node {
+    constructor() {
+        document.body.append(this.copyText);
+    }
+
+    copy(text: string) {
+        this.copyText.value = text;
+        this.copyText.select();
+        document.execCommand("copy");
+    }
+
+    static readonly instance = new HiddenCopyText();
+}
+
+export function CopyButton(text: string): Node {
     const copyButton = element("button", {
-        className: "",
+        className: "copy-button",
         type: "button"
     });
 
-    const textBox = element("p", {}, [
-        name,
-        copyButton
-    ]);
-
     copyButton.addEventListener("click", () => {
-        if (copyText) {
-            copyText.remove();
-        }
-
-        copyText = createHiddenCopyText(name);
-        document.body.append(copyText);
-        copyText.select();
-        document.execCommand("copy");
+        HiddenCopyText.instance.copy(text);
     });
 
-    return textBox;
-}
-
-function createHiddenCopyText(text: string): HTMLInputElement {
-    return element("input", {
-        className: "hidden-offscreen",
-        value: text,
-    });
+    return copyButton;
 }
