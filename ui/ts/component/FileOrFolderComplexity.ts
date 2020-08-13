@@ -5,12 +5,12 @@ import { FolderComplexity } from "./FolderComplexity";
 export function FileOrFolderComplexity(
     path: string,
     complexity: FileOutput | FolderOutput,
-    isTopLevel: boolean
+    startOpen: boolean
 ): Node {
     if (isFileOutput(complexity)) {
-        return FileComplexity(path, complexity, isTopLevel);
+        return FileComplexity(path, complexity, startOpen);
     } else {
-        return FolderComplexity(path, complexity, isTopLevel);
+        return FolderComplexity(path, complexity, startOpen);
     }
 }
 
