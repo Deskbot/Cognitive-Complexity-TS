@@ -11,6 +11,7 @@ export function ContainerComplexity(complexity: ContainerOutput): Node {
             [`Score: ${complexity.score}`]
         ),
     ],
-        complexity.inner.map(ContainerComplexity)
+        complexity.inner.map(ContainerComplexity),
+        false,
     );
 }

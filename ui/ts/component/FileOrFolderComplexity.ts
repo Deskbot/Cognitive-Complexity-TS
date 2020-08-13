@@ -2,11 +2,15 @@ import { FileOutput, FolderOutput } from "../../../shared/types";
 import { FileComplexity } from "./FileComplexity";
 import { FolderComplexity } from "./FolderComplexity";
 
-export function FileOrFolderComplexity(path: string, complexity: FileOutput | FolderOutput): Node {
+export function FileOrFolderComplexity(
+    path: string,
+    complexity: FileOutput | FolderOutput,
+    isTopLevel: boolean
+): Node {
     if (isFileOutput(complexity)) {
-        return FileComplexity(path, complexity);
+        return FileComplexity(path, complexity, isTopLevel);
     } else {
-        return FolderComplexity(path, complexity);
+        return FolderComplexity(path, complexity, isTopLevel);
     }
 }
 
