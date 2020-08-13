@@ -5,6 +5,7 @@
     * Copy file name and line and column number on clicking a container name
     * render on expand
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
+    * decent style
     * Give relative colours to complexities
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependency
