@@ -7,7 +7,6 @@
     * render on expand
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
     * Give relative colours to complexities
-* When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependency
 * Can I run with npx
@@ -15,6 +14,8 @@
 * Update documentation of best way to run it from the terminal
 * Add documentation for the json output and the UI output.
 * Add documentation on how to use the library programmatically.
+* Import/Export json in browser
+* When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
 
 # Possible Features
 
