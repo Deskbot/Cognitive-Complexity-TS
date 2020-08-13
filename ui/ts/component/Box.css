@@ -1,6 +1,5 @@
 .box {
     border: 1px solid var(--text-color);
-
     margin: var(--section-indent);
     margin-right: 0;
     padding: var(--spacing);

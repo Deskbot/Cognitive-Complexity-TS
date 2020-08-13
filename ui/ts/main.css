@@ -12,8 +12,3 @@ html {
     color: var(--text-color);
     font-family: var(--font);
 }
-
-p {
-    padding: 0;
-    margin: calc(var(--spacing) / 2) 0;
-}
