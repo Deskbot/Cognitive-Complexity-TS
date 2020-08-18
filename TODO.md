@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * render on expand
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
     * decent style
     * Give relative colours to complexities

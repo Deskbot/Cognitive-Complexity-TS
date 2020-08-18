@@ -13,7 +13,7 @@ export function ContainerComplexity(complexity: ContainerOutput, filePath: strin
             [`Score: ${complexity.score}`]
         ),
     ],
-        complexity.inner.map(complexity => ContainerComplexity(complexity, filePath)),
+        () => complexity.inner.map(complexity => ContainerComplexity(complexity, filePath)),
         false,
     );
 }

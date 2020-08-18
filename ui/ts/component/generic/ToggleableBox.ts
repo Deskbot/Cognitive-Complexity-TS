@@ -11,11 +11,19 @@ export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode 
 
     constructor(
         private visibleContent: Node[],
-        private toggleableContent: Node[],
+        private makeToggleableContent: () => Node[],
         isTopLevel: boolean,
     ) {
         this.showToggleable = isTopLevel;
         this.toggleButton = ToggleButton(this.showToggleable, this.onNewIsOpen.bind(this));
+    }
+
+    private getToggleableContent(): Node[] {
+        const result = this.makeToggleableContent();
+
+        this.getToggleableContent = () => result;
+
+        return result;
     }
 
     private onNewIsOpen(newIsOpen: boolean) {
@@ -26,14 +34,14 @@ export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode 
     rerender() {
         const boxContents = [] as Node[];
 
-        if (this.toggleableContent.length > 0) {
+        if (this.makeToggleableContent().length > 0) {
             boxContents.push(this.toggleButton);
         }
 
         boxContents.push(...this.visibleContent);
 
         if (this.showToggleable) {
-            boxContents.push(...this.toggleableContent);
+            boxContents.push(...this.getToggleableContent());
         }
 
         this.box.rerender(boxContents);

@@ -10,7 +10,7 @@ export function FolderComplexity(name: string, complexity: FolderOutput, startOp
             name,
             CopyButton(name),
         ])],
-        CognitiveComplexityUi(complexity, false),
+        () => CognitiveComplexityUi(complexity, false),
         startOpen,
     );
 }

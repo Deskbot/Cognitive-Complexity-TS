@@ -12,7 +12,7 @@ export function FileComplexity(filePath: string, complexity: FileOutput, startOp
         ]),
         element("p", {}, ["score: " + complexity.score]),
     ],
-        complexity.inner.map(complexity => ContainerComplexity(complexity, filePath)),
+        () => complexity.inner.map(complexity => ContainerComplexity(complexity, filePath)),
         startOpen,
     );
 }
