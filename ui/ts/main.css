@@ -6,6 +6,7 @@
     --font: sans-serif;
 
     --background-color: #222222;
+    --middle-color: #666666;
     --text-color: #eeeeee;
 
     --spacing: 1rem;
@@ -15,4 +16,8 @@ html {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: var(--font);
+}
+
+p {
+    margin: calc(var(--spacing)) 0;
 }

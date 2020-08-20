@@ -1,8 +1,10 @@
-import { element } from "../../framework";
+import { addStyleSheet, element } from "../../framework";
+
+addStyleSheet("/css/component/generic/ToggleButton")
 
 export function ToggleButton(isOpen: boolean, onOpennessChange: (isOpen: boolean) => void): Node {
     const input = element("input", {
-        className: "toggle-button",
+        className: "togglebutton",
         onchange: () => {
             setStateClass(input);
             onOpennessChange(input.checked);
@@ -20,10 +22,10 @@ export function ToggleButton(isOpen: boolean, onOpennessChange: (isOpen: boolean
 
 function setStateClass(input: HTMLInputElement) {
     if (input.checked) {
-        input.classList.remove("toggle-button--closed");
-        input.classList.add("toggle-button--open");
+        input.classList.remove("togglebutton--closed");
+        input.classList.add("togglebutton--open");
     } else {
-        input.classList.remove("toggle-button--open");
-        input.classList.add("toggle-button--closed");
+        input.classList.remove("togglebutton--open");
+        input.classList.add("togglebutton--closed");
     }
 }

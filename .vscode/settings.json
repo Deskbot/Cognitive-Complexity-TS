@@ -2,8 +2,11 @@
     "cSpell.words": [
         "Toggleable",
         "Unstatefully",
+        "checkbox",
         "consts",
         "muts",
-        "rerender"
+        "rerender",
+        "toggleablebox",
+        "togglebutton"
     ]
 }

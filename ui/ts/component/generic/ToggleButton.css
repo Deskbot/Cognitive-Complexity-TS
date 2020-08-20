@@ -1,3 +1,19 @@
-.toggle-button {
-    height: 100%;
+.togglebutton {
+    margin: 0;
+    width: 1rem;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    background: var(--middle-color);
+    outline: none;
+    text-align: center;
+}
+
+.togglebutton--closed {
+    cursor: zoom-in;
+}
+
+.togglebutton--open {
+    cursor: zoom-out;
 }

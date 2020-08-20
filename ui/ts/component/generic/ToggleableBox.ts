@@ -2,7 +2,7 @@ import { addStyleSheet, constClassToNodeFunc, element, StatefulNode } from "../.
 import { Box } from "../Box";
 import { ToggleButton } from "./ToggleButton";
 
-addStyleSheet("/css/component/ToggleableBox");
+addStyleSheet("/css/component/generic/ToggleableBox");
 
 export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode {
     private showToggleable;

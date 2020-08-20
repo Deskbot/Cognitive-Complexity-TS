@@ -1,3 +1,10 @@
 .toggleablebox-content {
+    flex-grow: 1;
+    margin: 0;
+    margin-left: var(--spacing);
+    padding: 0;
+}
 
+.toggleablebox-content:only-child {
+    margin-left: calc(2 * var(--spacing));
 }

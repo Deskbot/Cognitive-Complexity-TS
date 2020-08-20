@@ -2,8 +2,4 @@
     border: 1px solid var(--text-color);
 
     display: flex;
-    margin: var(--section-indent);
-    margin-right: 0;
-    padding: var(--spacing);
-    padding-right: 0;
 }
