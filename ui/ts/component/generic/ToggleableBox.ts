@@ -1,6 +1,8 @@
-import { constClassToNodeFunc, StatefulNode } from "../../framework";
+import { addStyleSheet, constClassToNodeFunc, element, StatefulNode } from "../../framework";
 import { Box } from "../Box";
 import { ToggleButton } from "./ToggleButton";
+
+addStyleSheet("/css/component/ToggleableBox");
 
 export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode {
     private showToggleable;
@@ -32,18 +34,22 @@ export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode 
     }
 
     rerender() {
-        const boxContents = [] as Node[];
-
-        if (this.makeToggleableContent().length > 0) {
-            boxContents.push(this.toggleButton);
-        }
-
-        boxContents.push(...this.visibleContent);
+        const content = [...this.visibleContent];
 
         if (this.showToggleable) {
-            boxContents.push(...this.getToggleableContent());
+            content.push(...this.getToggleableContent());
         }
 
-        this.box.rerender(boxContents);
+        const boxContent = [] as Node[];
+
+        if (this.makeToggleableContent().length > 0) {
+            boxContent.push(this.toggleButton);
+        }
+
+        boxContent.push(
+            element("div", { className: "toggleablebox-content" }, content)
+        );
+
+        this.box.rerender(boxContent);
     }
 });
