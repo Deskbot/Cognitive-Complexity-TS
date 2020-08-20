@@ -1,6 +1,6 @@
-import { element, addStyleSheet, StatefulNode, emptyChildNodes } from "../framework";
+import { element, addStyleSheet, StatefulNode, emptyChildNodes } from "../../framework";
 
-addStyleSheet("/css/component/Box");
+addStyleSheet("/css/component/generic/Box");
 
 export class Box implements StatefulNode {
     readonly dom = element("div", { className: "box" });

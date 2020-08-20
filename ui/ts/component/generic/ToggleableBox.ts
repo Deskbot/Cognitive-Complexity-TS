@@ -1,5 +1,5 @@
 import { addStyleSheet, constClassToNodeFunc, element, StatefulNode } from "../../framework";
-import { Box } from "../Box";
+import { Box } from "./Box";
 import { ToggleButton } from "./ToggleButton";
 
 addStyleSheet("/css/component/generic/ToggleableBox");
