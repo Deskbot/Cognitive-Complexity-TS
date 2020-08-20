@@ -1,9 +1,12 @@
 # Necessary Features
 
 * Add a html interface
-    * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
     * decent style
+    * make it work in Chrome & Firefox
     * Give relative colours to complexities
+    * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
+    * simplify things
+    * once over for efficiency
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependency
 * Can I run with npx
