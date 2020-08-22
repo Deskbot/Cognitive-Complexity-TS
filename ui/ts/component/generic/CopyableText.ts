@@ -1,4 +1,5 @@
 import { addStyleSheet, element } from "../../framework";
+import { ClipboardSvg } from "../icon/clipboard";
 
 addStyleSheet("/css/component/generic/CopyableText");
 
@@ -24,7 +25,9 @@ export function CopyButton(text: string): Node {
     const copyButton = element("button", {
         className: "copy-button",
         type: "button"
-    });
+    }, [
+        ClipboardSvg()
+    ]);
 
     copyButton.addEventListener("click", () => {
         HiddenCopyText.instance.copy(text);
