@@ -1,3 +1,15 @@
+.copy-button {
+    appearance: none;
+    -webkit-appearance: none;
+    background: none;
+    border: none;
+}
+
+.copy-button, .copy-button:active, .copy-button:focus {
+    margin: 0;
+    padding: 0;
+}
+
 .hidden-offscreen {
     left: -9999px;
     position: absolute;
