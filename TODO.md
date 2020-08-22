@@ -1,9 +1,9 @@
 # Necessary Features
 
 * Add a html interface
-    * decent style
+    * expand-all button
+    * make parent boxes sticky
     * make it work in Chrome & Firefox
-    * Give relative colours to complexities
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
     * simplify things
     * once over for efficiency
@@ -20,11 +20,12 @@
 # Possible Features
 
 * Gracefully handle incorrect arguments to package.json scripts
-* Turn the interface into a single page application, so that pressing back toggles the expansion state
 * Choose the TS version used
+* Give relative colours to complexities
 * recalculate button
     * on a per file basis
     * on a per container basis
+* Turn the interface into a single page application, so that pressing back toggles the expansion state
 * Don't open the ui automatically every time
     * could have it as an option
     * might be possible to open it over an existing one
@@ -38,7 +39,7 @@
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 * Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
-* Any remaining TODOs should be actioned.
+* Any remaining TODO comments should be actioned.
 
 # Code
 
