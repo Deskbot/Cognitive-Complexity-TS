@@ -1,5 +1,6 @@
 import { ProgramOutput } from "../../shared/types";
 import { CognitiveComplexityUi } from "./component/CognitiveComplexityUi";
+import { CollapseAll, ExpandAll } from "./component/global-controls";
 import { hasMoreThanOneKey } from "./util";
 
 main();
@@ -24,5 +25,10 @@ async function main() {
     // If there is only one top level node, show it expanded.
     // Otherwise show all nodes minimised by default.
     const onlyOneTopLevelNode = hasMoreThanOneKey(ccResult);
-    document.body.append(...CognitiveComplexityUi(ccResult, onlyOneTopLevelNode));
+
+    document.body.append(
+        ExpandAll(),
+        CollapseAll(),
+        ...CognitiveComplexityUi(ccResult, onlyOneTopLevelNode)
+    );
 }

@@ -42,7 +42,7 @@ export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode 
 
         const boxContent = [] as Node[];
 
-        if (this.makeToggleableContent().length > 0) {
+        if (this.getToggleableContent().length > 0) {
             boxContent.push(this.toggleButton);
         }
 

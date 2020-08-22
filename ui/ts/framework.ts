@@ -39,7 +39,7 @@ export function constClassToNodeFunc<Consts extends any[]>(
 
 export function element<K extends keyof HTMLElementTagNameMap>(
     tagName: K,
-    attrs: Partial<HTMLElementTagNameMap[K]>,
+    attrs?: Partial<HTMLElementTagNameMap[K]>,
     ...inner: (string | Node)[]
 ): HTMLElementTagNameMap[K] {
     const elem = document.createElement(tagName);
@@ -61,5 +61,11 @@ export function element<K extends keyof HTMLElementTagNameMap>(
 export function emptyChildNodes(node: Node) {
     while (node.childNodes.length > 0) {
         node.removeChild(node.childNodes[0]);
+    }
+}
+
+export function* domIterate<T extends Element>(dom: HTMLCollectionOf<T>): Iterable<T> {
+    for (let i = 0; i < dom.length; i++) {
+        yield dom[i];
     }
 }

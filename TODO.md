@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * expand-all button
     * make parent boxes sticky
     * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
