@@ -5,9 +5,13 @@
 :root {
     --font: sans-serif;
 
-    --background-color: #222222;
+    --dark-color: #222222;
+    --interactive-color: #6666FF;
     --middle-color: #666666;
-    --text-color: #eeeeee;
+    --light-color: #eeeeee;
+
+    --background-color: var(--dark-color);
+    --text-color: var(--light-color);
 
     --spacing: 1rem;
 }
@@ -16,6 +20,7 @@ html {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: var(--font);
+    font-size: 16px;
 }
 
 p {

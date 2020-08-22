@@ -3,11 +3,21 @@
     -webkit-appearance: none;
     background: none;
     border: none;
-}
-
-.copy-button, .copy-button:active, .copy-button:focus {
+    height: 1rem;
     margin: 0;
     padding: 0;
+    width: 1rem;
+}
+
+.copy-button:active:hover {
+    background-color: var(--interactive-color);
+    border-radius: 0.125rem;
+    --text-color: var(--light-color);
+}
+
+.copy-button:hover {
+    cursor: copy;
+    --text-color: var(--interactive-color);
 }
 
 .hidden-offscreen {

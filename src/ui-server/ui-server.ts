@@ -82,8 +82,6 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
 
         const targetFile = cssPath + "/" + urlWithoutPrefix + ".css";
 
-        console.log(urlWithoutPrefix, targetFile, cssPath)
-
         if (!doesFileExistInFolder(targetFile, cssPath)) {
             return endWith404(res);
         }

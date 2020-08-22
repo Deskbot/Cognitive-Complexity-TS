@@ -1,5 +1,5 @@
 import { addStyleSheet, element } from "../../framework";
-import { ClipboardSvg } from "../icon/clipboard";
+import { ClipboardSvg } from "../icon/Clipboard";
 
 addStyleSheet("/css/component/generic/CopyableText");
 
