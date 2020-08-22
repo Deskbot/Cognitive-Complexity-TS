@@ -20,10 +20,10 @@
     background-color: var(--interactive-color);
 }
 
-.togglebutton--closed {
+.togglebutton:not(:checked) {
     cursor: zoom-in;
 }
 
-.togglebutton--open {
+.togglebutton:checked {
     cursor: zoom-out;
 }

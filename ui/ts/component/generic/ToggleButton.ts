@@ -6,26 +6,22 @@ export function ToggleButton(isOpen: boolean, onOpennessChange: (isOpen: boolean
     const input = element("input", {
         className: "togglebutton",
         onchange: () => {
-            setStateClass(input);
+            setSymbol(input);
             onOpennessChange(input.checked);
         },
         type: "checkbox",
-    },
-        "+"
-    );
+    });
 
     input.checked = isOpen;
-    setStateClass(input);
+    setSymbol(input);
 
     return input;
 }
 
-function setStateClass(input: HTMLInputElement) {
-    if (input.checked) {
-        input.classList.remove("togglebutton--closed");
-        input.classList.add("togglebutton--open");
+function setSymbol(button: HTMLInputElement) {
+    if (button.checked) {
+        button.innerHTML = "-";
     } else {
-        input.classList.remove("togglebutton--open");
-        input.classList.add("togglebutton--closed");
+        button.innerHTML = "+";
     }
 }
