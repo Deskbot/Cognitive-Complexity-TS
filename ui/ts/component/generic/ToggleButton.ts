@@ -1,4 +1,4 @@
-import { addStyleSheet, domIterate, element } from "../../framework";
+import { addStyleSheet, element } from "../../framework";
 
 addStyleSheet("/css/component/generic/ToggleButton");
 
@@ -27,17 +27,18 @@ function setSymbol(button: HTMLInputElement) {
 }
 
 export function expandAllToggleButtons() {
-    const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
-    for (const button of domIterate(buttons)) {
-        button.checked = true;
-        button.dispatchEvent(new Event("change"));
-    }
+    setStateOfAllToggleButtons(true);
 }
 
 export function collapseAllToggleButtons() {
+    setStateOfAllToggleButtons(false);
+}
+
+function setStateOfAllToggleButtons(checked: boolean) {
     const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
-    for (const button of domIterate(buttons)) {
-        button.checked = false;
+    for (let i = 0; i < buttons.length; i++) {
+        const button = buttons[i];
+        button.checked = checked;
         button.dispatchEvent(new Event("change"));
     }
 }

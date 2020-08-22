@@ -1,6 +1,7 @@
 # Necessary Features
 
 * Add a html interface
+    * if toggleablebox becomes a web component, can I trigger the change function without simulating an event?
     * make parent boxes sticky
     * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json

@@ -63,9 +63,3 @@ export function emptyChildNodes(node: Node) {
         node.removeChild(node.childNodes[0]);
     }
 }
-
-export function* domIterate<T extends Element>(dom: HTMLCollectionOf<T>): Iterable<T> {
-    for (let i = 0; i < dom.length; i++) {
-        yield dom[i];
-    }
-}
