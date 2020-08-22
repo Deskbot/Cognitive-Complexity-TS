@@ -5,6 +5,7 @@
 :root {
     --font: sans-serif;
 
+    --active-color: #AA66AA;
     --dark-color: #222222;
     --interactive-color: #6666FF;
     --middle-color: #666666;

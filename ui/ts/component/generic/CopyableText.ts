@@ -24,6 +24,7 @@ class HiddenCopyText {
 export function CopyButton(text: string): Node {
     const copyButton = element("button", {
         className: "copy-button",
+        title: "copy",
         type: "button"
     },
         ClipboardSvg()
