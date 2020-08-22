@@ -1,12 +1,13 @@
 .copytext-button {
+    height: 1rem;
+    margin: 0 0.5rem;
+    padding: 0;
+    width: 1rem;
+
     appearance: none;
     -webkit-appearance: none;
     background: none;
     border: none;
-    height: 1rem;
-    margin: 0 0.125rem;
-    padding: 0;
-    width: 1rem;
 }
 
 .copytext-button:active:hover {

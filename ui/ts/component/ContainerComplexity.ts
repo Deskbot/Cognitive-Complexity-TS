@@ -6,9 +6,9 @@ import { ToggleableBox } from "./generic/ToggleableBox";
 export function ContainerComplexity(complexity: ContainerOutput, filePath: string): Node {
     return ToggleableBox([
         element("p", {},
-            `${complexity.name} Line ${complexity.line}, Column ${complexity.column}`
+            complexity.name,
+            CopyText(`${filePath}:${complexity.line}:${complexity.column}`),
         ),
-        CopyText(`${filePath}:${complexity.line}:${complexity.column}`),
         element("p", {},
             `Score: ${complexity.score}`
         ),
