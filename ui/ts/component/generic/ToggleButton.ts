@@ -10,9 +10,9 @@ export function ToggleButton(isOpen: boolean, onOpennessChange: (isOpen: boolean
             onOpennessChange(input.checked);
         },
         type: "checkbox",
-    }, [
+    },
         "+"
-    ]);
+    );
 
     input.checked = isOpen;
     setStateClass(input);

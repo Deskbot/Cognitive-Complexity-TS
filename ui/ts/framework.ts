@@ -39,8 +39,8 @@ export function constClassToNodeFunc<Consts extends any[]>(
 
 export function element<K extends keyof HTMLElementTagNameMap>(
     tagName: K,
-    attrs?: Partial<HTMLElementTagNameMap[K]>,
-    inner?: (string | Node)[]
+    attrs: Partial<HTMLElementTagNameMap[K]>,
+    ...inner: (string | Node)[]
 ): HTMLElementTagNameMap[K] {
     const elem = document.createElement(tagName);
 

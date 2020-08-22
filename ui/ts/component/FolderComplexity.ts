@@ -6,10 +6,10 @@ import { element } from "../framework";
 
 export function FolderComplexity(name: string, complexity: FolderOutput, startOpen: boolean): Node {
     return ToggleableBox(
-        [element("p", {}, [
+        [element("p", {},
             name,
             CopyButton(name),
-        ])],
+        )],
         () => CognitiveComplexityUi(complexity, false),
         startOpen,
     );

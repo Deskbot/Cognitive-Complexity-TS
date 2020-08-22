@@ -47,7 +47,7 @@ export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode 
         }
 
         boxContent.push(
-            element("div", { className: "toggleablebox-content" }, content)
+            element("div", { className: "toggleablebox-content" }, ...content)
         );
 
         this.box.rerender(boxContent);

@@ -6,11 +6,11 @@ import { ToggleableBox } from "./generic/ToggleableBox";
 
 export function FileComplexity(filePath: string, complexity: FileOutput, startOpen: boolean): Node {
     return ToggleableBox([
-        element("p", {}, [
+        element("p", {},
             filePath,
             CopyButton(filePath),
-        ]),
-        element("p", {}, ["score: " + complexity.score]),
+        ),
+        element("p", {}, "score: " + complexity.score),
     ],
         () => complexity.inner.map(complexity => ContainerComplexity(complexity, filePath)),
         startOpen,
