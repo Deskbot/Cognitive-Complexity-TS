@@ -1,7 +1,7 @@
 import { addStyleSheet, element } from "../../framework";
 import { ClipboardSvg } from "../icon/Clipboard";
 
-addStyleSheet("/css/component/generic/CopyableText");
+addStyleSheet("/css/component/generic/CopyText");
 
 class HiddenCopyText {
     private readonly copyText = element("input", {
@@ -21,9 +21,9 @@ class HiddenCopyText {
     static readonly instance = new HiddenCopyText();
 }
 
-export function CopyButton(text: string): Node {
+export function CopyText(text: string): Node {
     const copyButton = element("button", {
-        className: "copy-button",
+        className: "copytext-button",
         title: "copy",
         type: "button"
     },

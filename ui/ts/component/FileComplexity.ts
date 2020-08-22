@@ -1,14 +1,14 @@
 import { FileOutput } from "../../../shared/types";
 import { element } from "../framework";
 import { ContainerComplexity } from "./ContainerComplexity";
-import { CopyButton } from "./generic/CopyableText";
+import { CopyText } from "./generic/CopyText";
 import { ToggleableBox } from "./generic/ToggleableBox";
 
 export function FileComplexity(filePath: string, complexity: FileOutput, startOpen: boolean): Node {
     return ToggleableBox([
         element("p", {},
             filePath,
-            CopyButton(filePath),
+            CopyText(filePath),
         ),
         element("p", {}, "score: " + complexity.score),
     ],

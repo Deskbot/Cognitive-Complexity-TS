@@ -1,4 +1,4 @@
-.copy-button {
+.copytext-button {
     appearance: none;
     -webkit-appearance: none;
     background: none;
@@ -9,11 +9,11 @@
     width: 1rem;
 }
 
-.copy-button:active:hover {
+.copytext-button:active:hover {
     --text-color: var(--interactive-color);
 }
 
-.copy-button:hover {
+.copytext-button:hover {
     cursor: copy;
 }
 
