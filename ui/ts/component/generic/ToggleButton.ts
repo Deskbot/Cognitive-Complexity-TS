@@ -1,4 +1,4 @@
-import { addStyleSheet, element } from "../../framework";
+import { addStyleSheet, bakeHtmlCollection, element } from "../../framework";
 
 addStyleSheet("/css/component/generic/ToggleButton");
 
@@ -36,10 +36,7 @@ export function collapseAllToggleButtons() {
 
 function setStateOfAllToggleButtons(checked: boolean) {
     const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
-
-    for (let i = 0; i < buttons.length; i++) {
-        const button = buttons[i];
-
+    for (const button of bakeHtmlCollection(buttons)) {
         if (button.checked !== checked) {
             button.checked = checked;
             button.dispatchEvent(new Event("change"));

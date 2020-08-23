@@ -18,6 +18,22 @@ export function addStyleSheet(path: string) {
     }));
 }
 
+/**
+ * Take a reference to all members of a HTMLCollection.
+ * HTMLCollections are DOM-live, meaning they update as the DOM does.
+ * Use this function to avoid losing references to DOM as you make changes to it,
+ * while iterating through a HTMLCollection.
+ */
+export function bakeHtmlCollection<T extends Element>(collection: HTMLCollectionOf<T>): T[] {
+    const arr = [] as T[];
+
+    for (let i = 0; i < collection.length; i++) {
+        arr.push(collection[i]);
+    }
+
+    return arr;
+}
+
 export function renderImmutably<Muts extends any[]>(
     MutNodeConstructor: Constructor<StatefulNode<Muts>, []>,
     ...args: Muts
