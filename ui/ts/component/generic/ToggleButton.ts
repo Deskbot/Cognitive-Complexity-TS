@@ -10,7 +10,7 @@ export function ToggleButton(isOpen: boolean, onOpennessChange: (isOpen: boolean
     input.addEventListener("change", () => {
         setSymbol(input);
         onOpennessChange(input.checked);
-    })
+    });
 
     input.checked = isOpen;
     setSymbol(input);
@@ -36,9 +36,13 @@ export function collapseAllToggleButtons() {
 
 function setStateOfAllToggleButtons(checked: boolean) {
     const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
+
     for (let i = 0; i < buttons.length; i++) {
         const button = buttons[i];
-        button.checked = checked;
-        button.dispatchEvent(new Event("change"));
+
+        if (button.checked !== checked) {
+            button.checked = checked;
+            button.dispatchEvent(new Event("change"));
+        }
     }
 }

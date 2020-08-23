@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * if toggleablebox becomes a web component, can I trigger the change function without simulating an event?
     * make parent boxes sticky
     * file paths that are too long are truncated at the left
     * sort by complexity
