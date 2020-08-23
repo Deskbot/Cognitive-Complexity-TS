@@ -27,3 +27,9 @@ html {
 p {
     margin: calc(var(--spacing)) 0;
 }
+
+button, input {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
