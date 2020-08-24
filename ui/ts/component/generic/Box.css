@@ -1,4 +1,4 @@
 .box {
-    border: 1px solid var(--light-color);
+    border: var(--line-width) solid var(--light-color);
     display: flex;
 }
