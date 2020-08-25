@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * expand all doesn't expand all
     * make parent boxes sticky
     * file paths that are too long are truncated at the left
     * sort by complexity

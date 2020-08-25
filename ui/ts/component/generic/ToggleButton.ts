@@ -27,18 +27,21 @@ function setSymbol(button: HTMLInputElement) {
 }
 
 export function expandAllToggleButtons() {
-    setStateOfAllToggleButtons(true);
+    const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
+    for (let i = 0; i < buttons.length; i++) {
+        const button = buttons[i];
+        if (button.checked !== true) {
+            button.checked = true;
+            button.dispatchEvent(new Event("change"));
+        }
+    }
 }
 
 export function collapseAllToggleButtons() {
-    setStateOfAllToggleButtons(false);
-}
-
-function setStateOfAllToggleButtons(checked: boolean) {
     const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
     for (const button of bakeHtmlCollection(buttons)) {
-        if (button.checked !== checked) {
-            button.checked = checked;
+        if (button.checked !== false) {
+            button.checked = false;
             button.dispatchEvent(new Event("change"));
         }
     }
