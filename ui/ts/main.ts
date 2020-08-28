@@ -1,6 +1,6 @@
 import { ProgramOutput } from "../../shared/types";
 import { CognitiveComplexityUi } from "./component/CognitiveComplexityUi";
-import { CollapseAll, ExpandAll } from "./component/global-controls";
+import { GlobalControl } from "./component/GlobalControl";
 import { hasMoreThanOneKey } from "./util";
 
 main();
@@ -27,8 +27,8 @@ async function main() {
     const onlyOneTopLevelNode = hasMoreThanOneKey(ccResult);
 
     document.body.append(
-        ExpandAll(),
-        CollapseAll(),
+        GlobalControl("Expand All", () => {}),
+        GlobalControl("Collapse All", () => {}),
     );
 
     CognitiveComplexityUi(ccResult, onlyOneTopLevelNode)

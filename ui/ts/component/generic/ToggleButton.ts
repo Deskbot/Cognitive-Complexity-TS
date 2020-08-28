@@ -25,24 +25,3 @@ function setSymbol(button: HTMLInputElement) {
         button.innerHTML = "+";
     }
 }
-
-export function expandAllToggleButtons() {
-    const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
-    for (let i = 0; i < buttons.length; i++) {
-        const button = buttons[i];
-        if (button.checked !== true) {
-            button.checked = true;
-            button.dispatchEvent(new Event("change"));
-        }
-    }
-}
-
-export function collapseAllToggleButtons() {
-    const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
-    for (const button of bakeHtmlCollection(buttons)) {
-        if (button.checked !== false) {
-            button.checked = false;
-            button.dispatchEvent(new Event("change"));
-        }
-    }
-}
