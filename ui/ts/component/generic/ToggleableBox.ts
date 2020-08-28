@@ -1,48 +1,58 @@
-import { addStyleSheet, constClassToNodeFunc, element, StatefulNode } from "../../framework";
+import { addStyleSheet, element, StatefulNode } from "../../framework";
 import { Box } from "./Box";
 import { ToggleButton } from "./ToggleButton";
 
 addStyleSheet("/css/component/generic/ToggleableBox");
 
-export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode {
-    private showToggleable;
+export class ToggleableBox {
+    private showHideable;
     private toggleButton;
     private box = new Box();
 
-    readonly dom = this.box.dom;
-
     constructor(
         private visibleContent: Node[],
-        private makeToggleableContent: () => Node[],
+        private makeToggleableContent: () => ToggleableBox[],
         isTopLevel: boolean,
     ) {
-        this.showToggleable = isTopLevel;
-        this.toggleButton = ToggleButton(this.showToggleable, this.onNewIsOpen.bind(this));
+        this.showHideable = isTopLevel;
+        this.toggleButton = ToggleButton(this.showHideable, this.onNewIsOpen.bind(this));
+        this.rerender();
     }
 
-    private getToggleableContent(): Node[] {
+    get dom() {
+        return this.box.dom;
+    }
+
+    setOpenness(open: boolean) {
+        this.showHideable = open;
+        this.rerender();
+    }
+
+    private getHideableContent(): ToggleableBox[] {
         const result = this.makeToggleableContent();
 
-        this.getToggleableContent = () => result;
+        this.getHideableContent = () => result;
 
         return result;
     }
 
     private onNewIsOpen(newIsOpen: boolean) {
-        this.showToggleable = newIsOpen;
+        this.showHideable = newIsOpen;
         this.rerender();
     }
 
-    rerender() {
+    private rerender() {
         const content = [...this.visibleContent];
 
-        if (this.showToggleable) {
-            content.push(...this.getToggleableContent());
+        if (this.showHideable) {
+            this.getHideableContent().forEach((innerToggleableBox) => {
+                content.push(innerToggleableBox.dom);
+            });
         }
 
         const boxContent = [] as Node[];
 
-        if (this.getToggleableContent().length > 0) {
+        if (this.getHideableContent().length > 0) {
             boxContent.push(this.toggleButton);
         }
 
@@ -52,4 +62,4 @@ export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode 
 
         this.box.rerender(boxContent);
     }
-});
+}

@@ -1,12 +1,13 @@
 import { FileOutput, FolderOutput } from "../../../shared/types";
 import { FileComplexity } from "./FileComplexity";
 import { FolderComplexity } from "./FolderComplexity";
+import { ToggleableBox } from "./generic/ToggleableBox";
 
 export function FileOrFolderComplexity(
     path: string,
     complexity: FileOutput | FolderOutput,
     startOpen: boolean
-): Node {
+): ToggleableBox {
     if (isFileOutput(complexity)) {
         return FileComplexity(path, complexity, startOpen);
     } else {

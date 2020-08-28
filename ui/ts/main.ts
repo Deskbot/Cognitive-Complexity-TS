@@ -29,6 +29,10 @@ async function main() {
     document.body.append(
         ExpandAll(),
         CollapseAll(),
-        ...CognitiveComplexityUi(ccResult, onlyOneTopLevelNode)
     );
+
+    CognitiveComplexityUi(ccResult, onlyOneTopLevelNode)
+        .forEach((complexityUi) => {
+            document.body.append(complexityUi.dom);
+        });
 }
