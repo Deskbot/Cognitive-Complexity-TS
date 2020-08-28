@@ -1,4 +1,4 @@
-import { addStyleSheet, element, StatefulNode } from "../../framework";
+import { addStyleSheet, element } from "../../framework";
 import { Box } from "./Box";
 import { ToggleButton } from "./ToggleButton";
 
@@ -23,8 +23,11 @@ export class ToggleableBox {
         return this.box.dom;
     }
 
-    setOpenness(open: boolean) {
-        this.showHideable = open;
+    setOpenness(beOpen: boolean) {
+        this.showHideable = beOpen;
+        this.getHideableContent().forEach((toggleableBox) => {
+            toggleableBox.setOpenness(beOpen);
+        })
         this.rerender();
     }
 
