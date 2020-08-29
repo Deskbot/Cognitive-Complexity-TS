@@ -6,9 +6,9 @@ addStyleSheet("/css/component/generic/ToggleableBox");
 
 export class ToggleableBox {
     private showHideable: boolean;
+    private makeToggleableContent: () => ToggleableBox[];
 
     private box: Box;
-    private makeToggleableContent: () => ToggleableBox[];
     private toggleButton: ToggleButton;
     private visibleContent: Node[];
 
@@ -18,10 +18,13 @@ export class ToggleableBox {
         isTopLevel: boolean,
     ) {
         this.showHideable = isTopLevel;
+        this.makeToggleableContent = makeToggleableContent;
 
         this.box = new Box();
-        this.makeToggleableContent = makeToggleableContent;
-        this.toggleButton = new ToggleButton(this.showHideable, this.onNewIsOpen.bind(this));
+        this.toggleButton = new ToggleButton(this.showHideable, (newIsOpen) => {
+            this.showHideable = newIsOpen;
+            this.rerender();
+        });
         this.visibleContent = visibleContent;
 
         this.rerender();
@@ -33,15 +36,8 @@ export class ToggleableBox {
 
     private getHideableContent(): ToggleableBox[] {
         const result = this.makeToggleableContent();
-
         this.getHideableContent = () => result;
-
         return result;
-    }
-
-    private onNewIsOpen(newIsOpen: boolean) {
-        this.showHideable = newIsOpen;
-        this.rerender();
     }
 
     private rerender() {
