@@ -5,16 +5,25 @@ import { ToggleButton } from "./ToggleButton";
 addStyleSheet("/css/component/generic/ToggleableBox");
 
 export class ToggleableBox {
-    private showHideable;
-    private toggleButton: Node | undefined;
-    private box = new Box();
+    private showHideable: boolean;
+
+    private box: Box;
+    private makeToggleableContent: () => ToggleableBox[];
+    private toggleButton;
+    private visibleContent: Node[];
 
     constructor(
-        private visibleContent: Node[],
-        private makeToggleableContent: () => ToggleableBox[],
+        visibleContent: Node[],
+        makeToggleableContent: () => ToggleableBox[],
         isTopLevel: boolean,
     ) {
         this.showHideable = isTopLevel;
+
+        this.box = new Box();
+        this.makeToggleableContent = makeToggleableContent;
+        this.toggleButton = new ToggleButton(this.showHideable, this.onNewIsOpen.bind(this));
+        this.visibleContent = visibleContent;
+
         this.rerender();
     }
 
@@ -24,10 +33,12 @@ export class ToggleableBox {
 
     setOpenness(beOpen: boolean) {
         this.showHideable = beOpen;
+        this.rerender();
+
         this.getHideableContent().forEach((toggleableBox) => {
             toggleableBox.setOpenness(beOpen);
-        })
-        this.rerender();
+        });
+        this.toggleButton.setState(this.showHideable);
     }
 
     private getHideableContent(): ToggleableBox[] {
@@ -44,7 +55,6 @@ export class ToggleableBox {
     }
 
     private rerender() {
-        this.toggleButton = ToggleButton(this.showHideable, this.onNewIsOpen.bind(this));
         const content = [...this.visibleContent];
 
         if (this.showHideable) {
@@ -56,7 +66,7 @@ export class ToggleableBox {
         const boxContent = [] as Node[];
 
         if (this.getHideableContent().length > 0) {
-            boxContent.push(this.toggleButton);
+            boxContent.push(this.toggleButton.dom);
         }
 
         boxContent.push(
