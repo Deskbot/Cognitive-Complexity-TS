@@ -29,8 +29,8 @@ async function main() {
     const topLevelBoxes = CognitiveComplexityUi(ccResult, onlyOneTopLevelNode);
 
     document.body.append(
-        GlobalControl("Expand All", () => topLevelBoxes.forEach(box => box.setOpenness(true))),
-        GlobalControl("Collapse All", () => topLevelBoxes.forEach(box => box.setOpenness(false))),
+        GlobalControl("Expand All", () => topLevelBoxes.forEach(box => box.setTreeOpenness(true))),
+        GlobalControl("Collapse All", () => topLevelBoxes.forEach(box => box.setTreeOpenness(false))),
     );
 
     topLevelBoxes.forEach((complexityUi) => {

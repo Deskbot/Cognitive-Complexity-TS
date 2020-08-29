@@ -16,7 +16,7 @@ export class ToggleButton {
             type: "checkbox",
         });
 
-        this.dom.addEventListener("change", () => this.handleStateChange());
+        this.dom.addEventListener("change", this.handleStateChange.bind(this));
 
         this.setSymbol();
     }

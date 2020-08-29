@@ -31,16 +31,6 @@ export class ToggleableBox {
         return this.box.dom;
     }
 
-    setOpenness(beOpen: boolean) {
-        this.showHideable = beOpen;
-        this.rerender();
-
-        this.getHideableContent().forEach((toggleableBox) => {
-            toggleableBox.setOpenness(beOpen);
-        });
-        this.toggleButton.setState(this.showHideable);
-    }
-
     private getHideableContent(): ToggleableBox[] {
         const result = this.makeToggleableContent();
 
@@ -74,5 +64,15 @@ export class ToggleableBox {
         );
 
         this.box.rerender(boxContent);
+    }
+
+    setTreeOpenness(open: boolean) {
+        // this will trigger this object to change state to match
+        this.toggleButton.setState(open);
+
+        // set all the children to the same state
+        this.getHideableContent().forEach((toggleableBox) => {
+            toggleableBox.setTreeOpenness(open);
+        });
     }
 }
