@@ -1,55 +1,67 @@
-import { addStyleSheet, constClassToNodeFunc, element, StatefulNode } from "../../framework";
+import { addStyleSheet, element } from "../../framework";
 import { Box } from "./Box";
 import { ToggleButton } from "./ToggleButton";
 
 addStyleSheet("/css/component/generic/ToggleableBox");
 
-export const ToggleableBox = constClassToNodeFunc(class implements StatefulNode {
-    private showToggleable;
-    private toggleButton;
-    private box = new Box();
+export class ToggleableBox {
+    private showHideable: boolean;
+    private makeToggleableContent: () => ToggleableBox[];
 
-    readonly dom = this.box.dom;
+    private box: Box;
+    private toggleButton: ToggleButton;
+    private visibleContent: Node[];
 
     constructor(
-        private visibleContent: Node[],
-        private makeToggleableContent: () => Node[],
+        visibleContent: Node[],
+        makeToggleableContent: () => ToggleableBox[],
         isTopLevel: boolean,
     ) {
-        this.showToggleable = isTopLevel;
-        this.toggleButton = ToggleButton(this.showToggleable, this.onNewIsOpen.bind(this));
-    }
+        this.showHideable = isTopLevel;
+        this.makeToggleableContent = makeToggleableContent;
 
-    private getToggleableContent(): Node[] {
-        const result = this.makeToggleableContent();
+        this.box = new Box();
+        this.toggleButton = new ToggleButton(this.showHideable, (newIsOpen) => {
+            this.showHideable = newIsOpen;
+            this.rerender();
+        });
+        this.visibleContent = visibleContent;
 
-        this.getToggleableContent = () => result;
-
-        return result;
-    }
-
-    private onNewIsOpen(newIsOpen: boolean) {
-        this.showToggleable = newIsOpen;
         this.rerender();
     }
 
-    rerender() {
-        const content = [...this.visibleContent];
-
-        if (this.showToggleable) {
-            content.push(...this.getToggleableContent());
-        }
-
-        const boxContent = [] as Node[];
-
-        if (this.getToggleableContent().length > 0) {
-            boxContent.push(this.toggleButton);
-        }
-
-        boxContent.push(
-            element("div", { className: "toggleablebox-content" }, ...content)
-        );
-
-        this.box.rerender(boxContent);
+    get dom() {
+        return this.box.dom;
     }
-});
+
+    private getHideableContent(): ToggleableBox[] {
+        const result = this.makeToggleableContent();
+        this.getHideableContent = () => result;
+        return result;
+    }
+
+    private rerender() {
+        this.box.rerender([
+            (this.getHideableContent().length > 0
+                ? this.toggleButton.dom
+                : ""
+            ),
+            element("div", { className: "toggleablebox-content" },
+                ...this.visibleContent,
+                ...(this.showHideable
+                    ? this.getHideableContent().map(content => content.dom)
+                    : [])
+            )
+        ]);
+    }
+
+    setTreeOpenness(open: boolean) {
+        // this will trigger this object to change state to match
+        this.toggleButton.setState(open);
+
+        // set all the children to the same state
+        this.getHideableContent().forEach((toggleableBox) => {
+            toggleableBox.setTreeOpenness(open);
+        });
+    }
+}

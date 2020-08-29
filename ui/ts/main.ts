@@ -1,6 +1,6 @@
 import { ProgramOutput } from "../../shared/types";
 import { CognitiveComplexityUi } from "./component/CognitiveComplexityUi";
-import { CollapseAll, ExpandAll } from "./component/global-controls";
+import { GlobalControl } from "./component/GlobalControl";
 import { hasMoreThanOneKey } from "./util";
 
 main();
@@ -26,9 +26,14 @@ async function main() {
     // Otherwise show all nodes minimised by default.
     const onlyOneTopLevelNode = hasMoreThanOneKey(ccResult);
 
+    const topLevelBoxes = CognitiveComplexityUi(ccResult, onlyOneTopLevelNode);
+
     document.body.append(
-        ExpandAll(),
-        CollapseAll(),
-        ...CognitiveComplexityUi(ccResult, onlyOneTopLevelNode)
+        GlobalControl("Expand All", () => topLevelBoxes.forEach(box => box.setTreeOpenness(true))),
+        GlobalControl("Collapse All", () => topLevelBoxes.forEach(box => box.setTreeOpenness(false))),
     );
+
+    topLevelBoxes.forEach((complexityUi) => {
+        document.body.append(complexityUi.dom);
+    });
 }

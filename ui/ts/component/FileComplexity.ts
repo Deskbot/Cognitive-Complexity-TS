@@ -4,8 +4,8 @@ import { ContainerComplexity } from "./ContainerComplexity";
 import { CopyText } from "./generic/CopyText";
 import { ToggleableBox } from "./generic/ToggleableBox";
 
-export function FileComplexity(filePath: string, complexity: FileOutput, startOpen: boolean): Node {
-    return ToggleableBox([
+export function FileComplexity(filePath: string, complexity: FileOutput, startOpen: boolean): ToggleableBox {
+    return new ToggleableBox([
         element("p", {},
             filePath,
             CopyText(filePath),

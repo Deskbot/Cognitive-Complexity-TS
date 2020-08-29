@@ -1,48 +1,41 @@
-import { addStyleSheet, bakeHtmlCollection, element } from "../../framework";
+import { addStyleSheet, element } from "../../framework";
 
 addStyleSheet("/css/component/generic/ToggleButton");
 
-export function ToggleButton(isOpen: boolean, onOpennessChange: (isOpen: boolean) => void): Node {
-    const input = element("input", {
-        className: "togglebutton",
-        type: "checkbox",
-    });
-    input.addEventListener("change", () => {
-        setSymbol(input);
-        onOpennessChange(input.checked);
-    });
+export class ToggleButton {
+    readonly dom: HTMLInputElement;
 
-    input.checked = isOpen;
-    setSymbol(input);
+    private onStateChange: (isOpen: boolean) => void;
 
-    return input;
-}
+    constructor(isOpen: boolean, onStateChange: (isOpen: boolean) => void) {
+        this.onStateChange = onStateChange;
 
-function setSymbol(button: HTMLInputElement) {
-    if (button.checked) {
-        button.innerHTML = "-";
-    } else {
-        button.innerHTML = "+";
+        this.dom = element("input", {
+            checked: isOpen,
+            className: "togglebutton",
+            type: "checkbox",
+        });
+
+        this.dom.addEventListener("change", this.handleStateChange.bind(this));
+
+        this.setSymbol();
     }
-}
 
-export function expandAllToggleButtons() {
-    const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
-    for (let i = 0; i < buttons.length; i++) {
-        const button = buttons[i];
-        if (button.checked !== true) {
-            button.checked = true;
-            button.dispatchEvent(new Event("change"));
-        }
+    private handleStateChange() {
+        this.setSymbol();
+        this.onStateChange(this.dom.checked);
     }
-}
 
-export function collapseAllToggleButtons() {
-    const buttons = document.getElementsByClassName("togglebutton") as HTMLCollectionOf<HTMLInputElement>;
-    for (const button of bakeHtmlCollection(buttons)) {
-        if (button.checked !== false) {
-            button.checked = false;
-            button.dispatchEvent(new Event("change"));
+    setState(open: boolean) {
+        this.dom.checked = open;
+        this.handleStateChange();
+    }
+
+    private setSymbol() {
+        if (this.dom.checked) {
+            this.dom.innerHTML = "-";
+        } else {
+            this.dom.innerHTML = "+";
         }
     }
 }

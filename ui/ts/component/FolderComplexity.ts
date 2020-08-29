@@ -4,8 +4,8 @@ import { ToggleableBox } from "./generic/ToggleableBox";
 import { CopyText } from "./generic/CopyText";
 import { element } from "../framework";
 
-export function FolderComplexity(name: string, complexity: FolderOutput, startOpen: boolean): Node {
-    return ToggleableBox(
+export function FolderComplexity(name: string, complexity: FolderOutput, startOpen: boolean): ToggleableBox {
+    return new ToggleableBox(
         [element("p", {},
             name,
             CopyText(name),
