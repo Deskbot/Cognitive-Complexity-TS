@@ -9,7 +9,7 @@ export class ToggleableBox {
 
     private box: Box;
     private makeToggleableContent: () => ToggleableBox[];
-    private toggleButton;
+    private toggleButton: ToggleButton;
     private visibleContent: Node[];
 
     constructor(
@@ -45,25 +45,23 @@ export class ToggleableBox {
     }
 
     private rerender() {
-        const content = [...this.visibleContent];
+        const content = element("div", { className: "toggleablebox-content" }, ...this.visibleContent);
 
         if (this.showHideable) {
             this.getHideableContent().forEach((innerToggleableBox) => {
-                content.push(innerToggleableBox.dom);
+                content.append(innerToggleableBox.dom);
             });
         }
 
-        const boxContent = [] as Node[];
+        const buttonAndContent = [] as Node[];
 
         if (this.getHideableContent().length > 0) {
-            boxContent.push(this.toggleButton.dom);
+            buttonAndContent.push(this.toggleButton.dom);
         }
 
-        boxContent.push(
-            element("div", { className: "toggleablebox-content" }, ...content)
-        );
+        buttonAndContent.push(content);
 
-        this.box.rerender(boxContent);
+        this.box.rerender(buttonAndContent);
     }
 
     setTreeOpenness(open: boolean) {
