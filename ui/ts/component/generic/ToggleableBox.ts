@@ -41,23 +41,18 @@ export class ToggleableBox {
     }
 
     private rerender() {
-        const content = element("div", { className: "toggleablebox-content" }, ...this.visibleContent);
-
-        if (this.showHideable) {
-            this.getHideableContent().forEach((innerToggleableBox) => {
-                content.append(innerToggleableBox.dom);
-            });
-        }
-
-        const buttonAndContent = [] as Node[];
-
-        if (this.getHideableContent().length > 0) {
-            buttonAndContent.push(this.toggleButton.dom);
-        }
-
-        buttonAndContent.push(content);
-
-        this.box.rerender(buttonAndContent);
+        this.box.rerender([
+            (this.getHideableContent().length > 0
+                ? this.toggleButton.dom
+                : ""
+            ),
+            element("div", { className: "toggleablebox-content" },
+                ...this.visibleContent,
+                ...(this.showHideable
+                    ? this.getHideableContent().map(content => content.dom)
+                    : [])
+            )
+        ]);
     }
 
     setTreeOpenness(open: boolean) {
