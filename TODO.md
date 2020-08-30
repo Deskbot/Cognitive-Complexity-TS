@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * make parent boxes sticky
     * use import.meta.url to find the css file for a ts file
     * file paths that are too long are truncated at the left
     * sort by complexity
