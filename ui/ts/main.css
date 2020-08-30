@@ -17,6 +17,7 @@
     --text-color: var(--light-color);
 
     --spacing: 1rem;
+    --half-spacing: 0.5rem;
 }
 
 html {
