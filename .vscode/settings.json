@@ -8,7 +8,10 @@
         "elem",
         "muts",
         "rerender",
+        "stickys",
+        "stickytext",
         "toggleablebox",
-        "togglebutton"
+        "togglebutton",
+        "topbanner"
     ]
 }

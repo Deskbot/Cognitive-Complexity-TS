@@ -1,0 +1,8 @@
+.stickytext {
+    padding: var(--spacing) 0;
+    position: sticky;
+    margin: 0;
+    top: 0;
+
+    background: var(--background-color);
+}
