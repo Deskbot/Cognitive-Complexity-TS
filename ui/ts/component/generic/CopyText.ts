@@ -5,10 +5,10 @@ addStyleSheet(import.meta.url);
 
 class HiddenCopyText {
     private readonly copyText = element("input", {
-        className: "hidden-offscreen"
+        className: "hidden-off-screen"
     });
 
-    constructor() {
+    private constructor() {
         document.body.append(this.copyText);
     }
 
@@ -18,7 +18,12 @@ class HiddenCopyText {
         document.execCommand("copy");
     }
 
-    static readonly instance = new HiddenCopyText();
+    static getInstance(): HiddenCopyText {
+        // We don't want to generate this element at page load because it's visible before CSS gets loaded.
+        const instance = new HiddenCopyText();
+        HiddenCopyText.getInstance = () => instance;
+        return instance;
+    };
 }
 
 export function CopyText(text: string): Node {
@@ -31,7 +36,7 @@ export function CopyText(text: string): Node {
     );
 
     copyButton.addEventListener("click", () => {
-        HiddenCopyText.instance.copy(text);
+        HiddenCopyText.getInstance().copy(text);
     });
 
     return copyButton;

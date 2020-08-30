@@ -16,7 +16,7 @@
     cursor: copy;
 }
 
-.hidden-offscreen {
+.hidden-off-screen {
     left: -9999px;
     position: absolute;
 }
