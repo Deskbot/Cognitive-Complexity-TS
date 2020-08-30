@@ -1,15 +1,12 @@
 import { CognitiveComplexityUi } from "./CognitiveComplexityUi";
 import { FolderOutput } from "../../../shared/types";
 import { ToggleableBox } from "./generic/ToggleableBox";
-import { CopyText } from "./generic/CopyText";
-import { element } from "../framework";
+import { StickyTitle } from "./StickyTitle";
 
 export function FolderComplexity(name: string, complexity: FolderOutput, startOpen: boolean): ToggleableBox {
-    return new ToggleableBox(
-        [element("p", {},
-            name,
-            CopyText(name),
-        )],
+    return new ToggleableBox([
+        StickyTitle(name)
+    ],
         () => CognitiveComplexityUi(complexity, false),
         startOpen,
     );

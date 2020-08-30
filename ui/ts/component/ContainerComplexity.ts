@@ -2,6 +2,7 @@ import { ContainerOutput } from "../../../shared/types";
 import { element } from "../framework";
 import { CopyText } from "./generic/CopyText";
 import { ToggleableBox } from "./generic/ToggleableBox";
+import { Score } from "./Score";
 
 export function ContainerComplexity(complexity: ContainerOutput, filePath: string): ToggleableBox {
     return new ToggleableBox([
@@ -9,9 +10,7 @@ export function ContainerComplexity(complexity: ContainerOutput, filePath: strin
             complexity.name,
             CopyText(`${filePath}:${complexity.line}:${complexity.column}`),
         ),
-        element("p", {},
-            `Score: ${complexity.score}`
-        ),
+        Score(complexity.score),
     ],
         () => complexity.inner.map(complexity => ContainerComplexity(complexity, filePath)),
         false,
