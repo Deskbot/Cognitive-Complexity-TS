@@ -1,4 +1,4 @@
-.global-control-button {
+.globalcontrol {
     margin-bottom: var(--spacing);
     margin-right: var(--spacing);
     padding: var(--half-spacing);
@@ -7,13 +7,13 @@
     border: var(--line-width) solid var(--light-color);
     color: var(--light-color);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
 }
 
-.global-control-button:active {
+.globalcontrol:active {
     background-color: var(--interactive-color);
 }
 
-.global-control-button:first-of-type {
+.globalcontrol:first-of-type {
     margin-left: auto;
 }

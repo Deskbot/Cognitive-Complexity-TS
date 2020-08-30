@@ -5,7 +5,7 @@ addStyleSheet(import.meta.url);
 export function GlobalControl(text: string, onClick: () => void) {
     const button = element(
         "button",
-        { className: "global-control-button" },
+        { className: "globalcontrol" },
         text
     );
     button.addEventListener("click", onClick);
