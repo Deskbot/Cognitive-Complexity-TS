@@ -1,7 +1,7 @@
 import { addStyleSheet, element } from "../../framework";
 import { CopyText } from "../generic/CopyText";
 
-addStyleSheet("/css/component/generic/StickyText");
+addStyleSheet(import.meta.url);
 
 const stickyTextVisibilityObserver = new IntersectionObserver((entries) => {
     let lowestAboveTop: HTMLParagraphElement | undefined;

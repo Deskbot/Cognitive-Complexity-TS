@@ -2,7 +2,7 @@ import { addStyleSheet, element } from "../../framework";
 import { Box } from "./Box";
 import { ToggleButton } from "./ToggleButton";
 
-addStyleSheet("/css/component/generic/ToggleableBox");
+addStyleSheet(import.meta.url);
 
 export class ToggleableBox {
     private showHideable: boolean;

@@ -1,7 +1,7 @@
 import { addStyleSheet, element } from "../../framework";
 import { ClipboardSvg } from "../icon/Clipboard";
 
-addStyleSheet("/css/component/generic/CopyText");
+addStyleSheet(import.meta.url);
 
 class HiddenCopyText {
     private readonly copyText = element("input", {

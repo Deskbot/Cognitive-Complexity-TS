@@ -1,6 +1,6 @@
 import { addStyleSheet, element } from "../../framework";
 
-addStyleSheet("/css/component/generic/ToggleButton");
+addStyleSheet(import.meta.url);
 
 export class ToggleButton {
     readonly dom: HTMLInputElement;

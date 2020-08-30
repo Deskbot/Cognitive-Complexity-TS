@@ -55,7 +55,25 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
         return;
     }
 
+    if (url.endsWith(".css")) {
+        // remove the /js/ prefix
+        const prefixLength = 4;
+        const urlWithoutPrefix = url.substr(prefixLength);
+
+        const targetFile = cssPath + "/" + urlWithoutPrefix;
+
+        if (!doesFileExistInFolder(targetFile, cssPath)) {
+            return endWith404(res);
+        }
+
+        res.setHeader("Content-Type", "text/css");
+
+        res.write(await fsP.readFile(targetFile));
+        return;
+    }
+
     if (url.startsWith("/js/")) {
+        // remove the /js/ prefix
         const prefixLength = 4;
         const urlWithoutPrefix = url.substr(prefixLength);
 
@@ -71,22 +89,6 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
         if (!doesFileExistInFolder(targetFile, jsPath)) {
             return endWith404(res);
         }
-
-        res.write(await fsP.readFile(targetFile));
-        return;
-    }
-
-    if (url.startsWith("/css/")) {
-        const prefixLength = 5;
-        const urlWithoutPrefix = url.substr(prefixLength);
-
-        const targetFile = cssPath + "/" + urlWithoutPrefix + ".css";
-
-        if (!doesFileExistInFolder(targetFile, cssPath)) {
-            return endWith404(res);
-        }
-
-        res.setHeader("Content-Type", "text/css");
 
         res.write(await fsP.readFile(targetFile));
         return;

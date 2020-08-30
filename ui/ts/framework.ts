@@ -5,15 +5,9 @@ export interface StatefulNode<Muts extends any[] = any[]> {
     rerender(...muts: Muts): void;
 }
 
-const stylesheetsLinked = new Set<string>();
-export function addStyleSheet(path: string) {
-    if (stylesheetsLinked.has(path)) {
-        return;
-    }
-
-    stylesheetsLinked.add(path);
+export function addStyleSheet(jsUrl: string) {
     document.head.appendChild(element("link", {
-        href: path,
+        href: jsUrl + ".css",
         rel: "stylesheet",
     }));
 }

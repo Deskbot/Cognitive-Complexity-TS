@@ -1,6 +1,6 @@
 import { addStyleSheet, element } from "../../framework";
 
-addStyleSheet("/css/component/icon/Clipboard");
+addStyleSheet(import.meta.url);
 
 const svgTemplate = element("template", {});
 svgTemplate.innerHTML =
