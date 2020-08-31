@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * file paths that are too long are truncated at the left
     * sort by complexity
         * remove folders from view?
         * or have a list at the top and jump to it in the tree structure?

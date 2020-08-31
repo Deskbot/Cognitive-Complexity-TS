@@ -1,4 +1,5 @@
 .togglebutton {
+    flex: none;
     margin: 0;
     width: 1rem;
 
