@@ -1,11 +1,9 @@
 import { addStyleSheet, element } from "../framework";
-import { CopyText } from "./generic/CopyText";
 
 addStyleSheet(import.meta.url);
 
-export function StickyTitle(text: string): Node {
+export function StickyTitle(title: (string | Node)[]): Node {
     return element("p", { className: "stickytext" },
-        text,
-        CopyText(text),
+        ...title
     );
 }
