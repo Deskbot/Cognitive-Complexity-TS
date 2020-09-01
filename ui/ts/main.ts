@@ -35,6 +35,12 @@ async function main() {
         GlobalControl("Collapse All", () => {
             topLevelBoxes.forEach(box => box.setTreeOpenness(false))
         }),
+        GlobalControl("Sort A-Z", () => {
+
+        }),
+        GlobalControl("Sort By Complexity", () => {
+
+        }),
     );
 
     topLevelBoxes.forEach((complexityUi) => {
