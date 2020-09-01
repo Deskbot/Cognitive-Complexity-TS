@@ -6,7 +6,7 @@ addStyleSheet(import.meta.url);
 
 export class ToggleableBox {
     private showHideable: boolean;
-    private makeToggleableContent: () => ToggleableBox[];
+    private makeToggleableContent: () => Node[];
 
     private box: Box;
     private toggleButton: ToggleButton;
@@ -14,11 +14,11 @@ export class ToggleableBox {
 
     constructor(
         visibleContent: Node[],
-        makeToggleableContent: () => ToggleableBox[],
+        makeToggleableContent: Node[],
         isTopLevel: boolean,
     ) {
         this.showHideable = isTopLevel;
-        this.makeToggleableContent = makeToggleableContent;
+        this.makeToggleableContent = () => makeToggleableContent; // TODO this is wrong, should lazily generate these nodes
 
         this.box = new Box();
         this.toggleButton = new ToggleButton(this.showHideable, (newIsOpen) => {
@@ -34,7 +34,7 @@ export class ToggleableBox {
         return this.box.dom;
     }
 
-    private getHideableContent(): ToggleableBox[] {
+    private getHideableContent(): Node[] {
         const result = this.makeToggleableContent();
         this.getHideableContent = () => result;
         return result;
@@ -49,19 +49,14 @@ export class ToggleableBox {
             element("div", { className: "toggleablebox-content" },
                 ...this.visibleContent,
                 ...(this.showHideable
-                    ? this.getHideableContent().map(content => content.dom)
+                    ? this.getHideableContent()
                     : [])
             )
         ]);
     }
 
-    setTreeOpenness(open: boolean) {
+    setOpenness(open: boolean) {
         // this will trigger this object to change state to match
         this.toggleButton.setState(open);
-
-        // set all the children to the same state
-        this.getHideableContent().forEach((toggleableBox) => {
-            toggleableBox.setTreeOpenness(open);
-        });
     }
 }

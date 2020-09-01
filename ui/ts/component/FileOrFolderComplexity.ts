@@ -7,11 +7,11 @@ export function FileOrFolderComplexity(
     path: string,
     complexity: FileOutput | FolderOutput,
     startOpen: boolean
-): ToggleableBox {
+): FileComplexity | FolderComplexity {
     if (isFileOutput(complexity)) {
-        return FileComplexity(path, complexity, startOpen);
+        return new FileComplexity(path, complexity, startOpen);
     } else {
-        return FolderComplexity(path, complexity, startOpen);
+        return new FolderComplexity(path, complexity, startOpen);
     }
 }
 
