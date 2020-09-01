@@ -39,7 +39,7 @@ async function main() {
             topLevelBoxes.sortInOrder();
         }),
         GlobalControl("Sort By Complexity", () => {
-
+            topLevelBoxes.sortByComplexity();
         }),
     );
 

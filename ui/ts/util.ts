@@ -14,3 +14,16 @@ export function hasMoreThanOneKey(object: any): boolean {
 
     return true;
 }
+
+export function record<K extends string | number, V>(
+    list: K[],
+    mapper: (key: K) => V
+): Record<K, V> {
+    const record = {} as Record<K, V>;
+
+    for (const elem of list) {
+        record[elem] = mapper(elem);
+    }
+
+    return record;
+}
