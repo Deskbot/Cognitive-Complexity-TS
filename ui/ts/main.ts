@@ -35,8 +35,8 @@ async function main() {
         GlobalControl("Collapse All", () => {
             topLevelBoxes.setTreeOpenness(false);
         }),
-        GlobalControl("Sort A-Z", () => {
-
+        GlobalControl("Sort In Order", () => {
+            topLevelBoxes.sortInOrder();
         }),
         GlobalControl("Sort By Complexity", () => {
 
