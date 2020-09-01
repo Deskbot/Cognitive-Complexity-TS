@@ -26,14 +26,14 @@ async function main() {
     // Otherwise show all nodes minimised by default.
     const onlyOneTopLevelNode = hasMoreThanOneKey(ccResult);
 
-    const topLevelBoxes = CognitiveComplexityUi(ccResult, onlyOneTopLevelNode);
+    const topLevelBoxes = new CognitiveComplexityUi(ccResult, onlyOneTopLevelNode);
 
     document.body.append(
         GlobalControl("Expand All", () => {
-            topLevelBoxes.forEach(box => box.setTreeOpenness(true))
+            topLevelBoxes.setTreeOpenness(true);
         }),
         GlobalControl("Collapse All", () => {
-            topLevelBoxes.forEach(box => box.setTreeOpenness(false))
+            topLevelBoxes.setTreeOpenness(false);
         }),
         GlobalControl("Sort A-Z", () => {
 
@@ -43,7 +43,5 @@ async function main() {
         }),
     );
 
-    topLevelBoxes.forEach((complexityUi) => {
-        document.body.append(complexityUi.dom);
-    });
+    document.body.append(topLevelBoxes.dom);
 }
