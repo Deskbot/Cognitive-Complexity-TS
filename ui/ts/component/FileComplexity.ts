@@ -33,4 +33,8 @@ export class FileComplexity {
             container.setTreeOpenness(open);
         });
     }
+
+    sortByComplexity() {
+
+    }
 }

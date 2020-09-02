@@ -23,6 +23,10 @@ export class FolderComplexity {
         this.dom = this.box.dom;
     }
 
+    sortByComplexity() {
+
+    }
+
     setTreeOpenness(open: boolean) {
         this.box.setOpenness(open);
         this.innerContainers.setTreeOpenness(open);

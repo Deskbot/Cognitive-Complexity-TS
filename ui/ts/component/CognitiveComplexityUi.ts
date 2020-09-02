@@ -7,9 +7,9 @@ import { FolderComplexity } from "./FolderComplexity";
 
 export class CognitiveComplexityUi {
     readonly dom: Element;
-    private filesOrFolders: Record<string, FileComplexity | FolderComplexity>;
 
     private complexity: ProgramOutput;
+    private filesOrFolders: Record<string, FileComplexity | FolderComplexity>;
     private paths: string[];
 
     constructor(complexity: ProgramOutput, startOpen: boolean) {
@@ -66,6 +66,14 @@ export class CognitiveComplexityUi {
             return 0; // unreachable
         });
         this.reorderContents();
+        this.sortChildrenByComplexity();
+    }
+
+    private sortChildrenByComplexity() {
+        Object.values(this.filesOrFolders)
+            .forEach((f) => {
+                f.sortByComplexity();
+            });
     }
 
     sortInOrder() {
