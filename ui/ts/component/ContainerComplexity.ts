@@ -33,4 +33,8 @@ export class ContainerComplexity {
             container.setTreeOpenness(open);
         });
     }
+
+    sortByComplexity() {
+
+    }
 }

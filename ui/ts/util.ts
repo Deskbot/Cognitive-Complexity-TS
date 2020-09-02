@@ -2,6 +2,16 @@ export type Constructor<T, Args extends any[] = any[]> = {
     new(...args: Args): T;
 };
 
+export function map<K, V>(keys: K[], mapper: (key: K) => V): Map<K, V> {
+    const m = new Map<K,V>();
+
+    keys.forEach((key) => {
+        m.set(key, mapper(key));
+    });
+
+    return m;
+}
+
 export function hasMoreThanOneKey(object: any): boolean {
     let count = 0;
 
