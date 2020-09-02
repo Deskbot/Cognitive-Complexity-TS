@@ -1,4 +1,5 @@
 import { ProgramOutput } from "../../../shared/types";
+import { compareOutputs } from "../domain/output";
 import { element } from "../framework";
 import { record } from "../util";
 import { FileComplexity } from "./FileComplexity";
@@ -38,33 +39,9 @@ export class CognitiveComplexityUi {
     }
 
     sortByComplexity() {
-        this.paths.sort((left, right) => {
-            const leftScore = this.complexity[left].score;
-            const rightScore = this.complexity[right].score;
-
-            const leftHasScore = typeof leftScore === "number";
-            const rightHasScore = typeof rightScore === "number";
-
-            if (leftHasScore && rightHasScore) {
-                // If the typeof statements were directly in the if condition,
-                // the casting would not be required by TypeScript.
-                return (rightScore as number) - (leftScore as number);
-            }
-
-            if (!leftHasScore && !rightHasScore) {
-                return 0;
-            }
-
-            if (!leftHasScore) {
-                return 1;
-            }
-
-            if (!rightHasScore) {
-                return 1;
-            }
-
-            return 0; // unreachable
-        });
+        this.paths.sort(
+            (left, right) => compareOutputs(this.complexity[left], this.complexity[right])
+        );
         this.reorderContents();
         this.sortChildrenByComplexity();
     }
