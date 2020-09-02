@@ -34,7 +34,7 @@ export class CognitiveComplexityUi {
 
     setTreeOpenness(open: boolean) {
         Object.values(this.filesOrFolders)
-            .map(f => f.setTreeOpenness(open));
+            .forEach(f => f.setTreeOpenness(open));
     }
 
     sortByComplexity() {
