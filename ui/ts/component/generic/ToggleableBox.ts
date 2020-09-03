@@ -6,7 +6,7 @@ addStyleSheet(import.meta.url);
 
 export class ToggleableBox {
     private showHideable: boolean;
-    private makeToggleableContent: () => Node[];
+    private toggleableContent: Node[];
 
     private box: Box;
     private toggleButton: ToggleButton;
@@ -14,11 +14,11 @@ export class ToggleableBox {
 
     constructor(
         visibleContent: Node[],
-        makeToggleableContent: Node[],
+        toggleableContent: Node[],
         isTopLevel: boolean,
     ) {
         this.showHideable = isTopLevel;
-        this.makeToggleableContent = () => makeToggleableContent; // TODO this is wrong, should lazily generate these nodes
+        this.toggleableContent = toggleableContent; // TODO this is wrong, should lazily generate these nodes
 
         this.box = new Box();
         this.toggleButton = new ToggleButton(this.showHideable, (newIsOpen) => {
@@ -34,22 +34,21 @@ export class ToggleableBox {
         return this.box.dom;
     }
 
-    private getHideableContent(): Node[] {
-        const result = this.makeToggleableContent();
-        this.getHideableContent = () => result;
-        return result;
+    changeHideableContent(toggleableContent: Node[]) {
+        this.toggleableContent = toggleableContent;
+        this.rerender();
     }
 
     private rerender() {
         this.box.rerender([
-            (this.getHideableContent().length > 0
+            (this.toggleableContent.length > 0
                 ? this.toggleButton.dom
                 : ""
             ),
             element("div", { className: "toggleablebox-content" },
                 ...this.visibleContent,
                 ...(this.showHideable
-                    ? this.getHideableContent()
+                    ? this.toggleableContent
                     : [])
             )
         ]);

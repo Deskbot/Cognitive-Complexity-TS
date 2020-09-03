@@ -43,11 +43,11 @@ export class FileComplexity {
     }
 
     private reorderContents() {
-        // this.dom.innerHTML = "";
-        // this.innerComplexity.forEach((complexity) => {
-        //     const component = this.complexityToComponent.get(complexity)!;
-        //     this.dom.append(component.dom);
-        // });
+        const newOrder = this.innerComplexity.map((complexity) => {
+            return this.complexityToComponent.get(complexity)!.dom;
+        });
+
+        this.box.changeHideableContent(newOrder);
     }
 
     setTreeOpenness(open: boolean) {
