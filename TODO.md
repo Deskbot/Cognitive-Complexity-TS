@@ -46,7 +46,7 @@
 
 # Correctness
 
-* Sometimes functions declarations have the name "function", possibly when there is an "export" keyword before.
+* Sometimes functions declarations have the name "function", possibly when there is an "export" keyword before. Same is true for "type".
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 * Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
