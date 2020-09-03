@@ -11,19 +11,16 @@ export class ContainerComplexity {
     private box: ToggleableBox;
     private innerContainers: ContainerComplexity[];
 
-    private innerComplexity: ContainerOutput[];
-    private complexityToComponent: Map<ContainerOutput, ContainerComplexity>;
+    private innerContainerComp: ContainerOutput[];
+    private compToContainer: Map<ContainerOutput, ContainerComplexity>;
 
     constructor(complexity: ContainerOutput, filePath: string) {
-        this.innerComplexity = [...complexity.inner];
-        this.innerContainers = complexity.inner.map(
-            complexity => new ContainerComplexity(complexity, filePath)
+        this.innerContainerComp = [...complexity.inner];
+        this.compToContainer = map(
+            this.innerContainerComp,
+            innerComp => new ContainerComplexity(innerComp, filePath)
         );
-
-        this.complexityToComponent = map(
-            complexity.inner,
-            complexity => new ContainerComplexity(complexity, filePath)
-        );
+        this.innerContainers = Object.values(this.compToContainer);
 
         this.box = new ToggleableBox([
             element("p", {},
@@ -40,8 +37,8 @@ export class ContainerComplexity {
     }
 
     private reorderContents() {
-        const newOrder = this.innerComplexity.map(
-            complexityOutput => this.complexityToComponent.get(complexityOutput)!.dom
+        const newOrder = this.innerContainerComp.map(
+            complexityOutput => this.compToContainer.get(complexityOutput)!.dom
         );
         this.box.changeHideableContent(newOrder);
     }
@@ -54,7 +51,7 @@ export class ContainerComplexity {
     }
 
     sortByComplexity() {
-        this.innerComplexity.sort((left, right) => {
+        this.innerContainerComp.sort((left, right) => {
             return right.score - left.score
         });
         this.reorderContents();
@@ -74,7 +71,7 @@ export class ContainerComplexity {
     }
 
     sortInOrder() {
-        this.innerComplexity.sort();
+        this.innerContainerComp.sort();
         this.reorderContents();
         this.sortChildrenInOrder();
     }
