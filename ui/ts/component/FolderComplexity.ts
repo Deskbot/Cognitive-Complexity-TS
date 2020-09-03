@@ -31,4 +31,8 @@ export class FolderComplexity {
         this.box.setOpenness(open);
         this.innerContainers.setTreeOpenness(open);
     }
+
+    sortInOrder() {
+        this.innerContainers.sortInOrder();
+    }
 }

@@ -68,6 +68,18 @@ export class FileComplexity {
     private sortChildrenByComplexity() {
         this.innerContainers.forEach((container) => {
             container.sortByComplexity();
-        })
+        });
+    }
+
+    private sortChildrenInOrder() {
+        this.innerContainers.forEach((container) => {
+            container.sortInOrder();
+        });
+    }
+
+    sortInOrder() {
+        this.innerComplexity.sort();
+        this.reorderContents();
+        this.sortChildrenInOrder();
     }
 }

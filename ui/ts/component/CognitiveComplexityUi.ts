@@ -53,8 +53,16 @@ export class CognitiveComplexityUi {
             });
     }
 
+    private sortChildrenInOrder() {
+        Object.values(this.filesOrFolders)
+            .forEach((f) => {
+                f.sortInOrder();
+            });
+    }
+
     sortInOrder() {
         this.paths.sort();
         this.reorderContents();
+        this.sortChildrenInOrder();
     }
 }

@@ -67,4 +67,16 @@ export class ContainerComplexity {
             innerContainer.sortByComplexity();
         });
     }
+
+    private sortChildrenInOrder() {
+        this.innerContainers.forEach((innerContainer) => {
+            innerContainer.sortInOrder();
+        });
+    }
+
+    sortInOrder() {
+        this.innerComplexity.sort();
+        this.reorderContents();
+        this.sortChildrenInOrder();
+    }
 }
