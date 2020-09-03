@@ -21,12 +21,11 @@ export class FileComplexity {
         this.innerComplexity = [...this.complexity.inner];
 
         this.complexityToComponent = map(
-            complexity.inner,
+            this.innerComplexity,
             complexity => new ContainerComplexity(complexity, filePath)
         );
 
         this.innerContainers = [...this.complexityToComponent.values()];
-
 
         this.box = new ToggleableBox([
             StickyTitle([

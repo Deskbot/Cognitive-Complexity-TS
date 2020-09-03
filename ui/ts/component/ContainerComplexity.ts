@@ -11,16 +11,19 @@ export class ContainerComplexity {
     private box: ToggleableBox;
     private innerContainers: ContainerComplexity[];
 
-    private innerContainerComp: ContainerOutput[];
+    private complexity: ContainerOutput;
+    private innerComplexity: ContainerOutput[];
     private compToContainer: Map<ContainerOutput, ContainerComplexity>;
 
     constructor(complexity: ContainerOutput, filePath: string) {
-        this.innerContainerComp = [...complexity.inner];
+        this.complexity = complexity;
+        this.innerComplexity = [...this.complexity.inner];
+
         this.compToContainer = map(
-            this.innerContainerComp,
+            this.innerComplexity,
             innerComp => new ContainerComplexity(innerComp, filePath)
         );
-        this.innerContainers = Object.values(this.compToContainer);
+        this.innerContainers = [...this.compToContainer.values()];
 
         this.box = new ToggleableBox([
             element("p", {},
@@ -37,7 +40,7 @@ export class ContainerComplexity {
     }
 
     private reorderContents() {
-        const newOrder = this.innerContainerComp.map(
+        const newOrder = this.innerComplexity.map(
             complexityOutput => this.compToContainer.get(complexityOutput)!.dom
         );
         this.box.changeHideableContent(newOrder);
@@ -51,7 +54,7 @@ export class ContainerComplexity {
     }
 
     sortByComplexity() {
-        this.innerContainerComp.sort((left, right) => {
+        this.innerComplexity.sort((left, right) => {
             return right.score - left.score
         });
         this.reorderContents();
@@ -71,7 +74,7 @@ export class ContainerComplexity {
     }
 
     sortInOrder() {
-        this.innerContainerComp.sort();
+        this.innerComplexity.sort();
         this.reorderContents();
         this.sortChildrenInOrder();
     }
