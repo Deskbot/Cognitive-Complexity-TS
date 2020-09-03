@@ -15,7 +15,6 @@ export class ContainerComplexity {
     private complexityToComponent: Map<ContainerOutput, ContainerComplexity>;
 
     constructor(complexity: ContainerOutput, filePath: string) {
-
         this.innerComplexity = [...complexity.inner];
         this.innerContainers = complexity.inner.map(
             complexity => new ContainerComplexity(complexity, filePath)

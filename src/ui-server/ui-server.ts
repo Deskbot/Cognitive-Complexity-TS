@@ -72,7 +72,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
         return;
     }
 
-    if (url.startsWith("/js/")) {
+    if (url.startsWith("/js/") && !url.endsWith(".ts")) {
         // remove the /js/ prefix
         const prefixLength = 4;
         const urlWithoutPrefix = url.substr(prefixLength);
@@ -95,7 +95,10 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
     }
 
     if (url.endsWith(".ts")) {
-        const targetFile = tsPath + "/" + url;
+        // remove the /js/ prefix
+        const prefixLength = 4;
+        const urlWithoutPrefix = url.substr(prefixLength);
+        const targetFile = tsPath + "/" + urlWithoutPrefix;
 
         if (!doesFileExistInFolder(targetFile, tsPath)) {
             return endWith404(res);

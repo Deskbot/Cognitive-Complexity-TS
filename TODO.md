@@ -15,7 +15,6 @@
     * simplify things
     * once over for efficiency
     * improve urls
-        * opening a js file without an extension in Firefox shows ts correctly, but Firefox then tries to open the same file with a ts extension and it can't find it.
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependency
 * Can I run with npx
