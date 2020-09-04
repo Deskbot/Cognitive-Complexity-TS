@@ -1,7 +1,8 @@
 import { ProgramOutput } from "../../../shared/types";
 import { compareOutputs } from "../domain/output";
 import { element } from "../framework";
-import { record } from "../util";
+import { mapFromArr } from "../util";
+import { SortedMap } from "../util/SortedMap";
 import { FileComplexity } from "./FileComplexity";
 import { FileOrFolderComplexity } from "./FileOrFolderComplexity";
 import { FolderComplexity } from "./FolderComplexity";
@@ -9,59 +10,58 @@ import { FolderComplexity } from "./FolderComplexity";
 export class CognitiveComplexityUi {
     readonly dom: Element;
 
-    private complexity: ProgramOutput;
-    private filesOrFolders: Record<string, FileComplexity | FolderComplexity>;
-    private paths: string[];
+    private pathToComplexity: ProgramOutput;
+    private pathToComponent: SortedMap<string, FileComplexity | FolderComplexity>;
 
     constructor(complexity: ProgramOutput, startOpen: boolean) {
-        this.complexity = complexity;
-        this.paths = Object.keys(complexity).sort();
+        this.pathToComplexity = complexity;
+
+        this.pathToComponent = new SortedMap(mapFromArr(
+            Object.keys(complexity),
+            filePath => FileOrFolderComplexity(filePath, complexity[filePath], startOpen)
+        ));
 
         this.dom = element("div", {});
-        this.filesOrFolders = record(this.paths,
-            filePath => FileOrFolderComplexity(filePath, complexity[filePath], startOpen)
-        );
 
         this.sortInOrder();
     }
 
     private reorderContents() {
         this.dom.innerHTML = "";
-        this.paths.forEach((path) => {
-            const node = this.filesOrFolders[path].dom;
+        this.pathToComponent.keys().forEach((path) => {
+            const node = this.pathToComponent.get(path)!.dom;
             this.dom.append(node);
         });
     }
 
     setTreeOpenness(open: boolean) {
-        Object.values(this.filesOrFolders)
-            .forEach(f => f.setTreeOpenness(open));
+        for (const complexityComponent of this.pathToComponent.values()) {
+            complexityComponent.setTreeOpenness(open);
+        }
     }
 
     sortByComplexity() {
-        this.paths.sort(
-            (left, right) => compareOutputs(this.complexity[left], this.complexity[right])
+        this.pathToComponent.sort(
+            (left, right) => compareOutputs(this.pathToComplexity[left], this.pathToComplexity[right])
         );
         this.reorderContents();
         this.sortChildrenByComplexity();
     }
 
     private sortChildrenByComplexity() {
-        Object.values(this.filesOrFolders)
-            .forEach((f) => {
-                f.sortByComplexity();
-            });
+        for (const component of this.pathToComponent.values()) {
+            component.sortByComplexity();
+        }
     }
 
     private sortChildrenInOrder() {
-        Object.values(this.filesOrFolders)
-            .forEach((f) => {
-                f.sortInOrder();
-            });
+        for (const component of this.pathToComponent.values()) {
+            component.sortInOrder();
+        }
     }
 
     sortInOrder() {
-        this.paths.sort();
+        this.pathToComponent.sort();
         this.reorderContents();
         this.sortChildrenInOrder();
     }

@@ -34,16 +34,3 @@ export function mapFromArr<K, V>(keys: K[], mapper: (key: K) => V): Map<K, V> {
 
     return m;
 }
-
-export function record<K extends string | number, V>(
-    list: K[],
-    mapper: (key: K) => V
-): Record<K, V> {
-    const record = {} as Record<K, V>;
-
-    for (const elem of list) {
-        record[elem] = mapper(elem);
-    }
-
-    return record;
-}
