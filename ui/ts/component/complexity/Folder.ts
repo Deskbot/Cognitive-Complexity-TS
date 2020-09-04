@@ -1,15 +1,15 @@
-import { CognitiveComplexityUi } from "./CognitiveComplexityUi";
-import { FolderOutput } from "../../../shared/types";
-import { ToggleableBox } from "./generic/ToggleableBox";
-import { element } from "../framework";
-import { CopyText } from "./generic/CopyText";
+import { FolderContents } from "./FolderContents";
+import { FolderOutput } from "../../../../shared/types";
+import { ToggleableBox } from "../box/ToggleableBox";
+import { element } from "../../framework";
+import { CopyText } from "../controls/CopyText";
 
-export class FolderComplexity {
+export class Folder {
     private box: ToggleableBox;
-    private innerContainers: CognitiveComplexityUi;
+    private innerContainers: FolderContents;
 
     constructor(name: string, complexity: FolderOutput, startOpen: boolean) {
-        this.innerContainers = new CognitiveComplexityUi(complexity, false);
+        this.innerContainers = new FolderContents(complexity, false);
         this.box = new ToggleableBox([
             element("p", {},
                 name,

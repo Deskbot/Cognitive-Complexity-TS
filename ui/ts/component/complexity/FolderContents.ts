@@ -1,24 +1,24 @@
-import { ProgramOutput } from "../../../shared/types";
-import { compareOutputs } from "../domain/output";
-import { element } from "../framework";
-import { mapFromArr } from "../util";
-import { SortedMap } from "../util/SortedMap";
-import { FileComplexity } from "./FileComplexity";
-import { FileOrFolderComplexity } from "./FileOrFolderComplexity";
-import { FolderComplexity } from "./FolderComplexity";
+import { ProgramOutput } from "../../../../shared/types";
+import { compareOutputs } from "../../domain/output";
+import { element } from "../../framework";
+import { mapFromArr } from "../../util";
+import { SortedMap } from "../../util/SortedMap";
+import { File } from "./File";
+import { FileOrFolder } from "./FileOrFolder";
+import { Folder } from "./Folder";
 
-export class CognitiveComplexityUi {
+export class FolderContents {
     readonly dom: Element;
 
     private pathToComplexity: ProgramOutput;
-    private pathToComponent: SortedMap<string, FileComplexity | FolderComplexity>;
+    private pathToComponent: SortedMap<string, File | Folder>;
 
     constructor(complexity: ProgramOutput, startOpen: boolean) {
         this.pathToComplexity = complexity;
 
         this.pathToComponent = new SortedMap(mapFromArr(
             Object.keys(complexity),
-            filePath => FileOrFolderComplexity(filePath, complexity[filePath], startOpen)
+            filePath => FileOrFolder(filePath, complexity[filePath], startOpen)
         ));
 
         this.dom = element("div", {});

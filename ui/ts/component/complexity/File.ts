@@ -1,20 +1,20 @@
-import { ContainerOutput, FileOutput } from "../../../shared/types";
-import { ContainerComplexity } from "./ContainerComplexity";
-import { StickyTitle } from "./StickyTitle";
-import { ToggleableBox } from "./generic/ToggleableBox";
-import { Score } from "./Score";
-import { CopyText } from "./generic/CopyText";
-import { iterMap, mapFromArr } from "../util";
-import { SortedMap } from "../util/SortedMap";
+import { ContainerOutput, FileOutput } from "../../../../shared/types";
+import { Container } from "./Container";
+import { StickyTitle } from "../text/StickyTitle";
+import { ToggleableBox } from "../box/ToggleableBox";
+import { Score } from "../text/Score";
+import { CopyText } from "../controls/CopyText";
+import { iterMap, mapFromArr } from "../../util";
+import { SortedMap } from "../../util/SortedMap";
 
-export class FileComplexity {
+export class File {
     private box: ToggleableBox;
-    private complexityToContainer: SortedMap<ContainerOutput, ContainerComplexity>;
+    private complexityToContainer: SortedMap<ContainerOutput, Container>;
 
     constructor(filePath: string, complexity: FileOutput, startOpen: boolean) {
         this.complexityToContainer = new SortedMap(mapFromArr(
             complexity.inner,
-            complexity => new ContainerComplexity(complexity, filePath)
+            complexity => new Container(complexity, filePath)
         ));
 
         this.box = new ToggleableBox([

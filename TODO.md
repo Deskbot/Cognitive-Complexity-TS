@@ -1,12 +1,12 @@
 # Necessary Features
 
 * Add a html interface
-    * rename components
     * will event listeners make passing changes down the tree easier and work with GC
     * filter out types of nodes in the UI tree
         * everything
         * no folders
         * no folders or files
+    * flex properties should be decided by the parent
     * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
     * simplify things
