@@ -26,7 +26,7 @@ export class ContainerComplexity {
         ],
             false,
         );
-        this.box.changeHideableContent(iterMap(
+        this.box.changeHideableContent(() => iterMap(
             this.complexityToContainer.values(),
             container => container.dom)
         );
@@ -37,10 +37,11 @@ export class ContainerComplexity {
     }
 
     private reorderContents() {
-        const newOrder = this.complexityToContainer.keys().map(
-            complexityOutput => this.complexityToContainer.get(complexityOutput)!.dom
-        );
-        this.box.changeHideableContent(newOrder);
+        this.box.changeHideableContent(() => {
+            return this.complexityToContainer.keys().map(
+                complexityOutput => this.complexityToContainer.get(complexityOutput)!.dom
+            );
+        });
     }
 
     setTreeOpenness(open: boolean) {

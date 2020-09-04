@@ -8,7 +8,7 @@ export class ToggleableBox {
     private showHideable: boolean;
 
     private box: Box;
-    private toggleableContent: Node[];
+    private toggleableContent: () => Node[];
     private toggleButton: ToggleButton;
     private visibleContent: Node[];
 
@@ -17,7 +17,7 @@ export class ToggleableBox {
         isTopLevel: boolean,
     ) {
         this.showHideable = isTopLevel;
-        this.toggleableContent = [];
+        this.toggleableContent = () => [];
 
         this.box = new Box();
         this.toggleButton = new ToggleButton(this.showHideable, (newIsOpen) => {
@@ -33,21 +33,21 @@ export class ToggleableBox {
         return this.box.dom;
     }
 
-    changeHideableContent(toggleableContent: Node[]) {
+    changeHideableContent(toggleableContent: () => Node[]) {
         this.toggleableContent = toggleableContent;
         this.rerender();
     }
 
     private rerender() {
         this.box.rerender([
-            (this.toggleableContent.length > 0
+            (this.toggleableContent().length > 0
                 ? this.toggleButton.dom
                 : ""
             ),
             element("div", { className: "toggleablebox-content" },
                 ...this.visibleContent,
                 ...(this.showHideable
-                    ? this.toggleableContent
+                    ? this.toggleableContent()
                     : [])
             )
         ]);

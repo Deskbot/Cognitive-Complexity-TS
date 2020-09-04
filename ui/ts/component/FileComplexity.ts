@@ -27,7 +27,7 @@ export class FileComplexity {
             startOpen,
         );
         this.box.changeHideableContent(
-            iterMap(this.complexityToContainer.values(), container => container.dom)
+            () => iterMap(this.complexityToContainer.values(), container => container.dom)
         );
     }
 
@@ -36,11 +36,12 @@ export class FileComplexity {
     }
 
     private reorderContents() {
-        const newOrder = this.complexityToContainer.keys().map((complexity) => {
-            return this.complexityToContainer.get(complexity)!.dom;
+        this.box.changeHideableContent(() => {
+            return this.complexityToContainer.keys()
+                .map((complexity) => {
+                    return this.complexityToContainer.get(complexity)!.dom;
+                });
         });
-
-        this.box.changeHideableContent(newOrder);
     }
 
     setTreeOpenness(open: boolean) {
