@@ -15,7 +15,7 @@ export function hasMoreThanOneKey(object: any): boolean {
     return true;
 }
 
-export function map<K, V>(keys: K[], mapper: (key: K) => V): Map<K, V> {
+export function mapFromArr<K, V>(keys: K[], mapper: (key: K) => V): Map<K, V> {
     const m = new Map<K, V>();
 
     keys.forEach((key) => {

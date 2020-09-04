@@ -4,7 +4,7 @@ import { StickyTitle } from "./StickyTitle";
 import { ToggleableBox } from "./generic/ToggleableBox";
 import { Score } from "./Score";
 import { CopyText } from "./generic/CopyText";
-import { map } from "../util";
+import { mapFromArr } from "../util";
 import { SortedMap } from "../util/SortedMap";
 
 export class FileComplexity {
@@ -13,7 +13,7 @@ export class FileComplexity {
     private complexityToContainer: SortedMap<ContainerOutput, ContainerComplexity>;
 
     constructor(filePath: string, complexity: FileOutput, startOpen: boolean) {
-        this.complexityToContainer = new SortedMap(map(
+        this.complexityToContainer = new SortedMap(mapFromArr(
             complexity.inner,
             complexity => new ContainerComplexity(complexity, filePath)
         ));

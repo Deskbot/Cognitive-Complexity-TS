@@ -1,6 +1,6 @@
 import { ContainerOutput } from "../../../shared/types";
 import { element } from "../framework";
-import { map } from "../util";
+import { mapFromArr } from "../util";
 import { CopyText } from "./generic/CopyText";
 import { ToggleableBox } from "./generic/ToggleableBox";
 import { Score } from "./Score";
@@ -14,7 +14,7 @@ export class ContainerComplexity {
     constructor(complexity: ContainerOutput, filePath: string) {
         this.sortedInnerComp = [...complexity.inner];
 
-        this.compToContainer = map(
+        this.compToContainer = mapFromArr(
             this.sortedInnerComp,
             innerComp => new ContainerComplexity(innerComp, filePath)
         );
