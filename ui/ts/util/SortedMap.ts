@@ -11,46 +11,8 @@ export class SortedMap<K, V> {
         this.sortedKeys = [...map.keys()];
     }
 
-    clear(): void {
-        this.sortedKeys.splice(0, this.sortedKeys.length);
-    }
-
-    delete(key: K): boolean {
-        const keyIndex = this.sortedKeys.indexOf(key);
-
-        if (keyIndex === -1) return false;
-
-        this.sortedKeys.splice(keyIndex, 1);
-        return this.map.delete(key);
-    }
-
-    forEach(
-        callbackfn: (value: V, key: K, map: Map<K, V>) => void,
-        thisArg?: any
-    ): void {
-        this.map.forEach(callbackfn, thisArg);
-    }
-
     get(key: K): V | undefined {
         return this.map.get(key);
-    }
-
-    has(key: K): boolean {
-        return this.map.has(key);
-    }
-
-    set(key: K, value: V): this {
-        const mapSizeBefore = this.map.size;
-        this.map.set(key, value);
-        const mapSizeAfter = this.map.size;
-
-        if (mapSizeAfter > mapSizeBefore) {
-            this.sortedKeys.push(key);
-        }
-
-        this.sort();
-
-        return this;
     }
 
     get size(): number {
