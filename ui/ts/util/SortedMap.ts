@@ -1,13 +1,11 @@
 export class SortedMap<K, V> {
     private map: Map<K, V>;
-    private sorter: (k1: K, k2: K) => number;
     readonly sortedKeys: K[];
 
     constructor(
         map: Map<K, V> = new Map()
     ) {
         this.map = map;
-        this.sorter = () => 1;
         this.sortedKeys = [...map.keys()];
     }
 
@@ -20,10 +18,7 @@ export class SortedMap<K, V> {
     }
 
     sort(sorter?: (k1: K, k2: K) => number) {
-        if (sorter) {
-            this.sorter = sorter;
-        }
-        this.sortedKeys.sort(this.sorter);
+        this.sortedKeys.sort(sorter);
     }
 
     /**
