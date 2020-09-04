@@ -5,20 +5,18 @@ import { ToggleableBox } from "./generic/ToggleableBox";
 import { Score } from "./Score";
 import { CopyText } from "./generic/CopyText";
 import { map } from "../util";
+import { SortedMap } from "../util/SortedMap";
 
 export class FileComplexity {
     private box: ToggleableBox;
 
-    private complexityToComponent: Map<ContainerOutput, ContainerComplexity>;
-    private orderedInnerComplexity: ContainerOutput[];
+    private complexityToContainer: SortedMap<ContainerOutput, ContainerComplexity>;
 
     constructor(filePath: string, complexity: FileOutput, startOpen: boolean) {
-        this.orderedInnerComplexity = [...complexity.inner];
-
-        this.complexityToComponent = map(
-            this.orderedInnerComplexity,
+        this.complexityToContainer = new SortedMap(map(
+            complexity.inner,
             complexity => new ContainerComplexity(complexity, filePath)
-        );
+        ));
 
         this.box = new ToggleableBox([
             StickyTitle([
@@ -27,7 +25,7 @@ export class FileComplexity {
             ]),
             Score(complexity.score),
         ],
-            [...this.complexityToComponent.values()]
+            [...this.complexityToContainer.values()]
                 .map(container => container.dom),
             startOpen,
         );
@@ -38,8 +36,8 @@ export class FileComplexity {
     }
 
     private reorderContents() {
-        const newOrder = this.orderedInnerComplexity.map((complexity) => {
-            return this.complexityToComponent.get(complexity)!.dom;
+        const newOrder = this.complexityToContainer.keys().map((complexity) => {
+            return this.complexityToContainer.get(complexity)!.dom;
         });
 
         this.box.changeHideableContent(newOrder);
@@ -47,13 +45,13 @@ export class FileComplexity {
 
     setTreeOpenness(open: boolean) {
         this.box.setOpenness(open);
-        for (const container of this.complexityToComponent.values()) {
+        for (const container of this.complexityToContainer.values()) {
             container.setTreeOpenness(open);
         }
     }
 
     sortByComplexity() {
-        this.orderedInnerComplexity.sort((left, right) => {
+        this.complexityToContainer.sort((left, right) => {
             return right.score - left.score
         });
         this.reorderContents();
@@ -61,19 +59,19 @@ export class FileComplexity {
     }
 
     private sortChildrenByComplexity() {
-        for (const container of this.complexityToComponent.values()) {
+        for (const container of this.complexityToContainer.values()) {
             container.sortByComplexity();
         }
     }
 
     private sortChildrenInOrder() {
-        for (const container of this.complexityToComponent.values()) {
+        for (const container of this.complexityToContainer.values()) {
             container.sortInOrder();
         }
     }
 
     sortInOrder() {
-        this.orderedInnerComplexity.sort((left, right) => {
+        this.complexityToContainer.sort((left, right) => {
             // smaller line first
             const lineDiff = left.line - right.line;
             if (lineDiff !== 0) {
