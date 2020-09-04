@@ -9,7 +9,6 @@ import { SortedMap } from "../util/SortedMap";
 
 export class FileComplexity {
     private box: ToggleableBox;
-
     private complexityToContainer: SortedMap<ContainerOutput, ContainerComplexity>;
 
     constructor(filePath: string, complexity: FileOutput, startOpen: boolean) {
