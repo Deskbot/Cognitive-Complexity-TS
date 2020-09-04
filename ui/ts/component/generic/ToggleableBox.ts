@@ -1,4 +1,5 @@
 import { addStyleSheet, element } from "../../framework";
+import { computeOnce } from "../../util";
 import { Box } from "./Box";
 import { ToggleButton } from "./ToggleButton";
 
@@ -34,7 +35,7 @@ export class ToggleableBox {
     }
 
     changeHideableContent(toggleableContent: () => Node[]) {
-        this.toggleableContent = toggleableContent;
+        this.toggleableContent = computeOnce(toggleableContent);
         this.rerender();
     }
 

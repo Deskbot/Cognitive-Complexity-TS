@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * make inside of unexpanded nodes get rendered lazily again
     * rename components
     * will event listeners make passing changes down the tree easier and work with GC
     * filter out types of nodes in the UI tree

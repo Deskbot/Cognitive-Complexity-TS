@@ -2,6 +2,16 @@ export type Constructor<T, Args extends any[] = any[]> = {
     new(...args: Args): T;
 };
 
+export function computeOnce<T>(func: () => T): () => T {
+    let result: T | undefined;
+    return () => {
+        if (result === undefined) {
+            result = func();
+        }
+        return result;
+    };
+}
+
 export function hasMoreThanOneKey(object: any): boolean {
     let count = 0;
 
