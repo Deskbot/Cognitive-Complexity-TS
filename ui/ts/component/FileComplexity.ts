@@ -73,7 +73,16 @@ export class FileComplexity {
     }
 
     sortInOrder() {
-        this.orderedInnerComplexity.sort();
+        this.orderedInnerComplexity.sort((left, right) => {
+            // smaller line first
+            const lineDiff = left.line - right.line;
+            if (lineDiff !== 0) {
+                return lineDiff;
+            }
+
+            // if the line numbers are the same, sort by column
+            return left.column - right.column;
+        });
         this.reorderContents();
         this.sortChildrenInOrder();
     }
