@@ -5,7 +5,6 @@ import { element } from "../framework";
 import { CopyText } from "./generic/CopyText";
 
 export class FolderComplexity {
-    readonly dom: Element;
     private box: ToggleableBox;
     private innerContainers: CognitiveComplexityUi;
 
@@ -20,7 +19,10 @@ export class FolderComplexity {
             [this.innerContainers.dom],
             startOpen,
         );
-        this.dom = this.box.dom;
+    }
+
+    get dom(): Node {
+        return this.box.dom;
     }
 
     sortByComplexity() {

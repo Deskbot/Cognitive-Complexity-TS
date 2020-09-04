@@ -7,25 +7,18 @@ import { CopyText } from "./generic/CopyText";
 import { map } from "../util";
 
 export class FileComplexity {
-    readonly dom: Element;
-
     private box: ToggleableBox;
-    private innerContainers: ContainerComplexity[];
 
     private complexityToComponent: Map<ContainerOutput, ContainerComplexity>;
-    private complexity: FileOutput;
-    private innerComplexity: ContainerOutput[];
+    private orderedInnerComplexity: ContainerOutput[];
 
     constructor(filePath: string, complexity: FileOutput, startOpen: boolean) {
-        this.complexity = complexity;
-        this.innerComplexity = [...this.complexity.inner];
+        this.orderedInnerComplexity = [...complexity.inner];
 
         this.complexityToComponent = map(
-            this.innerComplexity,
+            this.orderedInnerComplexity,
             complexity => new ContainerComplexity(complexity, filePath)
         );
-
-        this.innerContainers = [...this.complexityToComponent.values()];
 
         this.box = new ToggleableBox([
             StickyTitle([
@@ -34,15 +27,18 @@ export class FileComplexity {
             ]),
             Score(complexity.score),
         ],
-            this.innerContainers.map(container => container.dom),
+            [...this.complexityToComponent.values()]
+                .map(container => container.dom),
             startOpen,
         );
+    }
 
-        this.dom = this.box.dom;
+    get dom(): Node {
+        return this.box.dom;
     }
 
     private reorderContents() {
-        const newOrder = this.innerComplexity.map((complexity) => {
+        const newOrder = this.orderedInnerComplexity.map((complexity) => {
             return this.complexityToComponent.get(complexity)!.dom;
         });
 
@@ -51,13 +47,13 @@ export class FileComplexity {
 
     setTreeOpenness(open: boolean) {
         this.box.setOpenness(open);
-        this.innerContainers.forEach((container) => {
+        for (const container of this.complexityToComponent.values()) {
             container.setTreeOpenness(open);
-        });
+        }
     }
 
     sortByComplexity() {
-        this.innerComplexity.sort((left, right) => {
+        this.orderedInnerComplexity.sort((left, right) => {
             return right.score - left.score
         });
         this.reorderContents();
@@ -65,19 +61,19 @@ export class FileComplexity {
     }
 
     private sortChildrenByComplexity() {
-        this.innerContainers.forEach((container) => {
+        for (const container of this.complexityToComponent.values()) {
             container.sortByComplexity();
-        });
+        }
     }
 
     private sortChildrenInOrder() {
-        this.innerContainers.forEach((container) => {
+        for (const container of this.complexityToComponent.values()) {
             container.sortInOrder();
-        });
+        }
     }
 
     sortInOrder() {
-        this.innerComplexity.sort();
+        this.orderedInnerComplexity.sort();
         this.reorderContents();
         this.sortChildrenInOrder();
     }
