@@ -4,7 +4,7 @@ import { StickyTitle } from "./StickyTitle";
 import { ToggleableBox } from "./generic/ToggleableBox";
 import { Score } from "./Score";
 import { CopyText } from "./generic/CopyText";
-import { mapFromArr } from "../util";
+import { iterMap, mapFromArr } from "../util";
 import { SortedMap } from "../util/SortedMap";
 
 export class FileComplexity {
@@ -25,8 +25,7 @@ export class FileComplexity {
             ]),
             Score(complexity.score),
         ],
-            [...this.complexityToContainer.values()]
-                .map(container => container.dom),
+            iterMap(this.complexityToContainer.values(), container => container.dom),
             startOpen,
         );
     }
