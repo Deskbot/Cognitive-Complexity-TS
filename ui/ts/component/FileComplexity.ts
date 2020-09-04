@@ -24,8 +24,10 @@ export class FileComplexity {
             ]),
             Score(complexity.score),
         ],
-            iterMap(this.complexityToContainer.values(), container => container.dom),
             startOpen,
+        );
+        this.box.changeHideableContent(
+            iterMap(this.complexityToContainer.values(), container => container.dom)
         );
     }
 

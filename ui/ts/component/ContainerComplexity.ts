@@ -24,8 +24,11 @@ export class ContainerComplexity {
             ),
             Score(complexity.score),
         ],
-            iterMap(this.complexityToContainer.values(), container => container.dom),
             false,
+        );
+        this.box.changeHideableContent(iterMap(
+            this.complexityToContainer.values(),
+            container => container.dom)
         );
     }
 

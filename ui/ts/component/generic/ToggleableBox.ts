@@ -6,19 +6,18 @@ addStyleSheet(import.meta.url);
 
 export class ToggleableBox {
     private showHideable: boolean;
-    private toggleableContent: Node[];
 
     private box: Box;
+    private toggleableContent: Node[];
     private toggleButton: ToggleButton;
     private visibleContent: Node[];
 
     constructor(
         visibleContent: Node[],
-        toggleableContent: Node[],
         isTopLevel: boolean,
     ) {
         this.showHideable = isTopLevel;
-        this.toggleableContent = toggleableContent; // TODO this is wrong, should lazily generate these nodes
+        this.toggleableContent = [];
 
         this.box = new Box();
         this.toggleButton = new ToggleButton(this.showHideable, (newIsOpen) => {
@@ -30,7 +29,7 @@ export class ToggleableBox {
         this.rerender();
     }
 
-    get dom() {
+    get dom(): Node {
         return this.box.dom;
     }
 

@@ -1,8 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * simplify components
-        * rename attributes of complexity components
     * make inside of unexpanded nodes get rendered lazily again
     * rename components
     * will event listeners make passing changes down the tree easier and work with GC

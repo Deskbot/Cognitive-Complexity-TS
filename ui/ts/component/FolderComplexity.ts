@@ -16,9 +16,9 @@ export class FolderComplexity {
                 CopyText(name),
             ),
         ],
-            [this.innerContainers.dom],
             startOpen,
         );
+        this.box.changeHideableContent([this.innerContainers.dom]);
     }
 
     get dom(): Node {
