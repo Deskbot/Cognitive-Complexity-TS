@@ -1,14 +1,17 @@
 # Necessary Features
 
 * Add a html interface
-    * sort by complexity
-        * remove folders from view?
-        * or have a list at the top and jump to it in the tree structure?
-        * and alphabetically
+    * will event listeners make passing changes down the tree easier and work with GC
+    * filter out types of nodes in the UI tree
+        * everything
+        * no folders
+        * no folders or files
+    * flex properties should be decided by the parent
     * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
     * simplify things
     * once over for efficiency
+    * improve urls
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependency
 * Can I run with npx
@@ -22,6 +25,7 @@
 # Possible Features
 
 * Gracefully handle incorrect arguments to package.json scripts
+* Option to hide anything with a score of 0.
 * Choose the TS version used
 * Give relative colours to complexities
 * recalculate button
@@ -38,6 +42,7 @@
 
 # Correctness
 
+* Sometimes functions declarations have the name "function", possibly when there is an "export" keyword before. Same is true for "type".
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 * Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".

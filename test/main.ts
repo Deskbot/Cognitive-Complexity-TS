@@ -9,8 +9,8 @@ import tempfile from "tempfile";
 import { toPromise } from "../src/util";
 import { ProgramOutput } from "../shared/types";
 
-const casesDir = path.normalize(__dirname + "/../../../test/cases");
-const programPath = path.normalize(__dirname + "/../../../bin/cognitive-complexity-ts-json");
+const casesDir = path.normalize(__dirname + "/../../test/cases");
+const programPath = path.normalize(__dirname + "/../../bin/cognitive-complexity-ts-json");
 
 main();
 

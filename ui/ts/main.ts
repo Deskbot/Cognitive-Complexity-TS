@@ -1,6 +1,6 @@
 import { ProgramOutput } from "../../shared/types";
-import { CognitiveComplexityUi } from "./component/CognitiveComplexityUi";
-import { GlobalControl } from "./component/GlobalControl";
+import { FolderContents } from "./component/complexity/FolderContents";
+import { GlobalControl } from "./component/controls/GlobalControl";
 import { hasMoreThanOneKey } from "./util";
 
 main();
@@ -26,18 +26,22 @@ async function main() {
     // Otherwise show all nodes minimised by default.
     const onlyOneTopLevelNode = hasMoreThanOneKey(ccResult);
 
-    const topLevelBoxes = CognitiveComplexityUi(ccResult, onlyOneTopLevelNode);
+    const topLevelBoxes = new FolderContents(ccResult, onlyOneTopLevelNode);
 
     document.body.append(
         GlobalControl("Expand All", () => {
-            topLevelBoxes.forEach(box => box.setTreeOpenness(true))
+            topLevelBoxes.setTreeOpenness(true);
         }),
         GlobalControl("Collapse All", () => {
-            topLevelBoxes.forEach(box => box.setTreeOpenness(false))
+            topLevelBoxes.setTreeOpenness(false);
+        }),
+        GlobalControl("Sort In Order", () => {
+            topLevelBoxes.sortInOrder();
+        }),
+        GlobalControl("Sort By Complexity", () => {
+            topLevelBoxes.sortByComplexity();
         }),
     );
 
-    topLevelBoxes.forEach((complexityUi) => {
-        document.body.append(complexityUi.dom);
-    });
+    document.body.append(topLevelBoxes.dom);
 }

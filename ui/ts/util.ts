@@ -2,6 +2,16 @@ export type Constructor<T, Args extends any[] = any[]> = {
     new(...args: Args): T;
 };
 
+export function computeOnce<T>(func: () => T): () => T {
+    let result: T | undefined;
+    return () => {
+        if (result === undefined) {
+            result = func();
+        }
+        return result;
+    };
+}
+
 export function hasMoreThanOneKey(object: any): boolean {
     let count = 0;
 
@@ -13,4 +23,24 @@ export function hasMoreThanOneKey(object: any): boolean {
     }
 
     return true;
+}
+
+export function iterMap<T,V>(iter: IterableIterator<T>, mapper: (val: T) => V): V[] {
+    const result = [] as V[];
+
+    for (const val of iter) {
+        result.push(mapper(val));
+    }
+
+    return result;
+}
+
+export function mapFromArr<K, V>(keys: K[], mapper: (key: K) => V): Map<K, V> {
+    const m = new Map<K, V>();
+
+    keys.forEach((key) => {
+        m.set(key, mapper(key));
+    });
+
+    return m;
 }

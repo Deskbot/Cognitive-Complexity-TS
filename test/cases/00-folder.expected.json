@@ -1,15 +1,15 @@
 {
     "00-folder": {
-        "00-folder-2.ts": {
-            "file-in-folder-in-folder.ts": {
+        "00-folder/file-in-folder-2.ts": {
+            "score": 0
+        },
+        "00-folder/file-in-folder.ts": {
+            "score": 0
+        },
+        "00-folder/00-folder-2.ts": {
+            "00-folder/00-folder-2.ts/file-in-folder-in-folder.ts": {
                 "score": 0
             }
-        },
-        "file-in-folder.ts": {
-            "score": 0
-        },
-        "file-in-folder-2.ts": {
-            "score": 0
         }
     }
 }
