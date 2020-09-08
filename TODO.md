@@ -9,9 +9,11 @@
     * flex properties should be decided by the parent
     * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
+        * could use symlinks in the build folder to make decent urls to typescript and possibly clean up linking to index.html
     * simplify things
     * once over for efficiency
     * improve urls
+    * make the UI code get published on npm
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependency
 * Can I run with npx
@@ -20,6 +22,7 @@
 * Add documentation for the json output and the UI output.
 * Add documentation on how to use the library programmatically.
 * Import/Export json in browser
+    * or import on the command line
 * When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
 
 # Possible Features
