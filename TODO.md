@@ -1,11 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * will event listeners make passing changes down the tree easier and work with GC
-    * filter out types of nodes in the UI tree
-        * everything
-        * no folders
-        * no folders or files
     * flex properties should be decided by the parent
     * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
@@ -29,6 +24,10 @@
 
 * Gracefully handle incorrect arguments to package.json scripts
 * Option to hide anything with a score of 0.
+* filter out types of nodes in the UI tree
+        * everything
+        * no folders
+        * no folders or files
 * Choose the TS version used
 * Give relative colours to complexities
 * recalculate button
