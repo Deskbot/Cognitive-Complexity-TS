@@ -11,7 +11,12 @@ async function main() {
     /**
      * The Cognitive Complexity result as json text.
      */
-    const ccJson = await result.text();
+    try {
+        var ccJson = await result.text();
+    } catch (e) {
+        alert("Could not fetch json by url.");
+        return;
+    }
 
     try {
         var ccResult = JSON.parse(ccJson) as ProgramOutput;
