@@ -12,11 +12,6 @@ export class Container {
     private complexityToContainer: SortedMap<ContainerOutput, Container>;
 
     constructor(complexity: ContainerOutput, filePath: string) {
-        this.complexityToContainer = new SortedMap(mapFromArr(
-            complexity.inner,
-            innerComp => new Container(innerComp, filePath)
-        ));
-
         this.box = new ToggleableBox([
             element("p", {},
                 complexity.name,
@@ -26,13 +21,18 @@ export class Container {
         ],
             false,
         );
+
+        this.complexityToContainer = new SortedMap(mapFromArr(
+            complexity.inner,
+            innerComp => new Container(innerComp, filePath)
+        ));
         this.box.changeHideableContent(() => iterMap(
             this.complexityToContainer.values(),
-            container => container.dom)
-        );
+            container => container.dom
+        ));
     }
 
-    get dom(): Node {
+    get dom(): HTMLElement {
         return this.box.dom;
     }
 

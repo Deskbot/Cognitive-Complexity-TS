@@ -8,7 +8,7 @@ import { FileOrFolder } from "./FileOrFolder";
 import { Folder } from "./Folder";
 
 export class FolderContents {
-    readonly dom: Element;
+    readonly dom: HTMLElement;
 
     private pathToComplexity: ProgramOutput;
     private pathToComponent: SortedMap<string, File | Folder>;

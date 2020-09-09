@@ -9,15 +9,15 @@ export class Folder {
     private innerContainers: FolderContents;
 
     constructor(name: string, complexity: FolderOutput, startOpen: boolean) {
-        this.innerContainers = new FolderContents(complexity, false);
         this.box = new ToggleableBox([
             element("p", {},
-                name,
-                CopyText(name),
+            name,
+            CopyText(name),
             ),
         ],
             startOpen,
         );
+        this.innerContainers = new FolderContents(complexity, false);
         this.box.changeHideableContent(() => [this.innerContainers.dom]);
     }
 

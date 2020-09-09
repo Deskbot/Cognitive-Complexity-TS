@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * flex properties should be decided by the parent
     * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
         * could use symlinks in the build folder to make decent urls to typescript and possibly clean up linking to index.html

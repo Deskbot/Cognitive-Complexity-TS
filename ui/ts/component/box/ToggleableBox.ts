@@ -1,3 +1,4 @@
+import { flex, flexGrow, flexNone } from "../../flex";
 import { addStyleSheet, element } from "../../framework";
 import { computeOnce } from "../../util";
 import { Box } from "./Box";
@@ -9,6 +10,7 @@ export class ToggleableBox {
     private showHideable: boolean;
 
     private box: Box;
+    private toggleableContentWrapper: ContentWrapper;
     private toggleableContent: () => Node[];
     private toggleButton: ToggleButton;
     private visibleContent: Node[];
@@ -20,17 +22,18 @@ export class ToggleableBox {
         this.showHideable = isTopLevel;
         this.toggleableContent = () => [];
 
-        this.box = new Box();
-        this.toggleButton = new ToggleButton(this.showHideable, (newIsOpen) => {
+        this.box = flex(new Box());
+        this.toggleButton = flexNone(new ToggleButton(this.showHideable, (newIsOpen) => {
             this.showHideable = newIsOpen;
             this.rerender();
-        });
+        }));
+        this.toggleableContentWrapper = flexGrow(new ContentWrapper());
         this.visibleContent = visibleContent;
 
         this.rerender();
     }
 
-    get dom(): Node {
+    get dom(): HTMLElement {
         return this.box.dom;
     }
 
@@ -40,22 +43,41 @@ export class ToggleableBox {
     }
 
     private rerender() {
+        this.toggleableContentWrapper.rerender(
+            this.visibleContent,
+            this.showHideable
+                ? this.toggleableContent()
+                : []
+        );
+
         this.box.rerender([
             (this.toggleableContent().length > 0
                 ? this.toggleButton.dom
                 : ""
             ),
-            element("div", { className: "toggleablebox-content" },
-                ...this.visibleContent,
-                ...(this.showHideable
-                    ? this.toggleableContent()
-                    : [])
-            )
+            this.toggleableContentWrapper.dom,
         ]);
     }
 
     setOpenness(open: boolean) {
         // this will trigger this object to change state to match
         this.toggleButton.setState(open);
+    }
+}
+
+class ContentWrapper {
+    readonly dom: HTMLDivElement;
+
+    constructor() {
+        this.dom = element(
+            "div",
+            { className: "toggleablebox-contentwrapper" },
+        );
+    }
+
+    rerender(visibleContent: Node[], toggleableContent: Node[]) {
+        this.dom.innerHTML = "";
+        this.dom.append(...visibleContent);
+        this.dom.append(...toggleableContent);
     }
 }

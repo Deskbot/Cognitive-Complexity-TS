@@ -1,5 +1,9 @@
 import { Constructor } from "./util";
 
+export interface Component {
+    dom: HTMLElement;
+}
+
 export interface StatefulNode<Muts extends any[] = any[]> {
     readonly dom: Node;
     rerender(...muts: Muts): void;
