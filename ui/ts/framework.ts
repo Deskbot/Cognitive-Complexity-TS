@@ -51,9 +51,3 @@ export function element<K extends keyof HTMLElementTagNameMap>(
 
     return elem;
 }
-
-export function emptyChildNodes(node: Node) {
-    while (node.childNodes.length > 0) {
-        node.removeChild(node.childNodes[0]);
-    }
-}
