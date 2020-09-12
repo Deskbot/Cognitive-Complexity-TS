@@ -1,7 +1,7 @@
-import { flex, flexGrow, flexNone } from "../../flex";
+import { flexGrow, flexNone } from "../../flex";
 import { addStyleSheet, element } from "../../framework";
 import { computeOnce } from "../../util";
-import { Box } from "./Box";
+import { FlexBox } from "./FlexBox";
 import { ToggleButton } from "./ToggleButton";
 
 addStyleSheet(import.meta.url);
@@ -9,7 +9,7 @@ addStyleSheet(import.meta.url);
 export class ToggleableBox {
     private showHideable: boolean;
 
-    private box: Box;
+    private box: FlexBox;
     private toggleableContentWrapper: ContentWrapper;
     private toggleableContent: () => Node[];
     private toggleButton: ToggleButton;
@@ -22,7 +22,7 @@ export class ToggleableBox {
         this.showHideable = isTopLevel;
         this.toggleableContent = () => [];
 
-        this.box = flex(new Box());
+        this.box = new FlexBox();
         this.toggleButton = flexNone(new ToggleButton(this.showHideable, (newIsOpen) => {
             this.showHideable = newIsOpen;
             this.rerender();
