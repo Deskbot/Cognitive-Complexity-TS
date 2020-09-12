@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * make it work in Chrome & Firefox
     * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
         * could use symlinks in the build folder to make decent urls to typescript and possibly clean up linking to index.html
     * simplify things
@@ -24,9 +23,9 @@
 * Gracefully handle incorrect arguments to package.json scripts
 * Option to hide anything with a score of 0.
 * filter out types of nodes in the UI tree
-        * everything
-        * no folders
-        * no folders or files
+    * everything
+    * no folders
+    * no folders or files
 * Choose the TS version used
 * Give relative colours to complexities
 * recalculate button
