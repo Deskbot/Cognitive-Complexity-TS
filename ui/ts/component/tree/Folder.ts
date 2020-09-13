@@ -17,15 +17,15 @@ export class Folder implements Tree {
     ) {
         this.box = new ToggleableBox([
             element("p", {},
-            name,
-            CopyText(name),
+                name,
+                CopyText(name),
             ),
         ],
             startOpen,
         );
 
         this.innerContainers = new FolderContents(controller, complexity, false);
-
+        controller.register(this.innerContainers);
         this.box.changeHideableContent(() => [this.innerContainers.dom]);
     }
 

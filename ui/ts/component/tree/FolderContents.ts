@@ -8,7 +8,7 @@ import { File } from "./File";
 import { FileOrFolder } from "./FileOrFolder";
 import { Folder } from "./Folder";
 
-export class FolderContents {
+export class FolderContents implements Tree {
     readonly dom: HTMLElement;
 
     private pathToComplexity: ProgramOutput;
@@ -44,28 +44,15 @@ export class FolderContents {
     }
 
     sortByComplexity() {
-        this.pathToComponent.sort(
-            (left, right) => compareOutputs(this.pathToComplexity[left], this.pathToComplexity[right])
-        );
+        this.pathToComponent.sort((left, right) => compareOutputs(
+            this.pathToComplexity[left],
+            this.pathToComplexity[right]
+        ));
         this.reorderContents();
-        this.sortChildrenByComplexity();
-    }
-
-    private sortChildrenByComplexity() {
-        for (const component of this.pathToComponent.values()) {
-            component.sortByComplexity();
-        }
-    }
-
-    private sortChildrenInOrder() {
-        for (const component of this.pathToComponent.values()) {
-            component.sortInOrder();
-        }
     }
 
     sortInOrder() {
         this.pathToComponent.sort();
         this.reorderContents();
-        this.sortChildrenInOrder();
     }
 }

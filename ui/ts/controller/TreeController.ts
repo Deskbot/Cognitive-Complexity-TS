@@ -1,7 +1,9 @@
 import { Controller } from "../framework";
 
 export interface Tree {
-    setTreeOpenness(isOpen: boolean): void;
+    setTreeOpenness?(isOpen: boolean): void;
+    sortByComplexity(): void;
+    sortInOrder(): void;
 }
 
 export class TreeController implements Controller<Tree> {
@@ -9,13 +11,29 @@ export class TreeController implements Controller<Tree> {
 
     collapseAll() {
         for (const component of this.components) {
-            component.setTreeOpenness(false);
+            if (component.setTreeOpenness) {
+                component.setTreeOpenness(false);
+            }
         }
     }
 
     expandAll() {
         for (const component of this.components) {
-            component.setTreeOpenness(true);
+            if (component.setTreeOpenness) {
+                component.setTreeOpenness(true);
+            }
+        }
+    }
+
+    sortByComplexity() {
+        for (const component of this.components) {
+            component.sortByComplexity();
+        }
+    }
+
+    sortInOrder() {
+        for (const component of this.components) {
+            component.sortInOrder();
         }
     }
 

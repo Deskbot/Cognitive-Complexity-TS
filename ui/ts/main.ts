@@ -34,6 +34,7 @@ async function main() {
 
     const controller = new TreeController();
     const topLevelBoxes = new FolderContents(controller, ccResult, onlyOneTopLevelNode);
+    controller.register(topLevelBoxes);
 
     document.body.append(
         GlobalControl("Expand All", () => {
@@ -43,10 +44,10 @@ async function main() {
             controller.collapseAll();
         }),
         GlobalControl("Sort In Order", () => {
-            topLevelBoxes.sortInOrder();
+            controller.sortInOrder();
         }),
         GlobalControl("Sort By Complexity", () => {
-            topLevelBoxes.sortByComplexity();
+            controller.sortByComplexity();
         }),
     );
 

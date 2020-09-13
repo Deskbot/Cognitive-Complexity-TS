@@ -64,19 +64,6 @@ export class File implements Tree {
             return right.score - left.score
         });
         this.reorderContents();
-        this.sortChildrenByComplexity();
-    }
-
-    private sortChildrenByComplexity() {
-        for (const container of this.complexityToContainer.values()) {
-            container.sortByComplexity();
-        }
-    }
-
-    private sortChildrenInOrder() {
-        for (const container of this.complexityToContainer.values()) {
-            container.sortInOrder();
-        }
     }
 
     sortInOrder() {
@@ -91,6 +78,5 @@ export class File implements Tree {
             return left.column - right.column;
         });
         this.reorderContents();
-        this.sortChildrenInOrder();
     }
 }

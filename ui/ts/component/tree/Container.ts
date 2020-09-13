@@ -58,24 +58,10 @@ export class Container implements Tree {
             return right.score - left.score
         });
         this.reorderContents();
-        this.sortChildrenByComplexity();
-    }
-
-    private sortChildrenByComplexity() {
-        for (const container of this.complexityToContainer.values()) {
-            container.sortByComplexity();
-        }
-    }
-
-    private sortChildrenInOrder() {
-        for (const container of this.complexityToContainer.values()) {
-            container.sortInOrder();
-        }
     }
 
     sortInOrder() {
         this.complexityToContainer.sort();
         this.reorderContents();
-        this.sortChildrenInOrder();
     }
 }
