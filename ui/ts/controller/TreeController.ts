@@ -10,17 +10,17 @@ export class TreeController implements Controller<Tree> {
     private components = [] as Tree[];
 
     collapseAll() {
-        for (const component of this.components) {
-            if (component.setTreeOpenness) {
-                component.setTreeOpenness(false);
-            }
-        }
+        this.setTreeOpenness(false);
     }
 
     expandAll() {
+        this.setTreeOpenness(true);
+    }
+
+    private setTreeOpenness(isOpen: boolean) {
         for (const component of this.components) {
             if (component.setTreeOpenness) {
-                component.setTreeOpenness(true);
+                component.setTreeOpenness(isOpen);
             }
         }
     }

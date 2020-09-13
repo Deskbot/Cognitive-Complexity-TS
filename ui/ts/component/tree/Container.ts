@@ -17,6 +17,15 @@ export class Container implements Tree {
         complexity: ContainerOutput,
         filePath: string
     ) {
+        this.complexityToContainer = new SortedMap(mapFromArr(
+            complexity.inner,
+            innerComp => new Container(controller, innerComp, filePath)
+        ));
+
+        for (const component of this.complexityToContainer.values()) {
+            controller.register(component);
+        }
+
         this.box = new ToggleableBox([
             element("p", {},
                 complexity.name,
@@ -26,11 +35,6 @@ export class Container implements Tree {
         ],
             false,
         );
-
-        this.complexityToContainer = new SortedMap(mapFromArr(
-            complexity.inner,
-            innerComp => new Container(controller, innerComp, filePath)
-        ));
         this.box.changeHideableContent(() => iterMap(
             this.complexityToContainer.values(),
             container => container.dom
