@@ -1,9 +1,11 @@
-export interface TreeControllable {
+import { Controller } from "../framework";
+
+export interface Tree {
     setTreeOpenness(isOpen: boolean): void;
 }
 
-export class TreeController {
-    private components = [] as TreeControllable[];
+export class TreeController implements Controller<Tree> {
+    private components = [] as Tree[];
 
     collapseAll() {
         for (const component of this.components) {
@@ -17,11 +19,11 @@ export class TreeController {
         }
     }
 
-    register(component: TreeControllable) {
+    register(component: Tree) {
         this.components.push(component);
     }
 
-    unregister(component: TreeControllable) {
+    unregister(component: Tree) {
         const pos = this.components.indexOf(component);
         this.components.splice(pos);
     }

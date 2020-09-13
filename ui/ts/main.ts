@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../shared/types";
-import { FolderContents } from "./component/complexity/FolderContents";
+import { FolderContents } from "./component/tree/FolderContents";
 import { GlobalControl } from "./component/controls/GlobalControl";
 import { TreeController } from "./controller/TreeController";
 import { hasMoreThanOneKey } from "./util";

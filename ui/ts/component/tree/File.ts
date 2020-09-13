@@ -6,14 +6,15 @@ import { Score } from "../text/Score";
 import { CopyText } from "../controls/CopyText";
 import { iterMap, mapFromArr } from "../../util";
 import { SortedMap } from "../../util/SortedMap";
-import { TreeControllable, TreeController } from "../../controller/TreeController";
+import { Tree } from "../../controller/TreeController";
+import { Controller } from "../../framework";
 
-export class File implements TreeControllable {
+export class File implements Tree {
     private box: ToggleableBox;
     private complexityToContainer: SortedMap<ContainerOutput, Container>;
 
     constructor(
-        controller: TreeController,
+        controller: Controller<Tree>,
         filePath: string,
         complexity: FileOutput,
         startOpen: boolean

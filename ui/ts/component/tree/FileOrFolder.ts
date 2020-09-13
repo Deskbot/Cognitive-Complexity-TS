@@ -1,10 +1,11 @@
 import { FileOutput, FolderOutput } from "../../../../shared/types";
-import { TreeController } from "../../controller/TreeController";
+import { Tree } from "../../controller/TreeController";
+import { Controller } from "../../framework";
 import { File } from "./File";
 import { Folder } from "./Folder";
 
 export function FileOrFolder(
-    controller: TreeController,
+    controller: Controller<Tree>,
     path: string,
     complexity: FileOutput | FolderOutput,
     startOpen: boolean

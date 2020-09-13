@@ -1,19 +1,19 @@
 import { ContainerOutput } from "../../../../shared/types";
-import { element } from "../../framework";
+import { Controller, element } from "../../framework";
 import { iterMap, mapFromArr } from "../../util";
 import { SortedMap } from "../../util/SortedMap";
 import { CopyText } from "../controls/CopyText";
 import { ToggleableBox } from "../box/ToggleableBox";
 import { Score } from "../text/Score";
-import { TreeControllable, TreeController } from "../../controller/TreeController";
+import { Tree } from "../../controller/TreeController";
 
-export class Container implements TreeControllable {
+export class Container implements Tree {
     private box: ToggleableBox;
 
     private complexityToContainer: SortedMap<ContainerOutput, Container>;
 
     constructor(
-        controller: TreeController,
+        controller: Controller<Tree>,
         complexity: ContainerOutput,
         filePath: string
     ) {

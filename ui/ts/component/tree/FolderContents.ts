@@ -1,7 +1,7 @@
 import { ProgramOutput } from "../../../../shared/types";
-import { TreeController } from "../../controller/TreeController";
+import { Tree } from "../../controller/TreeController";
 import { compareOutputs } from "../../domain/output";
-import { element } from "../../framework";
+import { Controller, element } from "../../framework";
 import { mapFromArr } from "../../util";
 import { SortedMap } from "../../util/SortedMap";
 import { File } from "./File";
@@ -15,7 +15,7 @@ export class FolderContents {
     private pathToComponent: SortedMap<string, File | Folder>;
 
     constructor(
-        controller: TreeController,
+        controller: Controller<Tree>,
         complexity: ProgramOutput,
         startOpen: boolean
     ) {

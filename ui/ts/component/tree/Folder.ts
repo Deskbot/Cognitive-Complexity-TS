@@ -1,16 +1,16 @@
 import { FolderContents } from "./FolderContents";
 import { FolderOutput } from "../../../../shared/types";
 import { ToggleableBox } from "../box/ToggleableBox";
-import { element } from "../../framework";
+import { Controller, element } from "../../framework";
 import { CopyText } from "../controls/CopyText";
-import { TreeControllable, TreeController } from "../../controller/TreeController";
+import { Tree } from "../../controller/TreeController";
 
-export class Folder implements TreeControllable {
+export class Folder implements Tree {
     private box: ToggleableBox;
     private innerContainers: FolderContents;
 
     constructor(
-        controller: TreeController,
+        controller: Controller<Tree>,
         name: string,
         complexity: FolderOutput,
         startOpen: boolean
