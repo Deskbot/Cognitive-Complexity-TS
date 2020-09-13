@@ -3,10 +3,12 @@ export type Constructor<T, Args extends any[] = any[]> = {
 };
 
 export function computeOnce<T>(func: () => T): () => T {
-    let result: T | undefined;
+    let result: T;
+    let notComputed = true;
     return () => {
-        if (result === undefined) {
+        if (notComputed) {
             result = func();
+            notComputed = false;
         }
         return result;
     };
