@@ -5,13 +5,18 @@ import { SortedMap } from "../../util/SortedMap";
 import { CopyText } from "../controls/CopyText";
 import { ToggleableBox } from "../box/ToggleableBox";
 import { Score } from "../text/Score";
+import { TreeControllable, TreeController } from "../../controller/TreeController";
 
-export class Container {
+export class Container implements TreeControllable {
     private box: ToggleableBox;
 
     private complexityToContainer: SortedMap<ContainerOutput, Container>;
 
-    constructor(complexity: ContainerOutput, filePath: string) {
+    constructor(
+        controller: TreeController,
+        complexity: ContainerOutput,
+        filePath: string
+    ) {
         this.box = new ToggleableBox([
             element("p", {},
                 complexity.name,
@@ -24,7 +29,7 @@ export class Container {
 
         this.complexityToContainer = new SortedMap(mapFromArr(
             complexity.inner,
-            innerComp => new Container(innerComp, filePath)
+            innerComp => new Container(controller, innerComp, filePath)
         ));
         this.box.changeHideableContent(() => iterMap(
             this.complexityToContainer.values(),
@@ -46,9 +51,6 @@ export class Container {
 
     setTreeOpenness(open: boolean) {
         this.box.setOpenness(open);
-        for (const container of this.complexityToContainer.values()) {
-            container.setTreeOpenness(open);
-        }
     }
 
     sortByComplexity() {

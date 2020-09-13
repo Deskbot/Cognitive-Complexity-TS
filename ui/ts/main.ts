@@ -1,6 +1,7 @@
 import { ProgramOutput } from "../../shared/types";
 import { FolderContents } from "./component/complexity/FolderContents";
 import { GlobalControl } from "./component/controls/GlobalControl";
+import { TreeController } from "./controller/TreeController";
 import { hasMoreThanOneKey } from "./util";
 
 main();
@@ -31,14 +32,15 @@ async function main() {
     // Otherwise show all nodes minimised by default.
     const onlyOneTopLevelNode = hasMoreThanOneKey(ccResult);
 
-    const topLevelBoxes = new FolderContents(ccResult, onlyOneTopLevelNode);
+    const controller = new TreeController();
+    const topLevelBoxes = new FolderContents(controller, ccResult, onlyOneTopLevelNode);
 
     document.body.append(
         GlobalControl("Expand All", () => {
-            topLevelBoxes.setTreeOpenness(true);
+            controller.expandAll();
         }),
         GlobalControl("Collapse All", () => {
-            topLevelBoxes.setTreeOpenness(false);
+            controller.collapseAll();
         }),
         GlobalControl("Sort In Order", () => {
             topLevelBoxes.sortInOrder();

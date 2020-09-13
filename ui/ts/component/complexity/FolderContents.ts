@@ -1,4 +1,5 @@
 import { ProgramOutput } from "../../../../shared/types";
+import { TreeController } from "../../controller/TreeController";
 import { compareOutputs } from "../../domain/output";
 import { element } from "../../framework";
 import { mapFromArr } from "../../util";
@@ -13,13 +14,21 @@ export class FolderContents {
     private pathToComplexity: ProgramOutput;
     private pathToComponent: SortedMap<string, File | Folder>;
 
-    constructor(complexity: ProgramOutput, startOpen: boolean) {
+    constructor(
+        controller: TreeController,
+        complexity: ProgramOutput,
+        startOpen: boolean
+    ) {
         this.pathToComplexity = complexity;
 
         this.pathToComponent = new SortedMap(mapFromArr(
             Object.keys(complexity),
-            filePath => FileOrFolder(filePath, complexity[filePath], startOpen)
+            filePath => FileOrFolder(controller, filePath, complexity[filePath], startOpen)
         ));
+
+        for (const component of this.pathToComponent.values()) {
+            controller.register(component);
+        }
 
         this.dom = element("div", {});
 
@@ -32,12 +41,6 @@ export class FolderContents {
             const node = this.pathToComponent.get(path)!.dom;
             this.dom.append(node);
         });
-    }
-
-    setTreeOpenness(open: boolean) {
-        for (const complexityComponent of this.pathToComponent.values()) {
-            complexityComponent.setTreeOpenness(open);
-        }
     }
 
     sortByComplexity() {
