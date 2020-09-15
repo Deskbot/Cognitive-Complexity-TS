@@ -21,7 +21,11 @@
 # Possible Features
 
 * Gracefully handle incorrect arguments to package.json scripts
+* json and ui commands handle input differently
+    * give json a help text
+    * let json take multiple files
 * Option to hide anything with a score of 0.
+    * on the json command level, not the ui level
 * filter out types of nodes in the UI tree
     * everything
     * no folders
