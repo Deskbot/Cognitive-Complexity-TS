@@ -1,7 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * simplify things
     * once over for efficiency
     * improve urls
     * make the UI code get published on npm
