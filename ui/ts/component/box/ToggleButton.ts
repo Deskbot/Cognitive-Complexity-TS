@@ -5,12 +5,14 @@ addStyleSheet(import.meta.url);
 export class ToggleButton {
     readonly dom: HTMLElement;
     private input: HTMLInputElement;
-    private symbol: Text;
+    private stateSymbol: StateSymbol;
 
     private onStateChange: (isOpen: boolean) => void;
 
     constructor(isOpen: boolean, onStateChange: (isOpen: boolean) => void) {
         this.onStateChange = onStateChange;
+
+        this.stateSymbol = new StateSymbol();
 
         this.dom = element("label", {
             className: "togglebutton-label",
@@ -20,7 +22,7 @@ export class ToggleButton {
                 className: "togglebutton-input",
                 type: "checkbox",
             }),
-            this.symbol = new Text(""),
+            this.stateSymbol.text,
         );
 
         this.dom.addEventListener("change", () => this.handleStateChange());
@@ -39,10 +41,18 @@ export class ToggleButton {
     }
 
     private setSymbol() {
-        if (this.input.checked) {
-            this.symbol.textContent = "-";
+        this.stateSymbol.setState(this.input.checked);
+    }
+}
+
+class StateSymbol {
+    readonly text = new Text("");
+
+    setState(bool: boolean) {
+        if (bool) {
+            this.text.textContent = "-";
         } else {
-            this.symbol.textContent = "+";
+            this.text.textContent = "+";
         }
     }
 }
