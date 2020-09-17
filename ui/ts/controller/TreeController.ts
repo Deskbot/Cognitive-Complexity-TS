@@ -1,7 +1,7 @@
 import { Controller } from "../framework.js";
 
 export interface Tree {
-    setTreeOpenness?(isOpen: boolean): void;
+    setTreeOpenness(isOpen: boolean): void;
     sortByComplexity(): void;
     sortInOrder(): void;
 }
@@ -19,9 +19,7 @@ export class TreeController implements Controller<Tree> {
 
     private setTreeOpenness(isOpen: boolean) {
         for (const component of this.components) {
-            if (component.setTreeOpenness) {
-                component.setTreeOpenness(isOpen);
-            }
+            component.setTreeOpenness(isOpen);
         }
     }
 

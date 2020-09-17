@@ -8,7 +8,7 @@ import { File } from "./File.js";
 import { FileOrFolder } from "./FileOrFolder.js";
 import { Folder } from "./Folder.js";
 
-export class FolderContents implements Tree {
+export class FolderContents {
     readonly dom: HTMLElement;
 
     private pathToComplexity: ProgramOutput;

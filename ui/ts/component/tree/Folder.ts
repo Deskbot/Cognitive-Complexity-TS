@@ -25,7 +25,6 @@ export class Folder implements Tree {
         );
 
         this.innerContainers = new FolderContents(controller, complexity, false);
-        controller.register(this.innerContainers);
         this.box.changeHideableContent(() => [this.innerContainers.dom]);
     }
 
