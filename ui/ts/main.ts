@@ -2,7 +2,7 @@ import { ProgramOutput } from "../../shared/types.js";
 import { GlobalControl } from "./component/controls/GlobalControl.js";
 import { TreeController } from "./controller/TreeController.js";
 import { hasMoreThanOneKey } from "./util.js";
-import { FileOrFolder } from "./component/tree/FileOrFolder.js";
+import { FolderContents } from "./component/tree/FolderContents.js";
 
 main();
 
@@ -34,14 +34,7 @@ async function main() {
     // Otherwise show all nodes minimised by default.
     const onlyOneTopLevelNode = hasMoreThanOneKey(ccResult);
 
-    const topLevelBoxes = Object.entries(ccResult)
-        .map(([path, complexity]) => {
-            return FileOrFolder(controller, path, complexity, onlyOneTopLevelNode);
-        });
-
-    topLevelBoxes.forEach(box => {
-        controller.register(box);
-    });
+    const topLevelBoxes = new FolderContents(controller, ccResult, onlyOneTopLevelNode);
 
     document.body.append(
         GlobalControl("Expand All", () => {
@@ -58,7 +51,5 @@ async function main() {
         }),
     );
 
-    topLevelBoxes.forEach((box) => {
-        document.body.append(box.dom);
-    });
+    document.body.append(topLevelBoxes.dom);
 }
