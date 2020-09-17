@@ -1,9 +1,9 @@
-import { FolderContents } from "./FolderContents";
-import { FolderOutput } from "../../../../shared/types";
-import { ToggleableBox } from "../box/ToggleableBox";
-import { Controller, element } from "../../framework";
-import { CopyText } from "../controls/CopyText";
-import { Tree } from "../../controller/TreeController";
+import { FolderContents } from "./FolderContents.js";
+import { FolderOutput } from "../../../../shared/types.js";
+import { ToggleableBox } from "../box/ToggleableBox.js";
+import { Controller, element } from "../../framework.js";
+import { CopyText } from "../controls/CopyText.js";
+import { Tree } from "../../controller/TreeController.js";
 
 export class Folder implements Tree {
     private box: ToggleableBox;

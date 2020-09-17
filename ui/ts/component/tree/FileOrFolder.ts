@@ -1,8 +1,8 @@
-import { FileOutput, FolderOutput } from "../../../../shared/types";
-import { Tree } from "../../controller/TreeController";
-import { Controller } from "../../framework";
-import { File } from "./File";
-import { Folder } from "./Folder";
+import { FileOutput, FolderOutput } from "../../../../shared/types.js";
+import { Tree } from "../../controller/TreeController.js";
+import { Controller } from "../../framework.js";
+import { File } from "./File.js";
+import { Folder } from "./Folder.js";
 
 export function FileOrFolder(
     controller: Controller<Tree>,

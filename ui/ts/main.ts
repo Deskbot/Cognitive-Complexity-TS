@@ -1,8 +1,8 @@
-import { ProgramOutput } from "../../shared/types";
-import { FolderContents } from "./component/tree/FolderContents";
-import { GlobalControl } from "./component/controls/GlobalControl";
-import { TreeController } from "./controller/TreeController";
-import { hasMoreThanOneKey } from "./util";
+import { ProgramOutput } from "../../shared/types.js";
+import { FolderContents } from "./component/tree/FolderContents.js";
+import { GlobalControl } from "./component/controls/GlobalControl.js";
+import { TreeController } from "./controller/TreeController.js";
+import { hasMoreThanOneKey } from "./util.js";
 
 main();
 

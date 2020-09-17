@@ -1,4 +1,4 @@
-import { Controller } from "../framework";
+import { Controller } from "../framework.js";
 
 export interface Tree {
     setTreeOpenness?(isOpen: boolean): void;
