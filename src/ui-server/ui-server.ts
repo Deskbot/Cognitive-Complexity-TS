@@ -4,12 +4,12 @@ import * as path from "path";
 import { ServerResponse, IncomingMessage } from "http";
 import { doesNotThrow } from "../util";
 
-const buildUiPath = __dirname + "/../../../build-ui";
+const sourcePath = __dirname + "/../../..";
 
-const cssPath = path.normalize(buildUiPath + "/css");
-const indexFilePath = path.normalize(buildUiPath + "/index.html");
-const jsPath = path.normalize(buildUiPath + "/js");
-const tsPath = path.normalize(buildUiPath + "/ts");
+const cssPath =       path.normalize(sourcePath + "/ui/ts");
+const indexFilePath = path.normalize(sourcePath + "/ui/html/index.html");
+const jsPath =        path.normalize(sourcePath + "/build/ui/ts");
+const tsPath =        path.normalize(sourcePath);
 
 export function createUiServer(combinedOutputsJson: string): http.Server {
     return http.createServer(async (req, res) => {
