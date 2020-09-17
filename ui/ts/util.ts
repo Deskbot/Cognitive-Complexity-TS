@@ -1,7 +1,3 @@
-export type Constructor<T, Args extends any[] = any[]> = {
-    new(...args: Args): T;
-};
-
 export function computeOnce<T>(func: () => T): () => T {
     let result: T;
     let notComputed = true;
@@ -37,7 +33,7 @@ export function iterMap<T,V>(iter: IterableIterator<T>, mapper: (val: T) => V): 
     return result;
 }
 
-export function mapFromArr<K, V>(keys: K[], mapper: (key: K) => V): Map<K, V> {
+export function arrayToMap<K, V>(keys: K[], mapper: (key: K) => V): Map<K, V> {
     const m = new Map<K, V>();
 
     keys.forEach((key) => {

@@ -2,7 +2,7 @@ import { ProgramOutput } from "../../../../shared/types.js";
 import { Tree } from "../../controller/TreeController.js";
 import { compareOutputs } from "../../domain/output.js";
 import { Controller, element } from "../../framework.js";
-import { mapFromArr } from "../../util.js";
+import { arrayToMap } from "../../util.js";
 import { SortedMap } from "../../util/SortedMap.js";
 import { File } from "./File.js";
 import { FileOrFolder } from "./FileOrFolder.js";
@@ -21,7 +21,7 @@ export class FolderContents {
     ) {
         this.pathToComplexity = complexity;
 
-        this.pathToComponent = new SortedMap(mapFromArr(
+        this.pathToComponent = new SortedMap(arrayToMap(
             Object.keys(complexity),
             filePath => FileOrFolder(controller, filePath, complexity[filePath], startOpen)
         ));

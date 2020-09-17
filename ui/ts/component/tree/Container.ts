@@ -1,6 +1,6 @@
 import { ContainerOutput } from "../../../../shared/types.js";
 import { Controller, element } from "../../framework.js";
-import { iterMap, mapFromArr } from "../../util.js";
+import { iterMap, arrayToMap } from "../../util.js";
 import { SortedMap } from "../../util/SortedMap.js";
 import { CopyText } from "../controls/CopyText.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
@@ -17,7 +17,7 @@ export class Container implements Tree {
         complexity: ContainerOutput,
         filePath: string
     ) {
-        this.complexityToContainer = new SortedMap(mapFromArr(
+        this.complexityToContainer = new SortedMap(arrayToMap(
             complexity.inner,
             innerComp => new Container(controller, innerComp, filePath)
         ));

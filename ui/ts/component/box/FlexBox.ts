@@ -1,8 +1,8 @@
-import { element, addStyleSheet, StatefulNode } from "../../framework.js";
+import { element, addStyleSheet } from "../../framework.js";
 
 addStyleSheet(import.meta.url);
 
-export class FlexBox implements StatefulNode {
+export class FlexBox {
     readonly dom = element("div", { className: "flexbox" });
 
     rerender(childNodes: (Node | string)[]) {

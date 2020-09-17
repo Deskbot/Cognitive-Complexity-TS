@@ -4,7 +4,7 @@ import { StickyTitle } from "../text/StickyTitle.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
-import { iterMap, mapFromArr } from "../../util.js";
+import { iterMap, arrayToMap } from "../../util.js";
 import { SortedMap } from "../../util/SortedMap.js";
 import { Tree } from "../../controller/TreeController.js";
 import { Controller } from "../../framework.js";
@@ -19,7 +19,7 @@ export class File implements Tree {
         complexity: FileOutput,
         startOpen: boolean
     ) {
-        this.complexityToContainer = new SortedMap(mapFromArr(
+        this.complexityToContainer = new SortedMap(arrayToMap(
             complexity.inner,
             complexity => new Container(controller, complexity, filePath)
         ));
@@ -49,9 +49,7 @@ export class File implements Tree {
     private reorderContents() {
         this.box.changeHideableContent(() => {
             return this.complexityToContainer.keys()
-                .map((complexity) => {
-                    return this.complexityToContainer.get(complexity)!.dom;
-                });
+                .map(complexity => this.complexityToContainer.get(complexity)!.dom);
         });
     }
 

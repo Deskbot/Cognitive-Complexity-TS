@@ -7,27 +7,27 @@ import { ToggleButton } from "./ToggleButton.js";
 addStyleSheet(import.meta.url);
 
 export class ToggleableBox {
-    private showHideable: boolean;
-
     private box: FlexBox;
-    private toggleableContentWrapper: ContentWrapper;
     private toggleableContent: () => Node[];
+    private toggleableContentWrapper: ContentWrapper;
     private toggleButton: ToggleButton;
     private visibleContent: Node[];
+
+    private showHideable: boolean;
 
     constructor(
         visibleContent: Node[],
         isTopLevel: boolean,
     ) {
         this.showHideable = isTopLevel;
-        this.toggleableContent = () => [];
 
         this.box = new FlexBox();
+        this.toggleableContent = () => [];
+        this.toggleableContentWrapper = flexGrow(new ContentWrapper());
         this.toggleButton = flexNone(new ToggleButton(this.showHideable, (newIsOpen) => {
             this.showHideable = newIsOpen;
             this.rerender();
         }));
-        this.toggleableContentWrapper = flexGrow(new ContentWrapper());
         this.visibleContent = visibleContent;
 
         this.rerender();
