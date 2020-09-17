@@ -1,8 +1,8 @@
-import { flexGrow, flexNone } from "../../flex";
-import { addStyleSheet, element } from "../../framework";
-import { computeOnce } from "../../util";
-import { FlexBox } from "./FlexBox";
-import { ToggleButton } from "./ToggleButton";
+import { flexGrow, flexNone } from "../../flex.js";
+import { addStyleSheet, element } from "../../framework.js";
+import { computeOnce } from "../../util.js";
+import { FlexBox } from "./FlexBox.js";
+import { ToggleButton } from "./ToggleButton.js";
 
 addStyleSheet(import.meta.url);
 

@@ -1,4 +1,4 @@
-import { element, addStyleSheet, StatefulNode } from "../../framework";
+import { element, addStyleSheet, StatefulNode } from "../../framework.js";
 
 addStyleSheet(import.meta.url);
 

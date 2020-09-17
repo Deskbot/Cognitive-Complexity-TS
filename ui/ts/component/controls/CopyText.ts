@@ -1,5 +1,5 @@
-import { addStyleSheet, element } from "../../framework";
-import { ClipboardSvg } from "../icon/Clipboard";
+import { addStyleSheet, element } from "../../framework.js";
+import { ClipboardSvg } from "../icon/Clipboard.js";
 
 addStyleSheet(import.meta.url);
 

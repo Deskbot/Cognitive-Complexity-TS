@@ -1,4 +1,4 @@
-import { Constructor } from "./util";
+import { Constructor } from "./util.js";
 
 export interface Component {
     dom: HTMLElement;
@@ -15,8 +15,11 @@ export interface StatefulNode<Muts extends any[] = any[]> {
 }
 
 export function addStyleSheet(jsUrl: string) {
+    const finalDot = jsUrl.length - 3; // ".js" is 3 chars long
+    const urlWithoutExtension = jsUrl.substring(0, finalDot);
+
     document.head.appendChild(element("link", {
-        href: jsUrl + ".css",
+        href: urlWithoutExtension + ".css",
         rel: "stylesheet",
     }));
 }

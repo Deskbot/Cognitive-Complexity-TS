@@ -1,13 +1,13 @@
-import { ContainerOutput, FileOutput } from "../../../../shared/types";
-import { Container } from "./Container";
-import { StickyTitle } from "../text/StickyTitle";
-import { ToggleableBox } from "../box/ToggleableBox";
-import { Score } from "../text/Score";
-import { CopyText } from "../controls/CopyText";
-import { iterMap, mapFromArr } from "../../util";
-import { SortedMap } from "../../util/SortedMap";
-import { Tree } from "../../controller/TreeController";
-import { Controller } from "../../framework";
+import { ContainerOutput, FileOutput } from "../../../../shared/types.js";
+import { Container } from "./Container.js";
+import { StickyTitle } from "../text/StickyTitle.js";
+import { ToggleableBox } from "../box/ToggleableBox.js";
+import { Score } from "../text/Score.js";
+import { CopyText } from "../controls/CopyText.js";
+import { iterMap, mapFromArr } from "../../util.js";
+import { SortedMap } from "../../util/SortedMap.js";
+import { Tree } from "../../controller/TreeController.js";
+import { Controller } from "../../framework.js";
 
 export class File implements Tree {
     private box: ToggleableBox;

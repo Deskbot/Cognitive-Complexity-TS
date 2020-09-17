@@ -1,4 +1,4 @@
-import { FileOutput, FolderOutput } from "../../../shared/types";
+import { FileOutput, FolderOutput } from "../../../shared/types.js";
 
 export function compareOutputs(
     left: FileOutput | FolderOutput,

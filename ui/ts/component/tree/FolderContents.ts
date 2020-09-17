@@ -1,12 +1,12 @@
-import { ProgramOutput } from "../../../../shared/types";
-import { Tree } from "../../controller/TreeController";
-import { compareOutputs } from "../../domain/output";
-import { Controller, element } from "../../framework";
-import { mapFromArr } from "../../util";
-import { SortedMap } from "../../util/SortedMap";
-import { File } from "./File";
-import { FileOrFolder } from "./FileOrFolder";
-import { Folder } from "./Folder";
+import { ProgramOutput } from "../../../../shared/types.js";
+import { Tree } from "../../controller/TreeController.js";
+import { compareOutputs } from "../../domain/output.js";
+import { Controller, element } from "../../framework.js";
+import { mapFromArr } from "../../util.js";
+import { SortedMap } from "../../util/SortedMap.js";
+import { File } from "./File.js";
+import { FileOrFolder } from "./FileOrFolder.js";
+import { Folder } from "./Folder.js";
 
 export class FolderContents implements Tree {
     readonly dom: HTMLElement;
