@@ -15,7 +15,8 @@ npm install cognitive-complexity-ts
 ## Run
 
 ```
-npx cognitive-complexity-ts [file path]
+npx cognitive-complexity-ts [file path] # text output
+npm run ui -- [filepaths] # ui output
 ```
 
 ## Simple Overview of the Cognitive Complexity Metric

@@ -1,0 +1,32 @@
+.togglebutton-input {
+    display: none;
+}
+
+.togglebutton-label {
+    margin: 0;
+    width: 1rem;
+
+    border: none;
+    background: var(--middle-color);
+    line-height: 1.2rem;
+    outline: none;
+    text-align: center;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.togglebutton-label:active {
+    background-color: var(--interactive-color);
+}
+
+.togglebutton-label:not(:checked) {
+    cursor: zoom-in;
+}
+
+.togglebutton-label:checked {
+    cursor: zoom-out;
+}

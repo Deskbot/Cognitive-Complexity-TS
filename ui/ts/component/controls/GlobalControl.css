@@ -1,0 +1,19 @@
+.globalcontrol {
+    margin-bottom: var(--spacing);
+    margin-right: var(--spacing);
+    padding: var(--half-spacing);
+
+    background-color: var(--middle-color);
+    border: var(--line-width) solid var(--light-color);
+    color: var(--light-color);
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.globalcontrol:active {
+    background-color: var(--interactive-color);
+}
+
+.globalcontrol:first-of-type {
+    margin-left: auto;
+}

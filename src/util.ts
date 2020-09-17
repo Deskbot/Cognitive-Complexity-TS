@@ -14,6 +14,49 @@ export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): num
     return tot;
 }
 
+export async function doesNotThrow<T>(promise: Promise<T>): Promise<boolean> {
+    try {
+        await promise;
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
+/**
+ * Builds an object from a list of keys whose values are based on the key itself,
+ * but where that value is produced asynchronously.
+ *
+ * This function starts by spawning a promise to generate the value for each key,
+ * and ends when all values have been produced.
+ * This is faster than spawning promises in sequence.
+ */
+export async function keysToAsyncValues<K extends string | number, V>(
+    keys: K[],
+    toValue: (elem: K) => Promise<V>,
+): Promise<Record<K, V>> {
+    const output = {} as Record<K, V>;
+
+    // Create promises to build the output concurrently.
+    // Each promise has a side effect of adding to the output.
+    const promises = keys.map(async (key) => {
+        output[key] = await toValue(key);
+    });
+
+    // Only return when all effects have been applied.
+    await Promise.all(promises);
+
+    return output;
+}
+
+export function nonNaN(num: number, fallback: number): number {
+    if (Number.isNaN(num)) {
+        return fallback;
+    }
+
+    return num;
+}
+
 export function repeat(str: string, times: number): string {
     let res = "";
     for (let i = 0; i < times; i++) {
@@ -21,10 +64,6 @@ export function repeat(str: string, times: number): string {
     }
 
     return res;
-}
-
-export function sum(a: number, b: number): number {
-    return a + b;
 }
 
 export function toPromise<T, E>(

@@ -1,0 +1,46 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+:root {
+    --font: sans-serif;
+
+    --line-width: 1px;
+
+    --active-color: #AA66AA;
+    --dark-color: #222222;
+    --interactive-color: #6666FF;
+    --middle-color: #666666;
+    --light-color: #eeeeee;
+
+    --background-color: var(--dark-color);
+    --text-color: var(--light-color);
+
+    --spacing: 1rem;
+    --half-spacing: 0.5rem;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font);
+    font-size: 16px;
+}
+
+body {
+    margin: 0.5rem;
+    padding: 0;
+}
+
+p {
+    margin: var(--spacing) 0;
+}
+
+button, input {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}

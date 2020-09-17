@@ -1,0 +1,5 @@
+.flexbox {
+    display: flex;
+
+    border: var(--line-width) solid var(--light-color);
+}

@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../build/src/main')
+require('./cognitive-complexity-ts-ui');

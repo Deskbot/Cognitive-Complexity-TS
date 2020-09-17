@@ -1,11 +1,14 @@
 {
     "extends": "../base.tsconfig.json",
     "compilerOptions": {
-        "declaration": true,
+        "module": "ESNEXT",
+        "lib": [
+            "DOM"
+        ],
         "outDir": "../build",
-        "sourceRoot": "."
+        "removeComments": true,
     },
     "include": [
-        "."
+        "./ts"
     ]
 }

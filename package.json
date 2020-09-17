@@ -11,21 +11,33 @@
   "main": "./bin/cognitive-complexity-ts",
   "types": "./build/src",
   "scripts": {
+    "json": "./bin/cognitive-complexity-ts-json",
+    "ui": "./bin/cognitive-complexity-ts-ui",
     "build": "tsc -i -p ./src",
     "build-test": "npm run build && tsc -i -p ./test",
     "build-tools": "tsc -i -p ./tools",
-    "prepublishOnly": "npm run test",
-    "start": "./bin/cognitive-complexity-ts.sh",
-    "test": "npm run build-test && node -r source-map-support/register ./build/test/test/main",
-    "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it"
+    "build-ui": "tsc -i -p ./ui",
+    "dev-json": "npm run build && node -r source-map-support/register ./build/src/json",
+    "dev-ui": "npm run build && npm run build-ui && node -r source-map-support/register ./build/src/ui",
+    "test": "npm run build-test && node -r source-map-support/register ./build/test/main",
+    "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it",
+    "prepublishOnly": "npm run test"
   },
   "bin": {
-    "cognitive-complexity-ts": "./bin/cognitive-complexity-ts"
+    "ccts": "./bin/cognitive-complexity-ts",
+    "ccts-json": "./bin/cognitive-complexity-ts-json",
+    "ccts-ui": "./bin/cognitive-complexity-ts-ui",
+    "cognitive-complexity-ts": "./bin/cognitive-complexity-ts",
+    "cognitive-complexity-ts-json": "./bin/cognitive-complexity-ts-json",
+    "cognitive-complexity-ts-ui": "./bin/cognitive-complexity-ts-ui"
   },
   "files": [
-    "bin",
-    "build/src/**",
-    "README.md"
+    "/bin",
+    "/build/src/**",
+    "/build/ui/**",
+    "/ui/html/**",
+    "/ui/ts/**/*.css",
+    "/README.md"
   ],
   "author": "Thomas Richards",
   "license": "UNLICENSED",
@@ -34,14 +46,17 @@
   "repository": "https://github.com/Deskbot/Cognitive-Complexity-TS",
   "dependencies": {
     "js-beautify": "^1.11.0",
+    "minimist": "^1.2.5",
+    "open": "^7.1.0",
     "source-map-support": "^0.5.19",
-    "typescript": "^3.8.3"
+    "typescript": "^4.0.0-beta"
   },
   "devDependencies": {
     "@types/deep-diff": "^1.0.0",
     "@types/glob": "^7.1.1",
     "@types/js-beautify": "^1.8.2",
-    "@types/node": "^10.17.21",
+    "@types/minimist": "^1.2.0",
+    "@types/node": "^12.12.6",
     "@types/tempfile": "^3.0.0",
     "deep-diff": "^1.0.2",
     "glob": "^7.1.6",

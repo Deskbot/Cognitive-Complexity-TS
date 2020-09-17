@@ -1,0 +1,9 @@
+.toggleablebox-contentwrapper {
+    margin: 0;
+    margin-left: var(--spacing);
+    padding: 0;
+}
+
+.toggleablebox-contentwrapper:only-child {
+    margin-left: calc(2 * var(--spacing));
+}

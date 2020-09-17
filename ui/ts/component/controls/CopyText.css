@@ -1,0 +1,22 @@
+.copytext-button {
+    height: 1rem;
+    margin: 0 var(--half-spacing);
+    padding: 0;
+    width: 1rem;
+
+    background: none;
+    border: none;
+}
+
+.copytext-button:active:hover {
+    --text-color: var(--interactive-color);
+}
+
+.copytext-button:hover {
+    cursor: copy;
+}
+
+.hidden-off-screen {
+    left: -9999px;
+    position: absolute;
+}

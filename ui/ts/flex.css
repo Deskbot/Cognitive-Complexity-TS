@@ -1,0 +1,11 @@
+.flex {
+    display: flex;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.flex-none {
+    flex: none;
+}

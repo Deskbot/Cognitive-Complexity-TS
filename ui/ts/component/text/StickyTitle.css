@@ -1,0 +1,10 @@
+.stickytext {
+    /* When being sticky, there is no margin, but we want normal spacing. */
+    padding: var(--half-spacing) 0;
+    position: sticky;
+    margin: var(--half-spacing) 0;
+    margin-right: var(--spacing);
+    top: 0;
+
+    background: var(--background-color);
+}
