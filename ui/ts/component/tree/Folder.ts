@@ -1,23 +1,31 @@
 import { FolderContents } from "./FolderContents";
 import { FolderOutput } from "../../../../shared/types";
 import { ToggleableBox } from "../box/ToggleableBox";
-import { element } from "../../framework";
+import { Controller, element } from "../../framework";
 import { CopyText } from "../controls/CopyText";
+import { Tree } from "../../controller/TreeController";
 
-export class Folder {
+export class Folder implements Tree {
     private box: ToggleableBox;
     private innerContainers: FolderContents;
 
-    constructor(name: string, complexity: FolderOutput, startOpen: boolean) {
+    constructor(
+        controller: Controller<Tree>,
+        name: string,
+        complexity: FolderOutput,
+        startOpen: boolean
+    ) {
         this.box = new ToggleableBox([
             element("p", {},
-            name,
-            CopyText(name),
+                name,
+                CopyText(name),
             ),
         ],
             startOpen,
         );
-        this.innerContainers = new FolderContents(complexity, false);
+
+        this.innerContainers = new FolderContents(controller, complexity, false);
+        controller.register(this.innerContainers);
         this.box.changeHideableContent(() => [this.innerContainers.dom]);
     }
 
@@ -31,7 +39,6 @@ export class Folder {
 
     setTreeOpenness(open: boolean) {
         this.box.setOpenness(open);
-        this.innerContainers.setTreeOpenness(open);
     }
 
     sortInOrder() {

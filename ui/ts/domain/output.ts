@@ -7,25 +7,27 @@ export function compareOutputs(
     const leftScore = left.score;
     const rightScore = right.score;
 
-    const leftHasScore = typeof leftScore === "number";
-    const rightHasScore = typeof rightScore === "number";
+    const leftIsFolder = typeof leftScore === "number";
+    const rightIsFolder = typeof rightScore === "number";
 
-    if (leftHasScore && rightHasScore) {
+    if (leftIsFolder && rightIsFolder) {
         // If the typeof statements were directly in the if condition,
         // the casting would not be required by TypeScript.
         return (rightScore as number) - (leftScore as number);
     }
 
-    if (!leftHasScore && !rightHasScore) {
+    if (!leftIsFolder && !rightIsFolder) {
         return 0;
     }
 
-    if (!leftHasScore) {
-        return 1;
+    // folders should be at the bottom of the complexity list
+
+    if (!leftIsFolder) {
+        return -1;
     }
 
-    if (!rightHasScore) {
-        return 1;
+    if (!rightIsFolder) {
+        return -1;
     }
 
     return 0; // unreachable

@@ -6,16 +6,27 @@ import { Score } from "../text/Score";
 import { CopyText } from "../controls/CopyText";
 import { iterMap, mapFromArr } from "../../util";
 import { SortedMap } from "../../util/SortedMap";
+import { Tree } from "../../controller/TreeController";
+import { Controller } from "../../framework";
 
-export class File {
+export class File implements Tree {
     private box: ToggleableBox;
     private complexityToContainer: SortedMap<ContainerOutput, Container>;
 
-    constructor(filePath: string, complexity: FileOutput, startOpen: boolean) {
+    constructor(
+        controller: Controller<Tree>,
+        filePath: string,
+        complexity: FileOutput,
+        startOpen: boolean
+    ) {
         this.complexityToContainer = new SortedMap(mapFromArr(
             complexity.inner,
-            complexity => new Container(complexity, filePath)
+            complexity => new Container(controller, complexity, filePath)
         ));
+
+        for (const component of this.complexityToContainer.values()) {
+            controller.register(component);
+        }
 
         this.box = new ToggleableBox([
             StickyTitle([
@@ -46,9 +57,6 @@ export class File {
 
     setTreeOpenness(open: boolean) {
         this.box.setOpenness(open);
-        for (const container of this.complexityToContainer.values()) {
-            container.setTreeOpenness(open);
-        }
     }
 
     sortByComplexity() {
@@ -56,19 +64,6 @@ export class File {
             return right.score - left.score
         });
         this.reorderContents();
-        this.sortChildrenByComplexity();
-    }
-
-    private sortChildrenByComplexity() {
-        for (const container of this.complexityToContainer.values()) {
-            container.sortByComplexity();
-        }
-    }
-
-    private sortChildrenInOrder() {
-        for (const container of this.complexityToContainer.values()) {
-            container.sortInOrder();
-        }
     }
 
     sortInOrder() {
@@ -83,6 +78,5 @@ export class File {
             return left.column - right.column;
         });
         this.reorderContents();
-        this.sortChildrenInOrder();
     }
 }

@@ -4,6 +4,11 @@ export interface Component {
     dom: HTMLElement;
 }
 
+export interface Controller<T> {
+    register(component: T): void;
+    unregister(component: T): void;
+}
+
 export interface StatefulNode<Muts extends any[] = any[]> {
     readonly dom: Node;
     rerender(...muts: Muts): void;
