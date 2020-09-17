@@ -1,8 +1,6 @@
 # Necessary Features
 
 * Add a html interface
-    * copy css & html into the build dir rather than trying to ship a specific subset of the source in the package.json
-        * could use symlinks in the build folder to make decent urls to typescript and possibly clean up linking to index.html
     * simplify things
     * once over for efficiency
     * improve urls

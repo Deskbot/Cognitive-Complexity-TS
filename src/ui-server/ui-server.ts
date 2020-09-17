@@ -4,15 +4,12 @@ import * as path from "path";
 import { ServerResponse, IncomingMessage } from "http";
 import { doesNotThrow } from "../util";
 
-const uiSourcePath = __dirname + "/../../../ui";
-const buildPath = __dirname + "/../..";
+const buildUiPath = __dirname + "/../../../build-ui";
 
-// it's sad that this is so inconsistent
-const cssPath = path.normalize(uiSourcePath + "/ts");
-const indexFilePath = path.normalize(uiSourcePath + "/html/index.html");
-const jsPath = path.normalize(buildPath + "/ui/ts");
-// due to importing "shared" the paths begin with "/ui"
-const tsPath = path.normalize(uiSourcePath + "/..");
+const cssPath = path.normalize(buildUiPath + "/css");
+const indexFilePath = path.normalize(buildUiPath + "/index.html");
+const jsPath = path.normalize(buildUiPath + "/js");
+const tsPath = path.normalize(buildUiPath + "/ts");
 
 export function createUiServer(combinedOutputsJson: string): http.Server {
     return http.createServer(async (req, res) => {
@@ -95,10 +92,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
     }
 
     if (url.endsWith(".ts")) {
-        // remove the /js/ prefix
-        const prefixLength = 4;
-        const urlWithoutPrefix = url.substr(prefixLength);
-        const targetFile = tsPath + "/" + urlWithoutPrefix;
+        const targetFile = tsPath + "/" + url;
 
         if (!doesFileExistInFolder(targetFile, tsPath)) {
             return endWith404(res);

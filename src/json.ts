@@ -22,13 +22,14 @@ async function main() {
 }
 
 async function printCognitiveComplexityJson(fullPath: string) {
-    const resultForAllFiles: ProgramOutput = {};
     const cwd = process.cwd();
 
     const filePath = path.relative(cwd, fullPath);
     const fileName = path.parse(fullPath).base;
 
-    resultForAllFiles[fileName] = await getFileOrFolderOutput(filePath);
+    const resultForAllFiles: ProgramOutput = {
+        [fileName]: await getFileOrFolderOutput(filePath)
+    };
 
     const outputStructure = JSON.stringify(resultForAllFiles, (key, value) => {
         // don't show empty inner
