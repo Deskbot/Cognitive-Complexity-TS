@@ -49,6 +49,37 @@ export async function keysToAsyncValues<K extends string | number, V>(
     return output;
 }
 
+/**
+ * Builds an object from a list of input items.
+ * The keys and values are derived from the input item,
+ * but the values either need to be generated asynchronously or not at all.
+ */
+export async function createObjectOfPromisedValues<I, K extends string | number | symbol, V>(
+    input: I[],
+    toKey: (input: I) => K,
+    toMaybePromise: (input: I) => Promise<V> | undefined
+): Promise<Record<K, V>> {
+    const output = {} as Record<K, V>;
+
+    // Create a Promise for each input entry
+    // that may perform another asynchronously task to generate a key-value pair.
+    // If it does so, that key-value pair is assigned to the output.
+    // No key-value will be produced if there is no internal Promise to wait for.
+
+    const promises = input.map(async (inputItem) => {
+        const maybePromise = toMaybePromise(inputItem);
+        if (maybePromise !== undefined) {
+            const key = toKey(inputItem);
+            output[key] = await maybePromise;
+        }
+    });
+
+    // make sure all promises have resolved before returning
+    await Promise.all(promises);
+
+    return output;
+}
+
 export function nonNaN(num: number, fallback: number): number {
     if (Number.isNaN(num)) {
         return fallback;
