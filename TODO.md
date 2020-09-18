@@ -1,7 +1,6 @@
 # Necessary Features
 
-* Should be able to compile and run from a fresh checkout
-* Should be able to run when installed as a dependency
+* Bring the makefile back
 * Can I run with npx
 * Does global install work
 * Update documentation of best way to run it from the terminal

@@ -1,6 +1,6 @@
 {
   "name": "cognitive-complexity-ts",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "keywords": [
     "typescript",
@@ -16,12 +16,12 @@
     "build": "tsc -i -p ./src",
     "build-test": "npm run build && tsc -i -p ./test",
     "build-tools": "tsc -i -p ./tools",
-    "build-ui": "tsc -i -p ./ui",
+    "build-ui": "npm run build && tsc -i -p ./ui",
     "dev-json": "npm run build && node -r source-map-support/register ./build/src/json",
     "dev-ui": "npm run build && npm run build-ui && node -r source-map-support/register ./build/src/ui",
     "test": "npm run build-test && node -r source-map-support/register ./build/test/main",
     "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run build && npm run build-ui && npm run test"
   },
   "bin": {
     "ccts": "./bin/cognitive-complexity-ts",

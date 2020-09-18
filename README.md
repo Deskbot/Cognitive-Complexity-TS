@@ -14,9 +14,17 @@ npm install cognitive-complexity-ts
 
 ## Run
 
-```
-npx cognitive-complexity-ts [file path] # text output
-npm run ui -- [filepaths] # ui output
+```bash
+# UI output (any of the following)
+npx cognitive-complexity-ts-ui [file path]
+npx ccts-ui [file path]
+
+# JSON output (any of the following)
+npx cognitive-complexity-ts [file path]
+npx cognitive-complexity-ts-json [file path]
+npx ccts [file path]
+npx ccts-json [file path]
+
 ```
 
 ## Simple Overview of the Cognitive Complexity Metric
@@ -74,6 +82,26 @@ Changes:
 ## Output
 
 Some anonymous classes and functions will appear with names because they are assigned to a variable/const.
+
+# Development
+
+## Install
+
+```bash
+git clone https://github.com/Deskbot/Cognitive-Complexity-TS
+npm i
+```
+
+## Build
+
+```bash
+# All builds are incremental.
+# These scripts also build dependencies incrementally.
+npm run build       # The main complexity analysis program and UI back-end server.
+npm run build-test
+npm run build-tools
+npm run build-ui    # The in-browser UI code only.
+```
 
 ## Development Tools
 
