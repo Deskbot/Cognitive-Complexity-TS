@@ -2,12 +2,12 @@
  * Functions to apply Cognitive Complexity to files and folders.
  */
 
-import { promises as fsP } from "fs";
+import { Dirent, promises as fsP } from "fs";
 import * as path from "path";
 import * as ts from "typescript";
 import { FileOutput, FolderOutput } from "../../shared/types";
+import { createObjectOfPromisedValues } from "../util";
 import { fileCost } from "./cognitive-complexity";
-import { keysToAsyncValues } from "../util";
 
 /**
  * @param entry A file system entry ok unknown type.
@@ -36,16 +36,22 @@ async function getFileOutput(filePath: string): Promise<FileOutput> {
 }
 
 async function getFolderOutput(folderPath: string): Promise<FolderOutput> {
-    const allSubFiles = await fsP.readdir(folderPath, { withFileTypes: true });
-    const subFiles = allSubFiles
-        .filter(filePath => filePath.name.match(/.*\.[tj]sx?$/) !== null);
+    const folderContents = await fsP.readdir(folderPath, { withFileTypes: true });
 
-    const subFilePaths = subFiles.map(file => path.join(folderPath, file.name));
+    return createObjectOfPromisedValues<Dirent, string, FileOutput | FolderOutput>(
+        folderContents,
+        entry => entry.name,
+        (entry) => {
+            if (entry.isDirectory()) {
+                return getFolderOutput(folderPath + "/" + entry.name);
+            }
 
-    const folderOutput = keysToAsyncValues(
-        subFilePaths,
-        innerEntryPath => getFileOrFolderOutput(innerEntryPath)
+            // correct extension
+            if (entry.name.match(/.*\.[tj]sx?$/) !== null) {
+                return getFileOutput(folderPath + "/" + entry.name);
+            }
+
+            return undefined;
+        }
     );
-
-    return folderOutput;
 }

@@ -18,6 +18,7 @@
 * json and ui commands handle input differently
     * give json a help text
     * let json take multiple files
+* see full path somehow without it getting the way or being inconsistent
 * Option to hide anything with a score of 0.
     * on the json command level, not the ui level
 * filter out types of nodes in the UI tree
