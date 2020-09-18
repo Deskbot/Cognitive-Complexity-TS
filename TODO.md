@@ -1,6 +1,5 @@
 # Necessary Features
 
-* make the UI code get published on npm
 * Should be able to compile and run from a fresh checkout
 * Should be able to run when installed as a dependency
 * Can I run with npx

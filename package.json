@@ -1,6 +1,6 @@
 {
   "name": "cognitive-complexity-ts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "keywords": [
     "typescript",
@@ -33,6 +33,7 @@
   },
   "files": [
     "/bin",
+    "/build/shared/**",
     "/build/src/**",
     "/build/ui/**",
     "/ui/html/**",
