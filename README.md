@@ -103,9 +103,16 @@ npm run build-tools
 npm run build-ui    # The in-browser UI code only.
 ```
 
-## Development Tools
+## Run
 
-### Test
+```bash
+# These also build dependencies.
+# The binaries exposed by package.json do not.
+npm run json
+npm run ui
+```
+
+## Test
 
 ```
 npm run test [test name]
@@ -113,7 +120,7 @@ npm run test [test name]
 
 The test name can be any substring of a path to a test file. Or the test name can be left blank to run all tests.
 
-### TypeScript Parser Output
+## See TypeScript Parser Output
 
 Microsoft doesn't appear to have documentation for what all of the AST nodes are, so I created a tool to output the AST for the code.
 
@@ -121,6 +128,6 @@ Microsoft doesn't appear to have documentation for what all of the AST nodes are
 npm run what [file path]
 ```
 
-## License
+# License
 
 I haven't decided yet.
