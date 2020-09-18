@@ -36,14 +36,19 @@ async function getFileOutput(filePath: string): Promise<FileOutput> {
 }
 
 async function getFolderOutput(folderPath: string): Promise<FolderOutput> {
-    const allSubFiles = await fsP.readdir(folderPath, { withFileTypes: true });
-    const subFiles = allSubFiles
-        .filter(filePath => filePath.name.match(/.*\.[tj]sx?$/) !== null);
+    const folderContents = await fsP.readdir(folderPath, { withFileTypes: true });
+    const subEntries = folderContents
+        .filter((entryPath) => {
+            const correctExtension = entryPath.name.match(/.*\.[tj]sx?$/) !== null;
+            const isDir = entryPath.isDirectory();
+            return correctExtension || isDir;
+        });
 
-    const subFilePaths = subFiles.map(file => path.join(folderPath, file.name));
+    const subFilePaths = subEntries.map(file => path.join(folderPath, file.name));
 
     const folderOutput = keysToAsyncValues(
         subFilePaths,
+        // TODO: call the correct func based on the information gained above
         innerEntryPath => getFileOrFolderOutput(innerEntryPath)
     );
 
