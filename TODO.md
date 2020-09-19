@@ -1,11 +1,8 @@
 # Necessary Features
 
-* Bring the makefile back
-* Can I run with npx
-* Does global install work
-* Update documentation of best way to run it from the terminal
-* Add documentation for the json output and the UI output.
 * Add documentation on how to use the library programmatically.
+    * Add a "main" in package.json
+    * export sensible things to become public
 * Import/Export json in browser
     * or import on the command line
 * When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
@@ -23,6 +20,7 @@
     * everything
     * no folders
     * no folders or files
+* [Let port be configured with npm](https://docs.npmjs.com/misc/scripts#special-packagejson-config-object)
 * Choose the TS version used
 * Give relative colours to complexities
 * recalculate button

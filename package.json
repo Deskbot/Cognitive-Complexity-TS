@@ -1,6 +1,6 @@
 {
   "name": "cognitive-complexity-ts",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "keywords": [
     "typescript",
@@ -8,18 +8,17 @@
     "complexity",
     "metric"
   ],
-  "main": "./bin/cognitive-complexity-ts",
   "types": "./build/src",
   "scripts": {
-    "build": "tsc -i -p ./src",
-    "build-test": "npm run build && tsc -i -p ./test",
-    "build-tools": "tsc -i -p ./tools",
-    "build-ui": "npm run build && tsc -i -p ./ui",
-    "json": "npm run build && node -r source-map-support/register ./build/src/json",
-    "ui": "npm run build && npm run build-ui && node -r source-map-support/register ./build/src/ui",
-    "test": "npm run build-test && node -r source-map-support/register ./build/test/main",
-    "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it",
-    "prepublishOnly": "npm run build && npm run build-ui && npm run test"
+    "build": "make build",
+    "build-test": "make build-test",
+    "build-tools": "make build-tools",
+    "build-ui": "make build-ui",
+    "json": "make json && node -r source-map-support/register ./build/src/json",
+    "ui": "make ui && node -r source-map-support/register ./build/src/ui",
+    "test": "make test && node -r source-map-support/register ./build/test/main",
+    "what": "make what && node -r source-map-support/register ./build/tools/what-is-it",
+    "prepublishOnly": "make prepublishOnly && npm run test"
   },
   "bin": {
     "ccts": "./bin/cognitive-complexity-ts",

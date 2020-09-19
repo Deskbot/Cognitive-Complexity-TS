@@ -12,6 +12,8 @@ Myself and this project are completely unaffiliated with Sonar Source.
 npm install cognitive-complexity-ts
 ```
 
+To use the UI. You must install [NodeJS](https://nodejs.org/en/download/)
+
 ## Run
 
 ```bash
@@ -24,8 +26,9 @@ npx cognitive-complexity-ts [file path]
 npx cognitive-complexity-ts-json [file path]
 npx ccts [file path]
 npx ccts-json [file path]
-
 ```
+
+If you do a global install, `npx` is not required as a prefix.
 
 ## Simple Overview of the Cognitive Complexity Metric
 
@@ -90,7 +93,10 @@ Some anonymous classes and functions will appear with names because they are ass
 ```bash
 git clone https://github.com/Deskbot/Cognitive-Complexity-TS
 npm i
+sudo npm i -g npx
 ```
+
+Install `make`, if it isn't already installed.
 
 ## Build
 
