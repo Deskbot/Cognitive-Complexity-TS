@@ -3,9 +3,15 @@
 * Add documentation on how to use the library programmatically.
     * Add a "main" in package.json
     * export sensible things to become public
-* Import/Export json in browser
-    * or import on the command line
 * When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
+
+# Correctness
+
+* Sometimes functions declarations have the name "function", possibly when there is an "export" keyword before. Same is true for "type".
+* Bug: Should increment when a value is recursively referenced but not called.
+    * .call .apply etc should count towards recursion because they are referenced
+* Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
+* Any remaining TODO comments should be actioned.
 
 # Possible Features
 
@@ -27,6 +33,8 @@
     * on a per file basis
     * on a per container basis
 * Turn the interface into a single page application, so that pressing back toggles the expansion state
+* Import/Export json in browser
+    * or import on the command line
 * Don't open the ui automatically every time
     * could have it as an option
     * might be possible to open it over an existing one
@@ -34,14 +42,6 @@
     * possibly with a particular expansion state
 * VSC Plugin
 * Webpack / Rollup Plugin
-
-# Correctness
-
-* Sometimes functions declarations have the name "function", possibly when there is an "export" keyword before. Same is true for "type".
-* Bug: Should increment when a value is recursively referenced but not called.
-    * .call .apply etc should count towards recursion because they are referenced
-* Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
-* Any remaining TODO comments should be actioned.
 
 # Code
 
