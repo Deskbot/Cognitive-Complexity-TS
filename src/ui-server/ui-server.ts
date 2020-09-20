@@ -2,7 +2,7 @@ import { promises as fsP } from "fs";
 import * as http from "http";
 import * as path from "path";
 import { ServerResponse, IncomingMessage } from "http";
-import { doesNotThrow } from "../util";
+import { doesNotThrow } from "../util/util";
 
 const sourcePath = __dirname + "/../../..";
 

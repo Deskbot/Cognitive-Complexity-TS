@@ -1,6 +1,6 @@
 import * as ts from "typescript"
 import { FileOutput, ContainerOutput, ScoreAndInner } from "../../shared/types";
-import { countNotAtTheEnds } from "../util";
+import { countNotAtTheEnds } from "../util/util";
 import {
     chooseContainerName,
     getNameIfCalledNode,

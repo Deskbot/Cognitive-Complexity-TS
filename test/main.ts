@@ -6,7 +6,7 @@ import { js_beautify } from "js-beautify";
 import * as path from "path";
 import * as process from "process";
 import tempfile from "tempfile";
-import { toPromise } from "../src/util";
+import { toPromise } from "../src/util/util";
 import { ProgramOutput } from "../shared/types";
 
 const casesDir = path.normalize(__dirname + "/../../test/cases");

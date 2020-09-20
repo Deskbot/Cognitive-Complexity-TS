@@ -1,8 +1,5 @@
 # Necessary Features
 
-* Add documentation on how to use the library programmatically.
-    * Add a "main" in package.json
-    * export sensible things to become public
 * When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
 
 # Correctness
@@ -33,6 +30,9 @@
     * on a per file basis
     * on a per container basis
 * Turn the interface into a single page application, so that pressing back toggles the expansion state
+* Improve the nodejs api to allow more input methods:
+    * give a string/stream of ts code
+    * give a ts node object
 * Import/Export json in browser
     * or import on the command line
 * Don't open the ui automatically every time

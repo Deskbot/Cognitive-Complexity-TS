@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { Unreachable } from "../util";
+import { Unreachable } from "../util/util";
 import {
     getIdentifier,
     FunctionNode,

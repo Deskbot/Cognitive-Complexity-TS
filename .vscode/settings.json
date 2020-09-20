@@ -4,6 +4,7 @@
         "Hideable",
         "Toggleable",
         "Unstatefully",
+        "ccts",
         "checkbox",
         "consts",
         "contentwrapper",
