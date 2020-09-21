@@ -1,7 +1,3 @@
-# Necessary Features
-
-* When I give several files, they should be grouped by folder in the JSON as if I had only specified the folder and not its contents.
-
 # Correctness
 
 * Sometimes functions declarations have the name "function", possibly when there is an "export" keyword before. Same is true for "type".
