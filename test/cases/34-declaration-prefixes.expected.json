@@ -1,0 +1,19 @@
+{
+    "34-declaration-prefixes.ts": {
+        "score": 2,
+        "inner": [
+            {
+                "name": "exportDeclaration",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "exportAnonymous",
+                "score": 1,
+                "line": 5,
+                "column": 32
+            }
+        ]
+    }
+}

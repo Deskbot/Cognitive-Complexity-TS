@@ -1,7 +1,7 @@
 import * as minimist from "minimist";
 import * as open from "open";
 import { nonNaN, keysToAsyncValues } from "./util/util";
-import { getFileOrFolderOutput } from "./cognitive-complexity/file-or-folder-output";
+import { getFileOrFolderOutput } from "./cognitive-complexity/output";
 import { createUiServer } from "./ui-server/ui-server";
 
 main();

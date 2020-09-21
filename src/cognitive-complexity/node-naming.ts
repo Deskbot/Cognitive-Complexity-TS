@@ -160,7 +160,11 @@ function getFunctionNodeName(
     }
 
     if (ts.isFunctionDeclaration(func)) {
-        return func.getChildAt(1).getText();
+        const functionKeywordIndex = func.getChildren()
+            .findIndex(node => node.kind === ts.SyntaxKind.FunctionKeyword);
+        const identifier = func.getChildAt(functionKeywordIndex + 1);
+
+        return identifier.getText();
     }
 
     if (ts.isFunctionExpression(func)) {
