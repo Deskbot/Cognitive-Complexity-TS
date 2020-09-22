@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { Unreachable } from "../util/util";
+import { UnreachableNodeState } from "../util/node-util";
 import {
     getIdentifier,
     FunctionNode,
@@ -183,10 +183,10 @@ function getFunctionNodeName(
             return name;
         }
 
-        throw new Unreachable("Method has no identifier.");
+        throw new UnreachableNodeState(func, "Method has no identifier.");
     }
 
-    throw new Unreachable("FunctionNode is not of a recognised type.");
+    throw new UnreachableNodeState(func, "FunctionNode is not of a recognised type.");
 }
 
 function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
@@ -196,7 +196,7 @@ function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
 function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     const moduleIdentifier = node.getChildren().find(node => ts.isIdentifier(node));
     if (!moduleIdentifier) {
-        throw new Unreachable("Module declaration has no identifier.");
+        throw new UnreachableNodeState(node, "Module declaration has no identifier.");
     }
     return moduleIdentifier.getText();
 }
@@ -207,7 +207,7 @@ function getNewedConstructorName(node: ts.NewExpression): string {
         return name;
     }
 
-    throw new Unreachable();
+    throw new UnreachableNodeState(node, "Newed constructor does not have a name.");
 }
 
 function getPropertyAccessName(node: ts.PropertyAccessExpression): string {

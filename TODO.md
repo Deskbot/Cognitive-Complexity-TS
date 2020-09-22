@@ -7,7 +7,6 @@
 
 # Possible Features
 
-* When something unreachable is reached, print the node location.
 * Gracefully handle incorrect arguments to package.json scripts
 * json and ui commands handle input differently
     * give json a help text
@@ -29,6 +28,7 @@
 * Improve the nodejs api to allow more input methods:
     * give a string/stream of ts code
     * give a ts node object
+* When something unreachable is reached, print the path to the file where the node is, instead of just the file name.
 * Import/Export json in browser
     * or import on the command line
 * Don't open the ui automatically every time

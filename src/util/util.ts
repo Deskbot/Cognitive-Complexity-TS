@@ -113,11 +113,7 @@ export function toPromise<T, E>(
 }
 
 export class Unreachable extends Error {
-    constructor(reason?: string) {
-        let message = "Unreachable branch.";
-        if (reason) {
-            message += " " + reason;
-        }
-        super(message);
+    constructor(reason: string) {
+        super("Unreachable branch.\n" + reason);
     }
 }
