@@ -2,9 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Test",
+            "label": "Build",
             "type": "shell",
-            "command": "npm run build-test"
+            "command": "make build"
         }
     ]
 }

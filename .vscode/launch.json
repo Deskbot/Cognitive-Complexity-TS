@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Test",
-            "preLaunchTask": "Build Test",
+            "preLaunchTask": "Build",
 
             "type": "node",
             "request": "launch",
@@ -16,7 +16,7 @@
             ],
             "program": "${workspaceRoot}/test/main.ts",
             "outFiles": [
-                "${workspaceFolder}/build/test/**/*.js"
+                "${workspaceFolder}/build/**/*.js"
             ],
             "sourceMaps": true,
             "args": [
