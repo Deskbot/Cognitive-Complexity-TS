@@ -11,14 +11,14 @@
   "main": "./build/src/api.js",
   "types": "./build/src",
   "scripts": {
-    "build": "make build",
-    "build-tools": "make build-tools",
-    "build-ui": "make build-ui",
-    "json": "make json && node -r source-map-support/register ./build/src/json",
-    "ui": "make ui && node -r source-map-support/register ./build/src/ui",
-    "test": "make test && node -r source-map-support/register ./build/test/main",
-    "what": "make what && node -r source-map-support/register ./build/tools/what-is-it",
-    "prepublishOnly": "make prepublishOnly && npm run test"
+    "build": "tsc -i",
+    "build-tools": "tsc -i -p ./tools",
+    "build-ui": "npm run build && tsc -i -p ./ui",
+    "json": "npm run build && node -r source-map-support/register ./build/src/json",
+    "ui": "npm run build && npm run build-ui && node -r source-map-support/register ./build/src/ui",
+    "test": "npm run build && node -r source-map-support/register ./build/test/main",
+    "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it",
+    "prepublishOnly": "npm run build && npm run build-ui && npm run test"
   },
   "bin": {
     "ccts": "./bin/cognitive-complexity-ts",

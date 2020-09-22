@@ -18,7 +18,6 @@
     * everything
     * no folders
     * no folders or files
-* [Let port be configured with npm](https://docs.npmjs.com/misc/scripts#special-packagejson-config-object)
 * Choose the TS version used
 * Give relative colours to complexities
 * recalculate button

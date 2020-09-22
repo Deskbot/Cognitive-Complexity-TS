@@ -4,7 +4,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "make build"
+            "command": "npm run build"
         }
     ]
 }
