@@ -1,10 +1,7 @@
 # build
 
 build:
-	npx tsc -i -p ./src
-
-build-test: build
-	npx tsc -i -p ./test
+	npx tsc -i
 
 build-tools:
 	npx tsc -i -p ./tools
@@ -23,7 +20,7 @@ ui: build build-ui
 clean:
 	rm -rf ./build
 
-test: build-test
+test: build
 
 what: build-tools
 

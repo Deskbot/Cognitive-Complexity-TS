@@ -5,7 +5,7 @@
 import { Dirent, promises as fsP } from "fs";
 import * as path from "path";
 import * as ts from "typescript";
-import { FileOutput, FolderOutput } from "../../shared/types";
+import { FileOutput, FolderOutput, ProgramOutput } from "../../shared/types";
 import { createObjectOfPromisedValues } from "../util/util";
 import { fileCost } from "./cognitive-complexity";
 
@@ -57,4 +57,25 @@ export async function getFolderOutput(folderPath: string): Promise<FolderOutput>
             return undefined;
         }
     );
+}
+
+// API
+/**
+ * @param entryPath Relative to cwd
+ */
+export async function programOutput(entryPath: string): Promise<string> {
+    const entryName = path.parse(entryPath).base;
+
+    const resultForAllFiles: ProgramOutput = {
+        [entryName]: await getFileOrFolderOutput(entryPath)
+    };
+
+    return JSON.stringify(resultForAllFiles, (key, value) => {
+        // don't show empty inner
+        if (key === "inner" && value.length === 0) {
+            return undefined;
+        }
+
+        return value;
+    });
 }

@@ -1,0 +1,15 @@
+{
+    "extends": "./base.tsconfig.json",
+    "compilerOptions": {
+        "declaration": true,
+        "esModuleInterop": true,
+        "outDir": "./build",
+    },
+    "include": [
+        "src",
+        "test"
+    ],
+    "exclude": [
+        "./test/cases/**/*"
+    ]
+}

@@ -160,7 +160,11 @@ function getFunctionNodeName(
     }
 
     if (ts.isFunctionDeclaration(func)) {
-        return func.getChildAt(1).getText();
+        const functionKeywordIndex = func.getChildren()
+            .findIndex(node => node.kind === ts.SyntaxKind.FunctionKeyword);
+        const identifier = func.getChildAt(functionKeywordIndex + 1);
+
+        return identifier.getText();
     }
 
     if (ts.isFunctionExpression(func)) {
@@ -190,7 +194,11 @@ function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
 }
 
 function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
-    return node.getChildAt(1).getText();
+    const moduleIdentifier = node.getChildren().find(node => ts.isIdentifier(node));
+    if (!moduleIdentifier) {
+        throw new Unreachable("Module declaration has no identifier.");
+    }
+    return moduleIdentifier.getText();
 }
 
 function getNewedConstructorName(node: ts.NewExpression): string {

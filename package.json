@@ -12,7 +12,6 @@
   "types": "./build/src",
   "scripts": {
     "build": "make build",
-    "build-test": "make build-test",
     "build-tools": "make build-tools",
     "build-ui": "make build-ui",
     "json": "make json && node -r source-map-support/register ./build/src/json",

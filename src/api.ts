@@ -1,5 +1,6 @@
 export {
     getFileOrFolderOutput,
     getFolderOutput,
-    getFileOutput
-} from "./cognitive-complexity/file-or-folder-output";
+    getFileOutput,
+    programOutput,
+} from "./cognitive-complexity/output";

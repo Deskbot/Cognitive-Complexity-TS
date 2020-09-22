@@ -1,0 +1,61 @@
+{
+    "34-declaration-prefixes.ts": {
+        "score": 7,
+        "inner": [
+            {
+                "name": "exportFunctionDeclaration",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "exportConstAnonymousFunction",
+                "score": 1,
+                "line": 5,
+                "column": 45
+            },
+            {
+                "name": "exportLetAnonymousFunction",
+                "score": 1,
+                "line": 9,
+                "column": 41
+            },
+            {
+                "name": "asyncDeclaration",
+                "score": 1,
+                "line": 13,
+                "column": 1
+            },
+            {
+                "name": "asyncAnonymous",
+                "score": 1,
+                "line": 17,
+                "column": 24
+            },
+            {
+                "name": "exportAsyncDeclaration",
+                "score": 1,
+                "line": 21,
+                "column": 1
+            },
+            {
+                "name": "exportAsyncAnonymous",
+                "score": 1,
+                "line": 25,
+                "column": 37
+            },
+            {
+                "name": "ExportNamespace",
+                "score": 0,
+                "line": 29,
+                "column": 1
+            },
+            {
+                "name": "ExportClass",
+                "score": 0,
+                "line": 33,
+                "column": 1
+            }
+        ]
+    }
+}
