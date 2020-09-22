@@ -3,7 +3,7 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "outDir": "../build",
-        "sourceRoot": "../../../"
+        "sourceRoot": "../../"
     },
     "exclude": [
         "cases/**/*"
