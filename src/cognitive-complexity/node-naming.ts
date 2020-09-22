@@ -194,7 +194,11 @@ function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
 }
 
 function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
-    return node.getChildAt(1).getText();
+    const moduleIdentifier = node.getChildren().find(node => ts.isIdentifier(node));
+    if (!moduleIdentifier) {
+        throw new Unreachable("Module declaration has no identifier.");
+    }
+    return moduleIdentifier.getText();
 }
 
 function getNewedConstructorName(node: ts.NewExpression): string {
