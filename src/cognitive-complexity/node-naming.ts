@@ -196,7 +196,12 @@ function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
 
 function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     const moduleKeywordIndex = node.getChildren()
-        .findIndex(node => node.kind === ts.SyntaxKind.ModuleKeyword);
+        .findIndex(node => node.kind === ts.SyntaxKind.NamespaceKeyword
+            || node.kind === ts.SyntaxKind.ModuleKeyword);
+
+    if (moduleKeywordIndex === -1) {
+        throw new UnreachableNodeState(node, "Module has no module/namespace keyword.");
+    }
 
     const moduleIdentifier = node.getChildAt(moduleKeywordIndex + 1);
     return moduleIdentifier.getText();
