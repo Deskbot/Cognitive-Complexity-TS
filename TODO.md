@@ -1,5 +1,6 @@
 # Correctness
 
+* Bug: `new something.MyClass()` causes an unreachable branch
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 * Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".

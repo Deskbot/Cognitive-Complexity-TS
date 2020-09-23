@@ -1,7 +1,7 @@
 import ts from "typescript";
 import { Unreachable } from "./util";
 
-export function nodeLocation(node: ts.Node) {
+function nodeLocation(node: ts.Node) {
     const sourceFile = node.getSourceFile();
     const lineAndCol = sourceFile
         .getLineAndCharacterOfPosition(node.getStart());
