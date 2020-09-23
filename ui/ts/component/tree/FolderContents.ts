@@ -17,13 +17,14 @@ export class FolderContents {
     constructor(
         controller: Controller<Tree>,
         complexity: ProgramOutput,
+        path: string,
         startOpen: boolean
     ) {
         this.pathToComplexity = complexity;
 
         this.pathToComponent = new SortedMap(arrayToMap(
             Object.keys(complexity),
-            filePath => FileOrFolder(controller, filePath, complexity[filePath], startOpen)
+            name => FileOrFolder(controller, path, name, complexity[name], startOpen)
         ));
 
         for (const component of this.pathToComponent.values()) {

@@ -15,13 +15,16 @@ export class File implements Tree {
 
     constructor(
         controller: Controller<Tree>,
-        filePath: string,
+        path: string,
+        name: string,
         complexity: FileOutput,
         startOpen: boolean
     ) {
+        const fullPath = path + "/" + name;
+
         this.complexityToContainer = new SortedMap(arrayToMap(
             complexity.inner,
-            complexity => new Container(controller, complexity, filePath)
+            complexity => new Container(controller, complexity, fullPath)
         ));
 
         for (const component of this.complexityToContainer.values()) {
@@ -30,8 +33,8 @@ export class File implements Tree {
 
         this.box = new ToggleableBox([
             StickyTitle([
-                filePath,
-                CopyText(filePath),
+                name,
+                CopyText(fullPath),
             ]),
             Score(complexity.score),
         ],

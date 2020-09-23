@@ -11,20 +11,23 @@ export class Folder implements Tree {
 
     constructor(
         controller: Controller<Tree>,
+        path: string,
         name: string,
         complexity: FolderOutput,
         startOpen: boolean
     ) {
+        const fullPath = path + "/" + name;
+
         this.box = new ToggleableBox([
             element("p", {},
                 name,
-                CopyText(name),
+                CopyText(fullPath),
             ),
         ],
             startOpen,
         );
 
-        this.innerContainers = new FolderContents(controller, complexity, false);
+        this.innerContainers = new FolderContents(controller, complexity, fullPath, false);
         this.box.changeHideableContent(() => [this.innerContainers.dom]);
     }
 

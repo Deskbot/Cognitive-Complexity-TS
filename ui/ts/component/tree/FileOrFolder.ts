@@ -7,13 +7,14 @@ import { Folder } from "./Folder.js";
 export function FileOrFolder(
     controller: Controller<Tree>,
     path: string,
+    name: string,
     complexity: FileOutput | FolderOutput,
     startOpen: boolean
 ): File | Folder {
     if (isFileOutput(complexity)) {
-        return new File(controller, path, complexity, startOpen);
+        return new File(controller, path, name, complexity, startOpen);
     } else {
-        return new Folder(controller, path, complexity, startOpen);
+        return new Folder(controller, path, name, complexity, startOpen);
     }
 }
 
