@@ -13,3 +13,11 @@ namespace M {
         export const b = 2;
     }
 }
+
+declare module name {
+    function f(): void;
+}
+
+declare module "deep-diff" {
+    function f(): void;
+}

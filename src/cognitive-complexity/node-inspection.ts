@@ -40,6 +40,16 @@ export function getFirstNonParenthesizedAncestor(node: ts.Node): ts.Node {
     return firstNonParenthesisAncestor;
 }
 
+export function getTextWithoutBrackets(node: ts.Node): string {
+    if (ts.isParenthesizedExpression(node)) {
+        return node.getChildren()
+            .map(getTextWithoutBrackets)
+            .join("");
+    }
+
+    return node.getText();
+}
+
 export function isBinaryTypeOperator(node: ts.Node): node is ts.UnionOrIntersectionTypeNode {
     return ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node);
 }

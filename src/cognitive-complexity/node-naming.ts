@@ -3,7 +3,8 @@ import { UnreachableNodeState } from "../util/node-util";
 import {
     getIdentifier,
     FunctionNode,
-    isFunctionNode
+    isFunctionNode,
+    getTextWithoutBrackets
 } from "./node-inspection";
 
 export function chooseContainerName(node: ts.Node, variableBeingDefined: string): string | undefined {
@@ -194,20 +195,15 @@ function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
 }
 
 function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
-    const moduleIdentifier = node.getChildren().find(node => ts.isIdentifier(node));
-    if (!moduleIdentifier) {
-        throw new UnreachableNodeState(node, "Module declaration has no identifier.");
-    }
+    const moduleKeywordIndex = node.getChildren()
+        .findIndex(node => node.kind === ts.SyntaxKind.ModuleKeyword);
+
+    const moduleIdentifier = node.getChildAt(moduleKeywordIndex + 1);
     return moduleIdentifier.getText();
 }
 
 function getNewedConstructorName(node: ts.NewExpression): string {
-    const name = getIdentifierDespiteBrackets(node.getChildAt(1));
-    if (name !== undefined) {
-        return name;
-    }
-
-    throw new UnreachableNodeState(node, "Newed constructor does not have a name.");
+    return getTextWithoutBrackets(node.getChildAt(1));
 }
 
 function getPropertyAccessName(node: ts.PropertyAccessExpression): string {

@@ -20,7 +20,24 @@
             ],
             "sourceMaps": true,
             "args": [
-                "34"
+                ""
+            ],
+        },
+        {
+            "name": "UI",
+            "preLaunchTask": "Build",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceRoot}/src/json.ts",
+            "outFiles": [
+                "${workspaceFolder}/build/**/*.js"
+            ],
+            "sourceMaps": true,
+            "args": [
+                ""
             ],
         }
     ]
