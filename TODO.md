@@ -1,5 +1,7 @@
 # Correctness
 
+* The UI copy buttons no longer copy the full path.
+* Too many anonymous functions have the name of the function/method they're in as their own name
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 * Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
