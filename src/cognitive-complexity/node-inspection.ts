@@ -43,6 +43,7 @@ export function getFirstNonParenthesizedAncestor(node: ts.Node): ts.Node {
 export function getTextWithoutBrackets(node: ts.Node): string {
     if (ts.isParenthesizedExpression(node)) {
         return node.getChildren()
+            .slice(1, -1) // ignore the bracket at each end
             .map(getTextWithoutBrackets)
             .join("");
     }
