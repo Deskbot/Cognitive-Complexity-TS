@@ -1,0 +1,27 @@
+{
+    "35-name-lambdas.ts": {
+        "score": 0,
+        "inner": [
+            {
+                "name": "f",
+                "score": 0,
+                "line": 1,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "ff",
+                        "score": 0,
+                        "line": 2,
+                        "column": 16
+                    },
+                    {
+                        "name": "",
+                        "score": 0,
+                        "line": 4,
+                        "column": 17
+                    }
+                ]
+            }
+        ]
+    }
+}
