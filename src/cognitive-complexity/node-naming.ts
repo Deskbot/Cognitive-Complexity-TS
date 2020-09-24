@@ -220,3 +220,8 @@ function getPropertyAccessName(node: ts.PropertyAccessExpression): string {
 function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
     return node.getChildAt(1).getText();
 }
+
+export function getVariableDeclarationName(node: ts.VariableDeclaration): string {
+    const identifier = node.getChildAt(0);
+    return identifier.getText();
+}

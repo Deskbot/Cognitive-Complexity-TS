@@ -5,7 +5,7 @@ import {
     chooseContainerName,
     getNameIfCalledNode,
     findIntroducedName,
-    getNameIfNameDeclaration
+    getNameIfNameDeclaration, getVariableDeclarationName
 } from "./node-naming";
 import { whereAreChildren } from "./depth";
 import {
@@ -160,12 +160,19 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
 }
 
 // todo should this output a name
+/**
+ * @param node The node whose cost we want
+ * @param topLevel Whether the node is at the top level of a file
+ * @param depth The depth the node is at
+ * @param namedAncestors All names that if used would be considered recursively referenced.
+ * @param variableAlreadyBeingDefined The name of a variable whose definition @param{node} is part of.
+ */
 function nodeCost(
     node: ts.Node,
     topLevel: boolean,
     depth = 0,
     namedAncestors = [] as ReadonlyArray<string>,
-    variableBeingDefined: string | undefined = undefined,
+    variableAlreadyBeingDefined: string | undefined = undefined,
 ): ScoreAndInner {
     let score = inherentCost(node, namedAncestors);
     score += costOfDepth(node, depth);
@@ -173,6 +180,14 @@ function nodeCost(
     // get the ancestors container names from the perspective of this node's children
     const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
     const { same, below } = whereAreChildren(node);
+
+    /**
+     * If the node is intro
+     * Update the variable being defined that is passed down to the children,
+     */
+    const variableBeingDefined = ts.isVariableDeclaration(node)
+        ? getVariableDeclarationName(node)
+        : variableAlreadyBeingDefined;
 
     const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
 
