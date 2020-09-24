@@ -24,7 +24,8 @@ function aggregateCostOfChildren(
     children: ts.Node[],
     childDepth: number,
     topLevel: boolean,
-    ancestorsOfChild: ReadonlyArray<string>
+    ancestorsOfChild: ReadonlyArray<string>,
+    variableBeingDefined: string | undefined,
 ): ScoreAndInner {
     let score = 0;
 
@@ -34,12 +35,11 @@ function aggregateCostOfChildren(
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
-        const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild);
+        const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild, variableBeingDefined);
 
         score += childCost.score;
 
         // a function/class/namespace/type is part of the inner scope we want to output
-        const variableBeingDefined = ancestorsOfChild[ancestorsOfChild.length - 1];
         const name = chooseContainerName(child, variableBeingDefined);
 
         if (name !== undefined) {
@@ -165,6 +165,7 @@ function nodeCost(
     topLevel: boolean,
     depth = 0,
     namedAncestors = [] as ReadonlyArray<string>,
+    variableBeingDefined: string | undefined = undefined,
 ): ScoreAndInner {
     let score = inherentCost(node, namedAncestors);
     score += costOfDepth(node, depth);
@@ -173,13 +174,13 @@ function nodeCost(
     const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
     const { same, below } = whereAreChildren(node);
 
-    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren);
+    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
 
     // The nodes below this node have the same depth number,
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, variableBeingDefined);
 
     score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.score;

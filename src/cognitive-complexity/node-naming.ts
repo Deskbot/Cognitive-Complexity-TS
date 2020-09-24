@@ -7,7 +7,7 @@ import {
     getTextWithoutBrackets
 } from "./node-inspection";
 
-export function chooseContainerName(node: ts.Node, variableBeingDefined: string): string | undefined {
+export function chooseContainerName(node: ts.Node, variableBeingDefined: string | undefined): string | undefined {
     if (isFunctionNode(node)) {
         return getFunctionNodeName(node, variableBeingDefined);
     }
