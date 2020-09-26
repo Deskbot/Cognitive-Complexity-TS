@@ -5,7 +5,7 @@ import {
     chooseContainerName,
     getNameIfCalledNode,
     findIntroducedName,
-    getNameIfNameDeclaration, getVariableDeclarationName
+    getNameIfNameDeclaration
 } from "./node-naming";
 import { whereAreChildren } from "./depth";
 import {
@@ -35,7 +35,7 @@ function aggregateCostOfChildren(
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
-        const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild, variableBeingDefined);
+        const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild);
 
         score += childCost.score;
 
@@ -90,10 +90,6 @@ function costOfDepth(node: ts.Node, depth: number): number {
     }
 
     return 0;
-}
-
-function currentVariableBeingDefined(node: ts.Node) {
-    return getNameIfNameDeclaration(node);
 }
 
 function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): number {
@@ -174,8 +170,7 @@ function nodeCost(
     node: ts.Node,
     topLevel: boolean,
     depth = 0,
-    namedAncestors = [] as ReadonlyArray<string>,
-    variableAlreadyBeingDefined: string | undefined = undefined,
+    namedAncestors = [] as ReadonlyArray<string>
 ): ScoreAndInner {
     let score = inherentCost(node, namedAncestors);
     score += costOfDepth(node, depth);
@@ -188,7 +183,7 @@ function nodeCost(
      * If the node is intro
      * Update the variable being defined that is passed down to the children,
      */
-    const variableBeingDefined = currentVariableBeingDefined(node);
+    const variableBeingDefined = getNameIfNameDeclaration(node);
 
     const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
 
