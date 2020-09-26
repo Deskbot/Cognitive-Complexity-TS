@@ -92,13 +92,8 @@ function costOfDepth(node: ts.Node, depth: number): number {
     return 0;
 }
 
-function currentVariableBeingDefined(node: ts.Node, alreadyBeingDefined: string | undefined) {
-    const name = getNameIfNameDeclaration(node)
-    if (name !== undefined) {
-        return name;
-    }
-
-    return alreadyBeingDefined;
+function currentVariableBeingDefined(node: ts.Node) {
+    return getNameIfNameDeclaration(node);
 }
 
 function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): number {
@@ -194,7 +189,7 @@ function nodeCost(
      * If the node is intro
      * Update the variable being defined that is passed down to the children,
      */
-    const variableBeingDefined = currentVariableBeingDefined(node, variableAlreadyBeingDefined);
+    const variableBeingDefined = currentVariableBeingDefined(node);
 
     const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
 
