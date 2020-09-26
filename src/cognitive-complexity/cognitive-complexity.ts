@@ -163,7 +163,6 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
     return 0;
 }
 
-// todo should this output a name
 /**
  * @param node The node whose cost we want
  * @param topLevel Whether the node is at the top level of a file

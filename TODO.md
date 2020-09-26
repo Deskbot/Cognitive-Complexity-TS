@@ -1,9 +1,8 @@
 # Correctness
 
+* Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
-* Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
-* Any remaining TODO comments should be actioned.
 
 # Possible Features
 
