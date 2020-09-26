@@ -39,7 +39,6 @@
 
 # Code
 
-* is this comment correct: all functions declared directly under a non function child node
 * Add comments to the top of each source file to explain the file purpose.
 * cognitive-complexity.ts has some functions with many arguments. namedAncestors and variableAlreadyBeingDefined run the same code to generate themselves, this could be simplified, perhaps wrapped in a class. There are several functions that use a subset of the information defined in nodeCost. NodeCost is almost like a class constructor. Could consider splitting that function if it's unappealing to turn it into a class.
 * Document utilities.

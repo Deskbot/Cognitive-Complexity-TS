@@ -29,9 +29,9 @@ function aggregateCostOfChildren(
 ): ScoreAndInner {
     let score = 0;
 
-    // The inner functions of a node is defined as the concat of:
+    // The inner containers of a node is defined as the concat of:
     // * all child nodes that are functions/namespaces/classes
-    // * all functions declared directly under a non function child node
+    // * all containers declared directly under a non-container child node
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
