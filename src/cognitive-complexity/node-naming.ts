@@ -7,7 +7,7 @@ import {
     getTextWithoutBrackets
 } from "./node-inspection";
 
-export function chooseContainerName(node: ts.Node, variableBeingDefined: string): string | undefined {
+export function chooseContainerName(node: ts.Node, variableBeingDefined: string | undefined): string | undefined {
     if (isFunctionNode(node)) {
         return getFunctionNodeName(node, variableBeingDefined);
     }
@@ -219,4 +219,9 @@ function getPropertyAccessName(node: ts.PropertyAccessExpression): string {
 
 function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
     return node.getChildAt(1).getText();
+}
+
+export function getVariableDeclarationName(node: ts.VariableDeclaration): string {
+    const identifier = node.getChildAt(0);
+    return identifier.getText();
 }

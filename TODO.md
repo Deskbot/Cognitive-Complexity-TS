@@ -1,6 +1,5 @@
 # Correctness
 
-* Too many anonymous functions have the name of the function/method they're in as their own name
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 * Bug: Should not be able to recursively reference an object method if the method name is not prepended with 'this".
@@ -43,7 +42,7 @@
 
 * is this comment correct: all functions declared directly under a non function child node
 * Add comments to the top of each source file to explain the file purpose.
-* Make the JavaScript served for the UI to be minimised
+* cognitive-complexity.ts has some functions with many arguments. namedAncestors and variableAlreadyBeingDefined run the same code to generate themselves, this could be simplified, perhaps wrapped in a class. There are several functions that use a subset of the information defined in nodeCost. NodeCost is almost like a class constructor. Could consider splitting that function if it's unappealing to turn it into a class.
 * Document utilities.
 * Delete unwanted utilities.
 * there are a bunch of comments where I should just use the word "container"
@@ -52,6 +51,7 @@
 # Performance
 
 * Should script imports become attached tags to shadow DOM?
+* Make the JavaScript served for the UI to be minimised
 
 # Technical Debt
 
