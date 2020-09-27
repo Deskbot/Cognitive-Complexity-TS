@@ -16,6 +16,34 @@ import {
     isBinaryTypeOperator
 } from "./node-inspection";
 
+class Scope {
+    readonly local: ReadonlyArray<string>;
+    readonly object: ReadonlyArray<string>;
+
+    constructor(local: ReadonlyArray<string>, object: ReadonlyArray<string>) {
+        this.local = local;
+        this.object = object;
+    }
+
+    includes(name: string) {
+        return this.local.includes(name) || this.object.includes(name);
+    }
+
+    maybeAddLocal(node: ts.Node): Scope {
+        const containerNameMaybe = findIntroducedName(node);
+        if (containerNameMaybe !== undefined) {
+            return new Scope([...this.local, containerNameMaybe], []);
+        }
+
+        const variableNameMaybe = getNameIfNameDeclaration(node);
+        if (variableNameMaybe !== undefined) {
+            return new Scope([...this.local, variableNameMaybe], []);
+        }
+
+        return this;
+    }
+}
+
 export function fileCost(file: ts.SourceFile): FileOutput {
     return nodeCost(file, true);
 }
@@ -24,7 +52,7 @@ function aggregateCostOfChildren(
     children: ts.Node[],
     childDepth: number,
     topLevel: boolean,
-    ancestorsOfChild: ReadonlyArray<string>,
+    scope: Scope,
     variableBeingDefined: string | undefined,
 ): ScoreAndInner {
     let score = 0;
@@ -35,7 +63,7 @@ function aggregateCostOfChildren(
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
-        const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild);
+        const childCost = nodeCost(child, topLevel, childDepth, scope);
 
         score += childCost.score;
 
@@ -92,7 +120,7 @@ function costOfDepth(node: ts.Node, depth: number): number {
     return 0;
 }
 
-function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): number {
+function inherentCost(node: ts.Node, scope: Scope): number {
     // certain language features carry and inherent cost
     if (isSequenceOfDifferentBooleanOperations(node)
         || ts.isCatchClause(node)
@@ -112,7 +140,7 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
 
     const calledName = getNameIfCalledNode(node);
     if (calledName !== undefined) {
-        return namedAncestors.includes(calledName) ? 1 : 0;
+        return scope.includes(calledName) ? 1 : 0;
     }
 
     // An `if` may contain an else keyword followed by else code.
@@ -170,13 +198,13 @@ function nodeCost(
     node: ts.Node,
     topLevel: boolean,
     depth = 0,
-    namedAncestors = [] as ReadonlyArray<string>
+    scope = new Scope([], []),
 ): ScoreAndInner {
-    let score = inherentCost(node, namedAncestors);
+    let score = inherentCost(node, scope);
     score += costOfDepth(node, depth);
 
     // get the ancestors container names from the perspective of this node's children
-    const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
+    const namedAncestorsOfChildren = scope.maybeAddLocal(node);
     const { same, below } = whereAreChildren(node);
 
     /**
@@ -202,21 +230,4 @@ function nodeCost(
         inner,
         score,
     };
-}
-
-function maybeAddNodeToNamedAncestors(
-    node: ts.Node,
-    ancestorsOfNode: ReadonlyArray<string>
-): ReadonlyArray<string> {
-    const containerNameMaybe = findIntroducedName(node);
-    if (containerNameMaybe !== undefined) {
-        return [...ancestorsOfNode, containerNameMaybe];
-    }
-
-    const variableNameMaybe = getNameIfNameDeclaration(node);
-    if (variableNameMaybe !== undefined) {
-        return [...ancestorsOfNode, variableNameMaybe];
-    }
-
-    return ancestorsOfNode;
 }
