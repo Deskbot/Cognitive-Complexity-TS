@@ -20,7 +20,7 @@ export function chooseContainerName(node: ts.Node, variableBeingDefined: string 
         return getClassExpressionName(node, variableBeingDefined);
     }
 
-    const name = findIntroducedName(node);
+    const name = findIntroducedLocalName(node);
     if (name !== undefined) {
         return name;
     }
@@ -36,7 +36,7 @@ export function chooseContainerName(node: ts.Node, variableBeingDefined: string 
     return undefined;
 }
 
-export function findIntroducedName(node: ts.Node): string | undefined {
+export function findIntroducedLocalName(node: ts.Node): string | undefined {
     if (ts.isClassDeclaration(node)) {
         return getClassDeclarationName(node);
     }
@@ -98,6 +98,10 @@ export function getNameIfNameDeclaration(node: ts.Node): string | undefined {
     ) {
         const identifier = node.getChildAt(0).getText();
         return identifier;
+    }
+
+    if (ts.isPropertyAssignment(node)) {
+        return node.getChildAt(0).getText();
     }
 
     if (ts.isPropertyDeclaration(node)) {
