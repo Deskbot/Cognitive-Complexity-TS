@@ -70,7 +70,7 @@ export function getNameIfCalledNode(node: ts.Node): string | undefined {
     }
 
     if (ts.isPropertyAccessExpression(node)) {
-        return getPropertyAccessName(node);
+        return node.getText();
     }
 
     if (ts.isJsxOpeningLikeElement(node)) {
@@ -209,12 +209,6 @@ function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
 
 function getNewedConstructorName(node: ts.NewExpression): string {
     return getTextWithoutBrackets(node.getChildAt(1));
-}
-
-function getPropertyAccessName(node: ts.PropertyAccessExpression): string {
-    const expressionNodes = node.getChildren();
-    const identifier = expressionNodes[expressionNodes.length - 1];
-    return identifier.getText();
 }
 
 function getTypeAliasName(node: ts.TypeAliasDeclaration): string {

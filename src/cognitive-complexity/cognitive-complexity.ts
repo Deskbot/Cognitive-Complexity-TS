@@ -163,8 +163,7 @@ function inherentCost(node: ts.Node, scope: Scope): number {
  * @param node The node whose cost we want
  * @param topLevel Whether the node is at the top level of a file
  * @param depth The depth the node is at
- * @param namedAncestors All names that if used would be considered recursively referenced.
- * @param variableAlreadyBeingDefined The name of a variable whose definition @param{node} is part of.
+ * @param scope The scope at the node
  */
 function nodeCost(
     node: ts.Node,
@@ -175,15 +174,15 @@ function nodeCost(
     let score = inherentCost(node, scope);
     score += costOfDepth(node, depth);
 
-    // get the ancestors container names from the perspective of this node's children
-    const namedAncestorsOfChildren = scope.maybeAddLocal(node);
-    const { same, below } = whereAreChildren(node);
-
     /**
      * If the node is intro
      * Update the variable being defined that is passed down to the children,
      */
     const variableBeingDefined = getNameIfNameDeclaration(node);
+
+    // get the ancestors container names from the perspective of this node's children
+    const namedAncestorsOfChildren = scope.maybeAddLocal(node).maybeAddObject(node, variableBeingDefined);
+    const { same, below } = whereAreChildren(node);
 
     const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
 
