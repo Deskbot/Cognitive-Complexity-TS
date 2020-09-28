@@ -4,7 +4,6 @@ import { countNotAtTheEnds } from "../util/util";
 import {
     chooseContainerName,
     getNameIfCalledNode,
-    findIntroducedName,
     getNameIfNameDeclaration
 } from "./node-naming";
 import { whereAreChildren } from "./depth";
@@ -15,34 +14,7 @@ import {
     isBreakOrContinueToLabel,
     isBinaryTypeOperator
 } from "./node-inspection";
-
-class Scope {
-    readonly local: ReadonlyArray<string>;
-    readonly object: ReadonlyArray<string>;
-
-    constructor(local: ReadonlyArray<string>, object: ReadonlyArray<string>) {
-        this.local = local;
-        this.object = object;
-    }
-
-    includes(name: string) {
-        return this.local.includes(name) || this.object.includes(name);
-    }
-
-    maybeAddLocal(node: ts.Node): Scope {
-        const containerNameMaybe = findIntroducedName(node);
-        if (containerNameMaybe !== undefined) {
-            return new Scope([...this.local, containerNameMaybe], []);
-        }
-
-        const variableNameMaybe = getNameIfNameDeclaration(node);
-        if (variableNameMaybe !== undefined) {
-            return new Scope([...this.local, variableNameMaybe], []);
-        }
-
-        return this;
-    }
-}
+import { Scope } from "./Scope";
 
 export function fileCost(file: ts.SourceFile): FileOutput {
     return nodeCost(file, true);
