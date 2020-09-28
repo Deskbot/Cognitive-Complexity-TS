@@ -17,12 +17,6 @@ class C {
     }
 }
 
-const D = {
-    j() {
-        D.j();
-    }
-};
-
 const k = function l() {
     l();
 }
@@ -39,5 +33,14 @@ const o = function p() {
 const Obj = {
     f() {
         f();
+    },
+    g() {
+        this.g();
+    },
+    h() {
+        Obj.h();
+    },
+    i: () => {
+        Obj.i()
     }
 };

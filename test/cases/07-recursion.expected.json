@@ -1,6 +1,6 @@
 {
     "07-recursion.ts": {
-        "score": 9,
+        "score": 11,
         "inner": [
             {
                 "name": "f",
@@ -35,34 +35,46 @@
                 ]
             },
             {
-                "name": "j",
-                "score": 1,
-                "line": 21,
-                "column": 5
-            },
-            {
                 "name": "l",
                 "score": 1,
-                "line": 26,
+                "line": 20,
                 "column": 11
             },
             {
                 "name": "n",
                 "score": 2,
-                "line": 30,
+                "line": 24,
                 "column": 11
             },
             {
                 "name": "p",
                 "score": 1,
-                "line": 35,
+                "line": 29,
                 "column": 11
             },
             {
                 "name": "f",
                 "score": 0,
+                "line": 34,
+                "column": 5
+            },
+            {
+                "name": "g",
+                "score": 1,
+                "line": 37,
+                "column": 5
+            },
+            {
+                "name": "h",
+                "score": 1,
                 "line": 40,
                 "column": 5
+            },
+            {
+                "name": "i",
+                "score": 1,
+                "line": 43,
+                "column": 8
             }
         ]
     }
