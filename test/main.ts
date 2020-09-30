@@ -1,4 +1,3 @@
-import { diff } from "deep-diff";
 import { promises as fsP } from "fs";
 import * as fs from "fs"
 import glob from "glob";
@@ -8,6 +7,7 @@ import * as process from "process";
 import tempfile from "tempfile";
 import { toPromise } from "../src/util/util";
 import { programOutput } from "../src/api";
+import { compare } from "./util";
 
 const casesDir = path.normalize(__dirname + "/../../test/cases");
 
@@ -58,7 +58,7 @@ async function main() {
             // read json expected for case
             const expectedObj = await getExpectation(caseFilePath);
             // deep compare the 2
-            const difference = diff(expectedObj, resultObj);
+            const difference = compare(expectedObj, resultObj);
             // output the difference
             // print pass or fail
             if (difference && difference.length > 0) {
