@@ -115,6 +115,18 @@ export function getNameIfNameDeclaration(node: ts.Node): string | undefined {
     return undefined;
 }
 
+export function getNameIfObjectMember(node: ts.Node): string | undefined {
+    if (ts.isMethodDeclaration(node)) {
+        return getMethodDeclarationName(node);
+    }
+
+    if (ts.isAccessor(node)) {
+        return getFirstIdentifierName(node);
+    }
+
+    return undefined;
+}
+
 function getIdentifierDespiteBrackets(node: ts.Node): string | undefined {
     if (ts.isIdentifier(node)) {
         return node.getText();
@@ -144,12 +156,9 @@ function getClassExpressionName(
     node: ts.ClassExpression,
     variableBeingDefined: string | undefined = undefined
 ): string | undefined {
-    const firstChild = node.getChildAt(1);
-    if (ts.isIdentifier(firstChild)) {
-        return firstChild.getText();
-    }
-
-    return variableBeingDefined ?? undefined;
+    return maybeGetFirstIdentifierName(node)
+        ?? variableBeingDefined
+        ?? undefined;
 }
 
 function getFunctionNodeName(
@@ -157,7 +166,7 @@ function getFunctionNodeName(
     variableBeingDefined: string | undefined = undefined
 ): string {
     if (ts.isAccessor(func)) {
-        return func.getChildAt(1).getText();
+        return getFirstIdentifierName(func);
     }
 
     if (ts.isArrowFunction(func)) {
@@ -181,14 +190,9 @@ function getFunctionNodeName(
         }
     }
 
-    if (ts.isMethodDeclaration(func)) {
-        const name = getIdentifier(func);
-
-        if (name !== undefined) {
-            return name;
-        }
-
-        throw new UnreachableNodeState(func, "Method has no identifier.");
+    const name = getMethodDeclarationName(func);
+    if (name !== undefined) {
+        return name;
     }
 
     throw new UnreachableNodeState(func, "FunctionNode is not of a recognised type.");
@@ -196,6 +200,17 @@ function getFunctionNodeName(
 
 function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
     return node.getChildAt(1).getText();
+}
+
+function getFirstIdentifierName(node: ts.Node): string {
+    const name = node.getChildren()
+        .find(child => ts.isIdentifier(child));
+
+    if (name === undefined) {
+        throw new UnreachableNodeState(node, "Node was expected to have an identifier.");
+    }
+
+    return name.getText();
 }
 
 function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
@@ -211,6 +226,16 @@ function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return moduleIdentifier.getText();
 }
 
+function getMethodDeclarationName(node: ts.MethodDeclaration): string {
+    const name = getIdentifier(node);
+
+    if (name !== undefined) {
+        return name;
+    }
+
+    throw new UnreachableNodeState(node, "Method has no identifier.");
+}
+
 function getNewedConstructorName(node: ts.NewExpression): string {
     return getTextWithoutBrackets(node.getChildAt(1));
 }
@@ -222,4 +247,11 @@ function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
 export function getVariableDeclarationName(node: ts.VariableDeclaration): string {
     const identifier = node.getChildAt(0);
     return identifier.getText();
+}
+
+function maybeGetFirstIdentifierName(node: ts.Node): string {
+    const name = node.getChildren()
+        .find(child => ts.isIdentifier(child));
+
+    return name === undefined ? "" : name.getText();
 }

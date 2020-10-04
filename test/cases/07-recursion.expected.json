@@ -75,6 +75,20 @@
                 "score": 1,
                 "line": 43,
                 "column": 8
+            },
+            {
+                "name": "Class",
+                "score": 3,
+                "line": 48,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "constructor",
+                        "score": 3,
+                        "line": 49,
+                        "column": 5
+                    }
+                ]
             }
         ]
     }

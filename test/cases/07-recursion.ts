@@ -44,3 +44,11 @@ const Obj = {
         Obj.i()
     }
 };
+
+class Class {
+    constructor() {
+        Class;
+        Class();
+        new Class();
+    }
+}

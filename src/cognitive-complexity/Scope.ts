@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { findIntroducedLocalName, getNameIfNameDeclaration } from "./node-naming";
+import { findIntroducedLocalName, getNameIfNameDeclaration, getNameIfObjectMember } from "./node-naming";
 
 /**
  * Contains all names that could be recursively referenced.
@@ -47,12 +47,11 @@ export class Scope {
             return new Scope(this.local, [...this.object, variableBeingDefined + "." + name]);
         }
 
-        if (ts.isMethodDeclaration(node)) {
-            const name = node.getChildAt(0).getText();
-
-            const newObjectNames = [...this.object, "this." + name];
+        const maybeName = getNameIfObjectMember(node);
+        if (maybeName !== undefined) {
+            const newObjectNames = [...this.object, "this." + maybeName];
             if (variableBeingDefined) {
-                newObjectNames.push(variableBeingDefined + "." + name);
+                newObjectNames.push(variableBeingDefined + "." + maybeName);
             }
 
             return new Scope(this.local, newObjectNames);

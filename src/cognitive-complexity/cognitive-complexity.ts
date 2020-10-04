@@ -174,14 +174,13 @@ function nodeCost(
     let score = inherentCost(node, scope);
     score += costOfDepth(node, depth);
 
-    /**
-     * If the node is intro
-     * Update the variable being defined that is passed down to the children,
-     */
+    // the name being introduced if there is one
     const variableBeingDefined = getNameIfNameDeclaration(node);
 
     // get the ancestors container names from the perspective of this node's children
-    const namedAncestorsOfChildren = scope.maybeAddLocal(node).maybeAddObject(node, variableBeingDefined);
+    const namedAncestorsOfChildren = scope
+        .maybeAddLocal(node)
+        .maybeAddObject(node, variableBeingDefined);
     const { same, below } = whereAreChildren(node);
 
     const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
