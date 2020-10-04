@@ -123,6 +123,12 @@ export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
 
+export function passThroughNameBeingAssigned(node: ts.Node): boolean {
+    return isSyntaxList(node)
+        || ts.isObjectLiteralExpression(node)
+        || ts.isParenthesizedExpression(node);
+}
+
 export function report(node: ts.Node, depth: number = 0) {
     const toLog = [repeat("\t", depth), ts.SyntaxKind[node.kind], node.kind];
 

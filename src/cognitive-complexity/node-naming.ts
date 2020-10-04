@@ -99,21 +99,14 @@ export function getNameIfCalledNode(node: ts.Node): string | undefined {
 
 export function getNameOfAssignment(node: ts.Node): string | undefined {
     if (ts.isVariableDeclaration(node)
-        || ts.isCallSignatureDeclaration(node)
+        || ts.isPropertyDeclaration(node)
+        || ts.isPropertyAssignment(node)
         || ts.isBindingElement(node)
         || ts.isTypeElement(node)
         || ts.isEnumDeclaration(node)
         || ts.isEnumMember(node)
+        || ts.isCallSignatureDeclaration(node)
     ) {
-        const identifier = node.getChildAt(0).getText();
-        return identifier;
-    }
-
-    if (ts.isPropertyAssignment(node)) {
-        return node.getChildAt(0).getText();
-    }
-
-    if (ts.isPropertyDeclaration(node)) {
         return getIdentifier(node);
     }
 
@@ -166,8 +159,7 @@ function getClassExpressionName(
     variableBeingDefined: string | undefined = undefined
 ): string | undefined {
     return maybeGetFirstIdentifierName(node)
-        ?? variableBeingDefined
-        ?? undefined;
+        ?? variableBeingDefined;
 }
 
 function getFunctionNodeName(func: FunctionNode): string | undefined {
@@ -248,11 +240,6 @@ function getNewedConstructorName(node: ts.NewExpression): string {
 
 function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
     return node.getChildAt(1).getText();
-}
-
-function getVariableDeclarationName(node: ts.VariableDeclaration): string {
-    const identifier = node.getChildAt(0);
-    return identifier.getText();
 }
 
 function maybeGetFirstIdentifierName(node: ts.Node): string | undefined {

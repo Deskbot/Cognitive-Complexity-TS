@@ -37,12 +37,16 @@ export class Scope {
         const local = [] as string[];
         const object = [] as string[];
 
-        const introducedLocal = getIntroducedLocalName(node) ?? variableBeingDefined;
+        const introducedLocal = getIntroducedLocalName(node);
         if (introducedLocal !== undefined) {
             local.push(introducedLocal);
         }
 
-        if (ts.isPropertyAssignment(node)) {
+        if (ts.isPropertyAssignment(node)
+            || ts.isPropertyDeclaration(node)
+            || ts.isMethodDeclaration(node)
+            || ts.isAccessor(node)
+        ) {
             if (variableBeingDefined !== undefined) {
                 const name = node.getChildAt(0).getText();
                 object.push(variableBeingDefined + "." + name);

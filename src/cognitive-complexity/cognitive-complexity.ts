@@ -12,7 +12,8 @@ import {
     getColumnAndLine,
     isSequenceOfDifferentBooleanOperations,
     isBreakOrContinueToLabel,
-    isBinaryTypeOperator
+    isBinaryTypeOperator,
+    passThroughNameBeingAssigned
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -35,7 +36,7 @@ function aggregateCostOfChildren(
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
-        const childCost = nodeCost(child, topLevel, childDepth, scope);
+        const childCost = nodeCost(child, topLevel, childDepth, scope, variableBeingDefined);
 
         score += childCost.score;
 
@@ -170,26 +171,31 @@ function nodeCost(
     topLevel: boolean,
     depth = 0,
     scope = new Scope([], []),
+    variableBeingDefined: string | undefined = undefined,
 ): ScoreAndInner {
     let score = inherentCost(node, scope);
     score += costOfDepth(node, depth);
 
-    // the name being introduced if there is one
-    const variableBeingDefined = getNameOfAssignment(node);
-
     // get the ancestors container names from the perspective of this node's children
     const namedAncestorsOfChildren = scope
-        .maybeAddLocal(node, variableBeingDefined)
-        .maybeAddObject(node, variableBeingDefined);
+        .maybeAddToScope(node, variableBeingDefined);
     const { same, below } = whereAreChildren(node);
 
-    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
+    // the name being introduced if there is one
+    let newVariableBeingDefined = getNameOfAssignment(node);
+    if (newVariableBeingDefined === undefined
+        && passThroughNameBeingAssigned(node)
+    ) {
+        newVariableBeingDefined = variableBeingDefined;
+    }
+
+    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined);
 
     // The nodes below this node have the same depth number,
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, variableBeingDefined);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined);
 
     score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.score;
