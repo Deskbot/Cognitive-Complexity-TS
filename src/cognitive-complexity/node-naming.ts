@@ -54,7 +54,11 @@ export function getIntroducedLocalName(node: ts.Node): string | undefined {
         return getInterfaceDeclarationName(node);
     }
 
-    if (isFunctionNode(node)) {
+    // functions not always defined in object scope
+    if (ts.isArrowFunction(node)
+        || ts.isFunctionDeclaration(node)
+        || ts.isFunctionExpression(node)
+    ) {
         return getFunctionNodeName(node);
     }
 
