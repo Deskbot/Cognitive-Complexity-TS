@@ -47,7 +47,6 @@ const Obj = {
 
 class Class {
     constructor() {
-        Class;
         Class();
         new Class();
     }
