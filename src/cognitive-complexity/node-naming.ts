@@ -88,7 +88,7 @@ export function getNameIfCalledNode(node: ts.Node): string | undefined {
     return undefined;
 }
 
-export function getNameIfNameDeclaration(node: ts.Node): string | undefined {
+export function getIntroducedName(node: ts.Node): string | undefined {
     if (ts.isVariableDeclaration(node)
         || ts.isCallSignatureDeclaration(node)
         || ts.isBindingElement(node)
