@@ -1,6 +1,6 @@
 {
     "33-class-recursion.ts": {
-        "score": 5,
+        "score": 4,
         "inner": [
             {
                 "name": "NewSelf",
@@ -17,13 +17,13 @@
                 ]
             },
             {
-                "name": "RecursiveConstructor",
+                "name": "anonymousClass",
                 "score": 1,
                 "line": 7,
-                "column": 1,
+                "column": 24,
                 "inner": [
                     {
-                        "name": "constructor",
+                        "name": "method",
                         "score": 1,
                         "line": 8,
                         "column": 5
@@ -31,35 +31,21 @@
                 ]
             },
             {
-                "name": "anonymousClass",
-                "score": 1,
-                "line": 13,
-                "column": 24,
-                "inner": [
-                    {
-                        "name": "method",
-                        "score": 1,
-                        "line": 14,
-                        "column": 5
-                    }
-                ]
-            },
-            {
                 "name": "NamedClass",
                 "score": 2,
-                "line": 19,
+                "line": 13,
                 "column": 22,
                 "inner": [
                     {
                         "name": "alias",
                         "score": 1,
-                        "line": 20,
+                        "line": 14,
                         "column": 5
                     },
                     {
                         "name": "realName",
                         "score": 1,
-                        "line": 24,
+                        "line": 18,
                         "column": 5
                     }
                 ]

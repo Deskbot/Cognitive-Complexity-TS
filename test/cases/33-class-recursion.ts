@@ -4,12 +4,6 @@ class NewSelf {
     }
 }
 
-class RecursiveConstructor {
-    constructor() {
-        this.constructor();
-    }
-}
-
 const anonymousClass = class {
     method() {
         new anonymousClass();
