@@ -23,37 +23,47 @@ export class Scope {
         return this.local.includes(name) || this.object.includes(name);
     }
 
-    maybeAddLocal(node: ts.Node, variableBeingDefined: string | undefined): Scope {
-        const containerNameMaybe = getIntroducedLocalName(node);
-        if (containerNameMaybe !== undefined) {
-            return new Scope([...this.local, containerNameMaybe], this.object);
+    private localToAdd(node: ts.Node, variableBeingDefined: string | undefined): string | undefined {
+        return getIntroducedLocalName(node)
+            ?? variableBeingDefined;
+    }
+
+    private objectToAdd(node: ts.Node, variableBeingDefined: string | undefined): string[] | undefined {
+        if (ts.isPropertyAssignment(node)) {
+            if (variableBeingDefined === undefined) {
+                return undefined;
+            }
+
+            const name = node.getChildAt(0).getText();
+            return [variableBeingDefined + "." + name];
         }
 
-        if (variableBeingDefined !== undefined) {
-            return new Scope([...this.local, variableBeingDefined], this.object);
+        const maybeName = getNameIfObjectMember(node);
+        if (maybeName === undefined) {
+            return undefined;
+        }
+
+        const newObjectNames = [...this.object, "this." + maybeName];
+        if (variableBeingDefined) {
+            newObjectNames.push(variableBeingDefined + "." + maybeName);
+        }
+
+        return newObjectNames;
+    }
+
+    maybeAddLocal(node: ts.Node, variableBeingDefined: string | undefined): Scope {
+        const local = this.localToAdd(node, variableBeingDefined);
+        if (local !== undefined) {
+            return new Scope([...this.local, local], this.object);
         }
 
         return this;
     }
 
     maybeAddObject(node: ts.Node, variableBeingDefined: string | undefined): Scope {
-        if (ts.isPropertyAssignment(node)) {
-            if (variableBeingDefined === undefined) {
-                return this;
-            }
-
-            const name = node.getChildAt(0).getText();
-            return new Scope(this.local, [...this.object, variableBeingDefined + "." + name]);
-        }
-
-        const maybeName = getNameIfObjectMember(node);
-        if (maybeName !== undefined) {
-            const newObjectNames = [...this.object, "this." + maybeName];
-            if (variableBeingDefined) {
-                newObjectNames.push(variableBeingDefined + "." + maybeName);
-            }
-
-            return new Scope(this.local, newObjectNames);
+        const object = this.objectToAdd(node, variableBeingDefined);
+        if (object !== undefined) {
+            return new Scope(this.local, [...this.object, ...object]);
         }
 
         return this;
