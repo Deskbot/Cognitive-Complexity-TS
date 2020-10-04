@@ -50,4 +50,8 @@ class Class {
         Class();
         new Class();
     }
+
+    method() {
+        this.method();
+    }
 }
