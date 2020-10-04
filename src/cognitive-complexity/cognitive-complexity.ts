@@ -4,7 +4,7 @@ import { countNotAtTheEnds } from "../util/util";
 import {
     chooseContainerName,
     getNameIfCalledNode,
-    getIntroducedName
+    getNameOfAssignment
 } from "./node-naming";
 import { whereAreChildren } from "./depth";
 import {
@@ -175,7 +175,7 @@ function nodeCost(
     score += costOfDepth(node, depth);
 
     // the name being introduced if there is one
-    const variableBeingDefined = getIntroducedName(node);
+    const variableBeingDefined = getNameOfAssignment(node);
 
     // get the ancestors container names from the perspective of this node's children
     const namedAncestorsOfChildren = scope

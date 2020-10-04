@@ -20,9 +20,12 @@ export function chooseContainerName(node: ts.Node, variableBeingDefined: string 
         return getClassExpressionName(node, variableBeingDefined);
     }
 
-    const name = findIntroducedLocalName(node);
-    if (name !== undefined) {
-        return name;
+    if (ts.isConstructorDeclaration(node)) {
+        return "constructor";
+    }
+
+    if (ts.isInterfaceDeclaration(node)) {
+        return getInterfaceDeclarationName(node);
     }
 
     if (ts.isModuleDeclaration(node)) {
@@ -36,7 +39,7 @@ export function chooseContainerName(node: ts.Node, variableBeingDefined: string 
     return undefined;
 }
 
-export function findIntroducedLocalName(node: ts.Node): string | undefined {
+export function getIntroducedLocalName(node: ts.Node): string | undefined {
     if (ts.isClassDeclaration(node)) {
         return getClassDeclarationName(node);
     }
@@ -45,16 +48,16 @@ export function findIntroducedLocalName(node: ts.Node): string | undefined {
         return getClassExpressionName(node);
     }
 
-    if (ts.isConstructorDeclaration(node)) {
-        return "constructor";
-    }
-
     if (ts.isInterfaceDeclaration(node)) {
         return getInterfaceDeclarationName(node);
     }
 
     if (isFunctionNode(node)) {
         return getFunctionNodeName(node);
+    }
+
+    if (ts.isTypeAliasDeclaration(node)) {
+        return getTypeAliasName(node);
     }
 
     return undefined;
@@ -88,7 +91,7 @@ export function getNameIfCalledNode(node: ts.Node): string | undefined {
     return undefined;
 }
 
-export function getIntroducedName(node: ts.Node): string | undefined {
+export function getNameOfAssignment(node: ts.Node): string | undefined {
     if (ts.isVariableDeclaration(node)
         || ts.isCallSignatureDeclaration(node)
         || ts.isBindingElement(node)

@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { findIntroducedLocalName, getNameIfObjectMember } from "./node-naming";
+import { getIntroducedLocalName, getNameIfObjectMember } from "./node-naming";
 
 /**
  * Contains all names that could be recursively referenced.
@@ -24,7 +24,7 @@ export class Scope {
     }
 
     maybeAddLocal(node: ts.Node, variableBeingDefined: string | undefined): Scope {
-        const containerNameMaybe = findIntroducedLocalName(node);
+        const containerNameMaybe = getIntroducedLocalName(node);
         if (containerNameMaybe !== undefined) {
             return new Scope([...this.local, containerNameMaybe], this.object);
         }
