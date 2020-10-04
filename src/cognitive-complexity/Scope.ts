@@ -23,50 +23,44 @@ export class Scope {
         return this.local.includes(name) || this.object.includes(name);
     }
 
-    private localToAdd(node: ts.Node, variableBeingDefined: string | undefined): string | undefined {
-        return getIntroducedLocalName(node)
-            ?? variableBeingDefined;
-    }
-
-    private objectToAdd(node: ts.Node, variableBeingDefined: string | undefined): string[] | undefined {
-        if (ts.isPropertyAssignment(node)) {
-            if (variableBeingDefined === undefined) {
-                return undefined;
-            }
-
-            const name = node.getChildAt(0).getText();
-            return [variableBeingDefined + "." + name];
-        }
-
-        const maybeName = getNameIfObjectMember(node);
-        if (maybeName === undefined) {
-            return undefined;
-        }
-
-        const newObjectNames = ["this." + maybeName];
-        if (variableBeingDefined) {
-            newObjectNames.push(variableBeingDefined + "." + maybeName);
-        }
-
-        return newObjectNames;
-    }
-
     maybeAddToScope(node: ts.Node, variableBeingDefined: string | undefined): Scope {
-        const local = this.localToAdd(node, variableBeingDefined);
-        const object = this.objectToAdd(node, variableBeingDefined);
+        const { local, object } = this.scopeToAdd(node, variableBeingDefined);
 
-        if (local !== undefined && object !== undefined) {
-            return new Scope([...this.local, local], [...this.object, ...object]);
-        }
-
-        if (local !== undefined) {
-            return new Scope([...this.local, local], this.object);
-        }
-
-        if (object !== undefined) {
-            return new Scope(this.local, [...this.object, ...object]);
+        if (local.length !== 0 || object.length !== 0) {
+            return new Scope([...this.local, ...local], [...this.object, ...object]);
         }
 
         return this;
+    }
+
+    private scopeToAdd(node: ts.Node, variableBeingDefined: string | undefined): { local: string[], object: string[] } {
+        const local = [] as string[];
+        const object = [] as string[];
+
+        const introducedLocal = getIntroducedLocalName(node) ?? variableBeingDefined;
+        if (introducedLocal !== undefined) {
+            local.push(introducedLocal);
+        }
+
+        if (ts.isPropertyAssignment(node)) {
+            if (variableBeingDefined !== undefined) {
+                const name = node.getChildAt(0).getText();
+                object.push(variableBeingDefined + "." + name);
+            }
+        }
+
+        const maybeName = getNameIfObjectMember(node);
+        if (maybeName !== undefined) {
+            object.push("this." + maybeName);
+            if (variableBeingDefined) {
+                object.push(variableBeingDefined + "." + maybeName);
+                local.push(variableBeingDefined + "." + maybeName);
+            }
+        }
+
+        return {
+            local,
+            object,
+        }
     }
 }
