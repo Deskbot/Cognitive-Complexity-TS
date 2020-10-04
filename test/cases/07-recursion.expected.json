@@ -53,28 +53,28 @@
                 "column": 11
             },
             {
-                "name": "f",
+                "name": "nonRecursive",
                 "score": 0,
                 "line": 34,
                 "column": 5
             },
             {
-                "name": "g",
+                "name": "recursive",
                 "score": 1,
                 "line": 37,
                 "column": 5
             },
             {
-                "name": "h",
+                "name": "recursive2",
                 "score": 1,
                 "line": 40,
                 "column": 5
             },
             {
-                "name": "i",
+                "name": "recursive3",
                 "score": 1,
                 "line": 43,
-                "column": 8
+                "column": 17
             },
             {
                 "name": "Class",

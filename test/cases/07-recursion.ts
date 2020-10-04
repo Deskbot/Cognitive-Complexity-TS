@@ -31,17 +31,17 @@ const o = function p() {
 }
 
 const Obj = {
-    f() {
-        f();
+    nonRecursive() {
+        nonRecursive();
     },
-    g() {
-        this.g();
+    recursive() {
+        this.recursive();
     },
-    h() {
-        Obj.h();
+    recursive2() {
+        Obj.recursive2();
     },
-    i: () => {
-        Obj.i()
+    recursive3: () => {
+        Obj.recursive3()
     }
 };
 
