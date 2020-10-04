@@ -42,6 +42,10 @@ export function chooseContainerName(node: ts.Node, variableBeingDefined: string 
 }
 
 export function getIntroducedLocalName(node: ts.Node): string | undefined {
+    if (ts.isVariableDeclaration(node)) {
+        return getIdentifier(node);
+    }
+
     if (ts.isClassDeclaration(node)) {
         return getClassDeclarationName(node);
     }
