@@ -43,7 +43,7 @@ export class Scope {
             return undefined;
         }
 
-        const newObjectNames = [...this.object, "this." + maybeName];
+        const newObjectNames = ["this." + maybeName];
         if (variableBeingDefined) {
             newObjectNames.push(variableBeingDefined + "." + maybeName);
         }
@@ -51,17 +51,18 @@ export class Scope {
         return newObjectNames;
     }
 
-    maybeAddLocal(node: ts.Node, variableBeingDefined: string | undefined): Scope {
+    maybeAddToScope(node: ts.Node, variableBeingDefined: string | undefined): Scope {
         const local = this.localToAdd(node, variableBeingDefined);
+        const object = this.objectToAdd(node, variableBeingDefined);
+
+        if (local !== undefined && object !== undefined) {
+            return new Scope([...this.local, local], [...this.object, ...object]);
+        }
+
         if (local !== undefined) {
             return new Scope([...this.local, local], this.object);
         }
 
-        return this;
-    }
-
-    maybeAddObject(node: ts.Node, variableBeingDefined: string | undefined): Scope {
-        const object = this.objectToAdd(node, variableBeingDefined);
         if (object !== undefined) {
             return new Scope(this.local, [...this.object, ...object]);
         }
