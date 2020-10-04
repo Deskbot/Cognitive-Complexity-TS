@@ -178,7 +178,7 @@ function nodeCost(
 
     // get the ancestors container names from the perspective of this node's children
     const namedAncestorsOfChildren = scope
-        .maybeAddToScope(node, variableBeingDefined);
+        .maybeAdd(node, variableBeingDefined);
     const { same, below } = whereAreChildren(node);
 
     // the name being introduced if there is one

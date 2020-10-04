@@ -23,7 +23,7 @@ export class Scope {
         return this.local.includes(name) || this.object.includes(name);
     }
 
-    maybeAddToScope(node: ts.Node, variableBeingDefined: string | undefined): Scope {
+    maybeAdd(node: ts.Node, variableBeingDefined: string | undefined): Scope {
         const { local, object } = this.scopeToAdd(node, variableBeingDefined);
 
         if (local.length !== 0 || object.length !== 0) {
