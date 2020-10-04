@@ -249,9 +249,9 @@ export function getVariableDeclarationName(node: ts.VariableDeclaration): string
     return identifier.getText();
 }
 
-function maybeGetFirstIdentifierName(node: ts.Node): string {
+function maybeGetFirstIdentifierName(node: ts.Node): string | undefined {
     const name = node.getChildren()
         .find(child => ts.isIdentifier(child));
 
-    return name === undefined ? "" : name.getText();
+    return name?.getText();
 }
