@@ -9,7 +9,9 @@ import {
 
 export function chooseContainerName(node: ts.Node, variableBeingDefined: string | undefined): string | undefined {
     if (isFunctionNode(node)) {
-        return getFunctionNodeName(node, variableBeingDefined);
+        return getFunctionNodeName(node)
+            ?? variableBeingDefined
+            ?? "";
     }
 
     if (ts.isClassDeclaration(node)) {
@@ -164,16 +166,13 @@ function getClassExpressionName(
         ?? undefined;
 }
 
-function getFunctionNodeName(
-    func: FunctionNode,
-    variableBeingDefined: string | undefined = undefined
-): string {
+function getFunctionNodeName(func: FunctionNode): string | undefined {
     if (ts.isAccessor(func)) {
         return getFirstIdentifierName(func);
     }
 
     if (ts.isArrowFunction(func)) {
-        return variableBeingDefined ?? "";
+        return undefined;
     }
 
     if (ts.isFunctionDeclaration(func)) {
@@ -189,7 +188,7 @@ function getFunctionNodeName(
         if (ts.isIdentifier(maybeIdentifier)) {
             return maybeIdentifier.getText();
         } else {
-            return variableBeingDefined ?? "";
+            return undefined;
         }
     }
 
