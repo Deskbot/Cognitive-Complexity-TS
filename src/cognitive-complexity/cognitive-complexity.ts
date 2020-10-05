@@ -181,7 +181,15 @@ function nodeCost(
         .maybeAdd(node, variableBeingDefined);
     const { same, below } = whereAreChildren(node);
 
-    // the name being introduced if there is one
+    /**
+     * The name being introduced (if there is one)
+     * for a variable whose declaration this scope is directly inside of.
+     * It is used to give names to anonymous functions and classes.
+     * let a =    $a$         () => {};
+     * let a =  ( $a$         () => {} );
+     * let a = f( $undefined$ () => {} );
+     * let a =                      () => { $undefined$ };
+     */
     let newVariableBeingDefined = getNameOfAssignment(node);
     if (newVariableBeingDefined === undefined
         && passThroughNameBeingAssigned(node)

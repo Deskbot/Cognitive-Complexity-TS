@@ -1,5 +1,5 @@
 function f() {
-    const ff = () => { };
+    const ff = () => {};
 
     const fff = function() {}
 
