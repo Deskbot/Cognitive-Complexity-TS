@@ -34,12 +34,6 @@ class BracketedThis {
     }
 }
 
-class BracketedConstructor {
-    constructor() {
-        (this.constructor)();
-    }
-}
-
 const val = function func() {
     (val)();
 }

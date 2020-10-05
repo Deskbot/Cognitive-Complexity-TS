@@ -77,35 +77,21 @@
                 ]
             },
             {
-                "name": "BracketedConstructor",
-                "score": 1,
-                "line": 37,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "constructor",
-                        "score": 1,
-                        "line": 38,
-                        "column": 5
-                    }
-                ]
-            },
-            {
                 "name": "func",
                 "score": 1,
-                "line": 43,
+                "line": 37,
                 "column": 13
             },
             {
                 "name": "bracketedConst",
                 "score": 1,
-                "line": 48,
+                "line": 42,
                 "column": 5
             },
             {
                 "name": "bracketedMethodCall",
                 "score": 1,
-                "line": 52,
+                "line": 46,
                 "column": 5
             }
         ]
