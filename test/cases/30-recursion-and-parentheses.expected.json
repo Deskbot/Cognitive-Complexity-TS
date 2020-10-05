@@ -1,6 +1,6 @@
 {
     "30-recursion-and-parentheses.ts": {
-        "score": 11,
+        "score": 7,
         "inner": [
             {
                 "name": "parens",
@@ -10,20 +10,14 @@
             },
             {
                 "name": "C",
-                "score": 2,
+                "score": 1,
                 "line": 5,
                 "column": 1,
                 "inner": [
                     {
-                        "name": "bracketedThis",
-                        "score": 1,
-                        "line": 6,
-                        "column": 5
-                    },
-                    {
                         "name": "bracketedCallExpression",
                         "score": 1,
-                        "line": 10,
+                        "line": 6,
                         "column": 5
                     }
                 ]
@@ -31,19 +25,19 @@
             {
                 "name": "l",
                 "score": 1,
-                "line": 15,
+                "line": 11,
                 "column": 11
             },
             {
                 "name": "NoParentheses",
                 "score": 1,
-                "line": 19,
+                "line": 15,
                 "column": 1,
                 "inner": [
                     {
                         "name": "constructor",
                         "score": 1,
-                        "line": 20,
+                        "line": 16,
                         "column": 5
                     }
                 ]
@@ -51,27 +45,13 @@
             {
                 "name": "Parentheses",
                 "score": 1,
-                "line": 25,
+                "line": 21,
                 "column": 1,
                 "inner": [
                     {
                         "name": "constructor",
                         "score": 1,
-                        "line": 26,
-                        "column": 5
-                    }
-                ]
-            },
-            {
-                "name": "BracketedThis",
-                "score": 1,
-                "line": 31,
-                "column": 1,
-                "inner": [
-                    {
-                        "name": "constructor",
-                        "score": 1,
-                        "line": 32,
+                        "line": 22,
                         "column": 5
                     }
                 ]
@@ -79,19 +59,13 @@
             {
                 "name": "func",
                 "score": 1,
-                "line": 37,
+                "line": 27,
                 "column": 13
-            },
-            {
-                "name": "bracketedConst",
-                "score": 1,
-                "line": 42,
-                "column": 5
             },
             {
                 "name": "bracketedMethodCall",
                 "score": 1,
-                "line": 46,
+                "line": 32,
                 "column": 5
             }
         ]

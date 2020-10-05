@@ -3,10 +3,6 @@ function parens() {
 }
 
 class C {
-    bracketedThis() {
-        (this).bracketedThis();
-    }
-
     bracketedCallExpression() {
         (this.bracketedCallExpression)();
     }
@@ -28,21 +24,11 @@ class Parentheses {
     }
 }
 
-class BracketedThis {
-    constructor() {
-        (this).constructor();
-    }
-}
-
 const val = function func() {
     (val)();
 }
 
 const Obj = {
-    bracketedConst() {
-        (Obj).bracketedConst();
-    },
-
     bracketedMethodCall() {
         (Obj.bracketedMethodCall)();
     }
