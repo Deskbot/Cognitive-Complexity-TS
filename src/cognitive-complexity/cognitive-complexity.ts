@@ -4,8 +4,7 @@ import { countNotAtTheEnds } from "../util/util";
 import {
     chooseContainerName,
     getNameIfCalledNode,
-    findIntroducedName,
-    getNameIfNameDeclaration
+    getNameOfAssignment
 } from "./node-naming";
 import { whereAreChildren } from "./depth";
 import {
@@ -13,8 +12,10 @@ import {
     getColumnAndLine,
     isSequenceOfDifferentBooleanOperations,
     isBreakOrContinueToLabel,
-    isBinaryTypeOperator
+    isBinaryTypeOperator,
+    passThroughNameBeingAssigned
 } from "./node-inspection";
+import { Scope } from "./Scope";
 
 export function fileCost(file: ts.SourceFile): FileOutput {
     return nodeCost(file, true);
@@ -24,7 +25,7 @@ function aggregateCostOfChildren(
     children: ts.Node[],
     childDepth: number,
     topLevel: boolean,
-    ancestorsOfChild: ReadonlyArray<string>,
+    scope: Scope,
     variableBeingDefined: string | undefined,
 ): ScoreAndInner {
     let score = 0;
@@ -35,7 +36,7 @@ function aggregateCostOfChildren(
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
-        const childCost = nodeCost(child, topLevel, childDepth, ancestorsOfChild);
+        const childCost = nodeCost(child, topLevel, childDepth, scope, variableBeingDefined);
 
         score += childCost.score;
 
@@ -92,7 +93,7 @@ function costOfDepth(node: ts.Node, depth: number): number {
     return 0;
 }
 
-function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): number {
+function inherentCost(node: ts.Node, scope: Scope): number {
     // certain language features carry and inherent cost
     if (isSequenceOfDifferentBooleanOperations(node)
         || ts.isCatchClause(node)
@@ -112,7 +113,7 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
 
     const calledName = getNameIfCalledNode(node);
     if (calledName !== undefined) {
-        return namedAncestors.includes(calledName) ? 1 : 0;
+        return scope.includes(calledName) ? 1 : 0;
     }
 
     // An `if` may contain an else keyword followed by else code.
@@ -163,35 +164,38 @@ function inherentCost(node: ts.Node, namedAncestors: ReadonlyArray<string>): num
  * @param node The node whose cost we want
  * @param topLevel Whether the node is at the top level of a file
  * @param depth The depth the node is at
- * @param namedAncestors All names that if used would be considered recursively referenced.
- * @param variableAlreadyBeingDefined The name of a variable whose definition @param{node} is part of.
+ * @param scope The scope at the node
  */
 function nodeCost(
     node: ts.Node,
     topLevel: boolean,
     depth = 0,
-    namedAncestors = [] as ReadonlyArray<string>
+    scope = new Scope([], []),
+    variableBeingDefined: string | undefined = undefined,
 ): ScoreAndInner {
-    let score = inherentCost(node, namedAncestors);
+    let score = inherentCost(node, scope);
     score += costOfDepth(node, depth);
 
     // get the ancestors container names from the perspective of this node's children
-    const namedAncestorsOfChildren = maybeAddNodeToNamedAncestors(node, namedAncestors);
+    const namedAncestorsOfChildren = scope
+        .maybeAdd(node, variableBeingDefined);
     const { same, below } = whereAreChildren(node);
 
-    /**
-     * If the node is intro
-     * Update the variable being defined that is passed down to the children,
-     */
-    const variableBeingDefined = getNameIfNameDeclaration(node);
+    // the name being introduced if there is one
+    let newVariableBeingDefined = getNameOfAssignment(node);
+    if (newVariableBeingDefined === undefined
+        && passThroughNameBeingAssigned(node)
+    ) {
+        newVariableBeingDefined = variableBeingDefined;
+    }
 
-    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, variableBeingDefined);
+    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined);
 
     // The nodes below this node have the same depth number,
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, variableBeingDefined);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined);
 
     score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.score;
@@ -202,21 +206,4 @@ function nodeCost(
         inner,
         score,
     };
-}
-
-function maybeAddNodeToNamedAncestors(
-    node: ts.Node,
-    ancestorsOfNode: ReadonlyArray<string>
-): ReadonlyArray<string> {
-    const containerNameMaybe = findIntroducedName(node);
-    if (containerNameMaybe !== undefined) {
-        return [...ancestorsOfNode, containerNameMaybe];
-    }
-
-    const variableNameMaybe = getNameIfNameDeclaration(node);
-    if (variableNameMaybe !== undefined) {
-        return [...ancestorsOfNode, variableNameMaybe];
-    }
-
-    return ancestorsOfNode;
 }

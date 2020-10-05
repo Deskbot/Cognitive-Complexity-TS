@@ -17,12 +17,6 @@ class C {
     }
 }
 
-const D = {
-    j() {
-        D.j();
-    }
-};
-
 const k = function l() {
     l();
 }
@@ -34,4 +28,30 @@ const m = function n() {
 
 const o = function p() {
     o();
+}
+
+const Obj = {
+    nonRecursive() {
+        nonRecursive();
+    },
+    recursive() {
+        this.recursive();
+    },
+    recursive2() {
+        Obj.recursive2();
+    },
+    recursive3: () => {
+        Obj.recursive3()
+    }
+};
+
+class Class {
+    constructor() {
+        Class();
+        new Class();
+    }
+
+    method() {
+        this.method();
+    }
 }
