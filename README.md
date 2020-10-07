@@ -78,6 +78,7 @@ Changes:
     * Mapped types have an inherent and nesting increments
     * Recursive types have an inherent increment
 * Recursive references have an increment, not just recursive calls
+* `&` and `|` are not supported by TypeScript as eager boolean operators, so they do not carry an inherent increment.
 
 ## Output
 
