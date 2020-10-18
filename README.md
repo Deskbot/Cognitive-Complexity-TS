@@ -27,6 +27,19 @@ npx ccts-json [file path]
 
 ```
 
+## API
+
+See `src/api.ts` or `build/src/api.d.ts`.
+
+Functions available when this package is imported:
+
+```
+function getFileOrFolderOutput(entryPath: string): Promise<FileOutput | FolderOutput>;
+function getFileOutput(filePath: string): Promise<FileOutput>;
+function getFolderOutput(folderPath: string): Promise<FolderOutput>;
+function programOutput(entryPath: string): Promise<string>;
+```
+
 ## Simple Overview of the Cognitive Complexity Metric
 
 Each function, class, namespace, type, and file has a complexity score based on the total complexity of all code written inside. The complexity score is not increased by code that is referenced.

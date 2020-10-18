@@ -11,7 +11,7 @@ import { fileCost } from "./cognitive-complexity";
 
 // API
 /**
- * @param entry A file system entry ok unknown type.
+ * @param entry A file system entry path
  */
 export async function getFileOrFolderOutput(entryPath: string): Promise<FileOutput | FolderOutput> {
     const entry = await fsP.stat(entryPath);
