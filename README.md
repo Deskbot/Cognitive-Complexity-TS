@@ -141,7 +141,3 @@ Microsoft doesn't appear to have documentation for what all of the AST nodes are
 ```
 npm run what [file path]
 ```
-
-# License
-
-I haven't decided yet.
