@@ -31,7 +31,7 @@ export async function doesNotThrow<T>(promise: Promise<T>): Promise<boolean> {
  * and ends when all values have been produced.
  * This is faster than spawning promises in sequence.
  */
-export async function keysToAsyncValues<K extends string | number, V>(
+export async function keysToAsyncValues<K extends keyof any, V>(
     keys: K[],
     toValue: (elem: K) => Promise<V>,
 ): Promise<Record<K, V>> {
@@ -54,7 +54,7 @@ export async function keysToAsyncValues<K extends string | number, V>(
  * The keys and values are derived from the input item,
  * but the values either need to be generated asynchronously or not at all.
  */
-export async function createObjectOfPromisedValues<I, K extends string | number | symbol, V>(
+export async function createObjectOfPromisedValues<I, K extends keyof any, V>(
     input: I[],
     toKey: (input: I) => K,
     toMaybePromise: (input: I) => Promise<V> | undefined
