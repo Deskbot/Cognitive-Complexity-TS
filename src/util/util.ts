@@ -55,7 +55,7 @@ export async function keysToAsyncValues<K extends keyof any, V>(
  * but the values either need to be generated asynchronously or not at all.
  */
 export async function createObjectOfPromisedValues<I, K extends keyof any, V>(
-    input: I[],
+    inputs: I[],
     toKey: (input: I) => K,
     toMaybePromise: (input: I) => Promise<V> | undefined
 ): Promise<Record<K, V>> {
@@ -66,13 +66,18 @@ export async function createObjectOfPromisedValues<I, K extends keyof any, V>(
     // If it does so, that key-value pair is assigned to the output.
     // No key-value will be produced if there is no internal Promise to wait for.
 
-    const promises = input.map(async (inputItem) => {
-        const maybePromise = toMaybePromise(inputItem);
+    const promises = [] as Promise<void>[];
+
+    for (const input of inputs) {
+        const maybePromise = toMaybePromise(input);
         if (maybePromise !== undefined) {
-            const key = toKey(inputItem);
-            output[key] = await maybePromise;
+            const promise = maybePromise.then(value => {
+                const key = toKey(input);
+                output[key] = value;
+            });
+            promises.push(promise);
         }
-    });
+    }
 
     // make sure all promises have resolved before returning
     await Promise.all(promises);
