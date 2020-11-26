@@ -3,7 +3,7 @@
 ## Entry Points
 
 * [json.ts]
-* [ui-server.ts]
+* [ui.ts]
 
 ## NodeJS API
 
