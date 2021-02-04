@@ -3,6 +3,7 @@ import { TreeController } from "../controller/TreeController.js";
 import { element } from "../framework.js";
 import { hasMoreThanOneKey } from "../util.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
+import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
 import { FolderContents } from "./tree/FolderContents.js";
 
 export function Main(complexity: ProgramOutput) {
@@ -26,6 +27,12 @@ export function Main(complexity: ProgramOutput) {
         }),
         GlobalControl("Sort By Complexity", () => {
             controller.sortByComplexity();
+        }),
+        GlobalToggleControl(false, hide => hide ? "Show Folders" : "Hide Folders", () => {
+
+        }),
+        GlobalToggleControl(false, hide => hide ? "Show Files" : "Hide Files", () => {
+
         }),
 
         topLevelBoxes.dom
