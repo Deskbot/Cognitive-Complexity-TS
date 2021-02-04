@@ -13,7 +13,7 @@ export function Main(complexity: ProgramOutput) {
     // Otherwise show all nodes minimised by default.
     const onlyOneTopLevelNode = hasMoreThanOneKey(complexity);
 
-    const topLevelBoxes = new FolderContents(controller, complexity, ".", onlyOneTopLevelNode);
+    const topLevelBoxes = new FolderContents(controller, complexity, "", onlyOneTopLevelNode);
 
     return element("main", {},
         GlobalControl("Expand All", () => {
