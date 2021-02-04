@@ -31,7 +31,7 @@ export class FolderContents {
             controller.register(component);
         }
 
-        this.dom = element("div", {});
+        this.dom = element("div");
 
         this.sortInOrder();
     }
