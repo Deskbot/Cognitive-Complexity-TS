@@ -1,6 +1,6 @@
 import { flexGrow, flexNone } from "../../flex.js";
 import { addStyleSheet, element } from "../../framework.js";
-import { computeOnce } from "../../util.js";
+import { computeOnce } from "../../util/util.js";
 import { FlexBox } from "./FlexBox.js";
 import { ToggleButton } from "./ToggleButton.js";
 

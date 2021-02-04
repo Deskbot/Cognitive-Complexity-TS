@@ -2,7 +2,7 @@ import { ProgramOutput } from "../../../../shared/types.js";
 import { Tree } from "../../controller/TreeController.js";
 import { compareOutputs } from "../../domain/output.js";
 import { Controller, element } from "../../framework.js";
-import { arrayToMap } from "../../util.js";
+import { arrayToMap } from "../../util/util.js";
 import { SortedMap } from "../../util/SortedMap.js";
 import { File } from "./File.js";
 import { FileOrFolder } from "./FileOrFolder.js";

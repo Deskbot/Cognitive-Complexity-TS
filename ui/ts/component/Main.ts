@@ -1,7 +1,7 @@
 import { ProgramOutput } from "../../../shared/types";
 import { TreeController } from "../controller/TreeController.js";
 import { element } from "../framework.js";
-import { hasMoreThanOneKey } from "../util.js";
+import { hasMoreThanOneKey } from "../util/util.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
 import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
 import { FolderContents } from "./tree/FolderContents.js";

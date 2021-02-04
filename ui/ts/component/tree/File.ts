@@ -4,7 +4,7 @@ import { StickyTitle } from "../text/StickyTitle.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
-import { iterMap, arrayToMap } from "../../util.js";
+import { iterMap, arrayToMap } from "../../util/util.js";
 import { SortedMap } from "../../util/SortedMap.js";
 import { Tree } from "../../controller/TreeController.js";
 import { Controller } from "../../framework.js";

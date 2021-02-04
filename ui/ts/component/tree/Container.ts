@@ -1,6 +1,6 @@
 import { ContainerOutput } from "../../../../shared/types.js";
 import { Controller, element } from "../../framework.js";
-import { iterMap, arrayToMap } from "../../util.js";
+import { iterMap, arrayToMap } from "../../util/util.js";
 import { SortedMap } from "../../util/SortedMap.js";
 import { CopyText } from "../controls/CopyText.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
