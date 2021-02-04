@@ -8,6 +8,7 @@ import { iterMap, arrayToMap } from "../../util.js";
 import { SortedMap } from "../../util/SortedMap.js";
 import { Tree } from "../../controller/TreeController.js";
 import { Controller } from "../../framework.js";
+import { concatFilePath } from "../../domain/path.js";
 
 export class File implements Tree {
     private box: ToggleableBox;
@@ -20,7 +21,7 @@ export class File implements Tree {
         complexity: FileOutput,
         startOpen: boolean
     ) {
-        const fullPath = path + "/" + name;
+        const fullPath = concatFilePath(path,name);
 
         this.complexityToContainer = new SortedMap(arrayToMap(
             complexity.inner,

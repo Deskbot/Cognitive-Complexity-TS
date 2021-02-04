@@ -4,6 +4,7 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Controller, element } from "../../framework.js";
 import { CopyText } from "../controls/CopyText.js";
 import { Tree } from "../../controller/TreeController.js";
+import { concatFilePath } from "../../domain/path.js";
 
 export class Folder implements Tree {
     private box: ToggleableBox;
@@ -16,7 +17,7 @@ export class Folder implements Tree {
         complexity: FolderOutput,
         startOpen: boolean
     ) {
-        const fullPath = path + "/" + name;
+        const fullPath = concatFilePath(path, name);
 
         this.box = new ToggleableBox([
             element("p", {},
