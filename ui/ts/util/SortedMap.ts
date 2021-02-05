@@ -1,3 +1,5 @@
+import { Sorter } from "./util";
+
 export class SortedMap<K, V> {
     private map: Map<K, V>;
     readonly sortedKeys: K[];
@@ -25,7 +27,7 @@ export class SortedMap<K, V> {
         return this.sortedKeys.length;
     }
 
-    sort(sorter?: (k1: K, k2: K) => number) {
+    sort(sorter?: Sorter<K>) {
         this.sortedKeys.sort(sorter);
     }
 

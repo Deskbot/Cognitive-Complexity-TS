@@ -1,21 +1,19 @@
 import { ProgramOutput } from "../../../shared/types.js";
-import { convertToSortedOutput, SortedProgramOutput } from "../domain/sortedOutput.js";
+import { convertToSortedOutput, SortedProgramOutput, sortFolderByComplexity, sortFolderInOrder } from "../domain/sortedOutput.js";
 
 export class DataController {
     private complexity: SortedProgramOutput;
-    private initialComplexity: SortedProgramOutput;
 
     constructor(progComp: ProgramOutput) {
         this.complexity = convertToSortedOutput(progComp);
-        this.initialComplexity = this.complexity;
     }
 
     sortByComplexity() {
-        // sortFolderByComplexity(this.complexity);
+        sortFolderByComplexity(this.complexity);
     }
 
     sortInOrder() {
-        // sortFolderInOrder(this.complexity);
+        sortFolderInOrder(this.complexity);
     }
 
     hideFiles() {

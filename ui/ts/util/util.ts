@@ -42,3 +42,5 @@ export function iterMap<T,V>(iter: IterableIterator<T>, mapper: (val: T) => V): 
 
     return result;
 }
+
+export type Sorter<T> = (left: T, right: T) => number;
