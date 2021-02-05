@@ -32,3 +32,39 @@ export function compareOutputs(
 
     return 0; // unreachable
 }
+
+export function isFileOutput(output: FileOutput | FolderOutput): output is FileOutput {
+    return "score" in output;
+}
+
+export function sortFolderByComplexity(folder: FolderOutput) {
+    for (const path in folder) {
+        const entry = folder[path];
+
+        // FileOutput
+        if (isFileOutput(entry)) {
+            entry.inner //sort
+        }
+
+        // FolderOutput
+        else {
+            sortFolderByComplexity(entry);
+        }
+    }
+}
+
+export function sortFolderInOrder(folder: FolderOutput) {
+    for (const path in folder) {
+        const entry = folder[path];
+
+        // FileOutput
+        if (isFileOutput(entry)) {
+            entry.inner //sort
+        }
+
+        // FolderOutput
+        else {
+            sortFolderInOrder(entry);
+        }
+    }
+}

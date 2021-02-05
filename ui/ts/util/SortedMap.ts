@@ -9,6 +9,14 @@ export class SortedMap<K, V> {
         this.sortedKeys = [...map.keys()];
     }
 
+    clone(): SortedMap<K,V> {
+        const newSortedMap = Object.create(SortedMap.prototype);
+        newSortedMap.map = new Map(this.map);
+        newSortedMap.sortedKeys = [...this.sortedKeys];
+        newSortedMap.constructor = SortedMap;
+        return newSortedMap;
+    }
+
     get(key: K): V | undefined {
         return this.map.get(key);
     }
