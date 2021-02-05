@@ -15,6 +15,7 @@
         "fallback",
         "flexbox",
         "globalcontrol",
+        "globaltogglecontrol",
         "muts",
         "rerender",
         "stickys",

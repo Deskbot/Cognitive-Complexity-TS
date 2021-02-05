@@ -2,6 +2,8 @@ import { addStyleSheet, element } from "../../framework.js";
 
 addStyleSheet(import.meta.url);
 
+export const url = import.meta.url;
+
 export function GlobalControl(text: string, onClick: () => void) {
     const button = element(
         "button",
