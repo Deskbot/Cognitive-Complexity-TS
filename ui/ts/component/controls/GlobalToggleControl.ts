@@ -3,10 +3,10 @@ import { GlobalControl } from "./GlobalControl.js";
 
 addStyleSheet(import.meta.url);
 
-export function GlobalToggleControl(initialState: boolean, getText: (state: boolean) => string, onClick: () => void) {
+export function GlobalToggleControl(initialState: boolean, inner: string | Node, onClick: () => void) {
     let state = initialState;
 
-    const buttonText = element("span", {}, getText(initialState));
+    const buttonText = element("span", {}, inner);
 
     const cross = CrossSvg();
     const tick = TickSvg();
@@ -24,8 +24,6 @@ export function GlobalToggleControl(initialState: boolean, getText: (state: bool
             } else {
                 tick.parentElement?.replaceChild(cross, tick);
             }
-
-            buttonText.innerText = getText(state);
 
             onClick();
         }
