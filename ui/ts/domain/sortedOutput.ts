@@ -17,6 +17,8 @@ export type SortedProgramOutput = SortedFolderOutput;
 
 export type SortedFolderOutput = SortedMap<string, SortedFileOutput | SortedFolderOutput>;
 
+// compare
+
 function compareSortedOutputs(
     left: SortedFileOutput | SortedFolderOutput,
     right: SortedFileOutput | SortedFolderOutput
@@ -50,9 +52,9 @@ function compareSortedOutputs(
     return 0; // unreachable
 }
 
-export const convertToSortedOutput = convertToSortedFolderOutput;
+// convert
 
-function convertToSortedFolderOutput(folderOutput: FolderOutput): SortedFolderOutput {
+export function convertToSortedOutput(folderOutput: FolderOutput): SortedFolderOutput {
     const m = new Map<string, SortedFileOutput | SortedFolderOutput>();
 
     for (const key in folderOutput) {
@@ -60,52 +62,50 @@ function convertToSortedFolderOutput(folderOutput: FolderOutput): SortedFolderOu
         if (isFileOutput(value)) {
             m.set(key, value);
         } else {
-            m.set(key, convertToSortedFolderOutput(value));
+            m.set(key, convertToSortedOutput(value));
         }
     }
 
     return new SortedMap(m);
 }
 
+// type
+
 function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput): output is SortedFileOutput {
     return !(output instanceof SortedMap);
 }
 
-export function sortFolderByComplexity(folder: SortedFolderOutput) {
-    const sorter: Sorter<string> = (left, right) => compareSortedOutputs(
-        folder.get(left)!,
-        folder.get(right)!
-    );
+// sort
 
-    folder.sort(sorter);
-
-    for (const folderEntry of folder.values()) {
-        if (isSortedFileOutput(folderEntry)) {
-            sortFileInOrder(folderEntry);
-        } else {
-            sortFolderByComplexity(folderEntry);
-        }
-    }
-}
-
-const sortContainerInOrder = sortFileInOrder;
-
-function sortFileInOrder(file: SortedFileOutput) {
+function sortFileOrContainer(file: SortedFileOutput | SortedContainerOutput) {
     file.inner.sort();
 
     for (const container of file.inner) {
-        sortContainerInOrder(container);
+        sortFileOrContainer(container);
     }
 }
 
-export function sortFolderInOrder(folder: SortedFolderOutput) {
-    folder.sort();
+function sortProgram(program: SortedProgramOutput, sorter?: Sorter<string>) {
+    program.sort(sorter);
 
-    for (const fileOrFolder of folder.values()) {
+    for (const fileOrFolder of program.values()) {
         if (isSortedFileOutput(fileOrFolder)) {
-            sortFileInOrder(fileOrFolder);
+            sortFileOrContainer(fileOrFolder);
         } else {
-            sortFolderInOrder(fileOrFolder);
+            sortProgram(fileOrFolder);
         }
     }
+}
+
+export function sortProgramByComplexity(program: SortedProgramOutput) {
+    const sorter: Sorter<string> = (left, right) => compareSortedOutputs(
+        program.get(left)!,
+        program.get(right)!
+    );
+
+    sortProgram(program, sorter);
+}
+
+export function sortProgramInOrder(program: SortedProgramOutput) {
+    sortProgram(program);
 }
