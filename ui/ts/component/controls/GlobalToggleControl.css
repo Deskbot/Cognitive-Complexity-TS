@@ -1,8 +1,10 @@
 .globaltogglecontrol-svg {
-    background: var(--light-color);
+    fill: var(--text-color);
+
     margin: 0;
     margin-right: var(--half-spacing);
     padding: 0;
     height: 0.85rem;
     width: 0.85rem;
+    vertical-align: middle;
 }

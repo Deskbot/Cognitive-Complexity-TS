@@ -10,6 +10,8 @@ export function GlobalToggleControl(initialState: boolean, inner: string | Node,
 
     const cross = CrossSvg();
     const tick = TickSvg();
+    cross.classList.add("globaltogglecontrol-svg");
+    tick.classList.add("globaltogglecontrol-svg");
 
     const button = GlobalControl(
         fragment(
@@ -29,8 +31,6 @@ export function GlobalToggleControl(initialState: boolean, inner: string | Node,
         }
     );
 
-    "globaltogglecontrol"
-
     return button;
 }
 
@@ -42,8 +42,8 @@ crossTemplate.innerHTML =
         <polygon points="0,1, 1,0, 5,4, 9,0, 10,1, 6,5, 10,9, 9,10, 5,6, 1,10, 0,9, 4,5"/>
     </svg>`;
 
-function CrossSvg() {
-    return crossTemplate.content.firstElementChild!.cloneNode(true);
+function CrossSvg(): SVGElement {
+    return crossTemplate.content.firstElementChild!.cloneNode(true) as SVGElement;
 }
 
 const tickTemplate = element("template");
@@ -54,6 +54,6 @@ tickTemplate.innerHTML =
         <polygon points="3,7, 4,8, 9,3, 10,4, 4,10, 2,8"/>
     </svg>`;
 
-function TickSvg() {
-    return tickTemplate.content.firstElementChild!.cloneNode(true);
+function TickSvg(): SVGElement {
+    return tickTemplate.content.firstElementChild!.cloneNode(true) as SVGElement;
 }
