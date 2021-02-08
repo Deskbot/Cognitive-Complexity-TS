@@ -2,11 +2,11 @@ import { addStyleSheet, element } from "../../framework.js";
 
 addStyleSheet(import.meta.url);
 
-export function GlobalControl(text: string, onClick: () => void) {
+export function GlobalControl(inner: string | Node, onClick: () => void) {
     const button = element(
         "button",
         { className: "globalcontrol" },
-        text
+        inner
     );
     button.addEventListener("click", onClick);
     return button;

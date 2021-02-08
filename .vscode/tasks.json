@@ -5,6 +5,14 @@
             "label": "Build",
             "type": "shell",
             "command": "npm run build"
+        },
+        {
+            "type": "npm",
+            "script": "build-ui",
+            "group": "build",
+            "problemMatcher": [],
+            "label": "npm: build-ui",
+            "detail": "npm run build && tsc -i -p ./ui"
         }
     ]
 }
