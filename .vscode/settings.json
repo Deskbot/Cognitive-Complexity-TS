@@ -24,6 +24,8 @@
         "toggleablebox",
         "togglebutton",
         "topbanner",
-        "visitable"
+        "viewbox",
+        "visitable",
+        "xlink"
     ],
 }
