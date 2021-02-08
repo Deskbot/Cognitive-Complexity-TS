@@ -1,22 +1,22 @@
-import { FolderContents } from "./FolderContents.js";
-import { FolderOutput } from "../../../../shared/types.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
-import { Controller, element } from "../../framework.js";
+import { element } from "../../framework.js";
 import { CopyText } from "../controls/CopyText.js";
-import { Tree } from "../../controller/TreeController.js";
 import { concatFilePath } from "../../domain/path.js";
+import { FolderContents } from "./FolderContents.js";
+import { Tree } from "../../controller/TreeController.js";
 
 export class Folder implements Tree {
     private box: ToggleableBox;
-    private innerContainers: FolderContents;
+    private children: FolderContents; // TODO allow this to change
 
     constructor(
-        controller: Controller<Tree>,
         path: string,
         name: string,
-        complexity: FolderOutput,
-        startOpen: boolean
+        startOpen: boolean,
+        children: FolderContents,
     ) {
+        this.children = children;
+
         const fullPath = concatFilePath(path, name);
 
         this.box = new ToggleableBox([
@@ -28,23 +28,14 @@ export class Folder implements Tree {
             startOpen,
         );
 
-        this.innerContainers = new FolderContents(controller, complexity, fullPath, false);
-        this.box.changeHideableContent(() => [this.innerContainers.dom]);
+        this.box.changeHideableContent(() => [this.children.dom]);
     }
 
     get dom(): Node {
         return this.box.dom;
     }
 
-    sortByComplexity() {
-        this.innerContainers.sortByComplexity();
-    }
-
-    setTreeOpenness(open: boolean) {
+    setOpenness(open: boolean) {
         this.box.setOpenness(open);
-    }
-
-    sortInOrder() {
-        this.innerContainers.sortInOrder();
     }
 }
