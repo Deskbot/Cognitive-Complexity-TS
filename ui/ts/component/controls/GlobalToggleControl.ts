@@ -38,7 +38,7 @@ const crossTemplate = element("template");
 crossTemplate.innerHTML =
     `<svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink" height="10" width="10" viewBox="0 0 10 10">
+        xmlns:xlink="http://www.w3.org/1999/xlink" height="10" width="10" viewbox="0 0 10 10">
         <polygon points="0,1, 1,0, 5,4, 9,0, 10,1, 6,5, 10,9, 9,10, 5,6, 1,10, 0,9, 4,5"/>
     </svg>`;
 
@@ -50,8 +50,8 @@ const tickTemplate = element("template");
 tickTemplate.innerHTML =
     `<svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink" height="10" width="10" viewBox="2 2 8 8">
-        <polygon points="3,7, 4,8, 9,3, 10,4, 4,10, 2,8"/>
+        xmlns:xlink="http://www.w3.org/1999/xlink" height="10" width="10" viewbox="0 0 10 10">
+        <polygon points="1,5, 4,7, 9,0, 10,1, 4,10, 0,6"/>
     </svg>`;
 
 function TickSvg(): SVGElement {
