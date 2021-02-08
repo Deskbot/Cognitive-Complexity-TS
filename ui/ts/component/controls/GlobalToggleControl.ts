@@ -39,7 +39,7 @@ crossTemplate.innerHTML =
     `<svg
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" height="10" width="10" viewbox="0 0 10 10">
-        <polygon points="0,1, 1,0, 5.5,3.5, 9,0, 10,1, 6.5,5.5, 10,9, 9,10, 4.5,6.5, 1,10, 0,9, 3.5,4.5"/>
+        <polygon points="0,1, 1,0, 5.5,3.5, 9,0, 10,1, 6,5.5, 10,9, 9,10, 4.5,6.5, 1,10, 0,9, 4,4.5"/>
     </svg>`;
 
 function CrossSvg(): SVGElement {
