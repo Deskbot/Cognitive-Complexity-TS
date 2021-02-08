@@ -1,4 +1,4 @@
-.globaltogglecontrol input[type=checkbox] {
+.globaltogglecontrol-svg {
     background: var(--light-color);
     margin: 0;
     margin-right: var(--half-spacing);

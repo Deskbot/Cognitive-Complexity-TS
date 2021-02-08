@@ -37,3 +37,9 @@ export function element<K extends keyof HTMLElementTagNameMap>(
 
     return elem;
 }
+
+export function fragment(...children: (string | Node)[]) {
+    const fragment = document.createDocumentFragment();
+    fragment.append(...children);
+    return fragment;
+}
