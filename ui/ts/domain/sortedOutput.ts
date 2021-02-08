@@ -3,6 +3,8 @@ import { SortedMap } from "../util/SortedMap.js";
 import { Sorter } from "../util/util.js";
 import { isFileOutput } from "./output.js";
 
+// type
+
 export interface SortedContainerOutput extends FunctionNodeInfo {
     score: number;
     inner: SortedContainerOutput[];
@@ -16,6 +18,10 @@ export interface SortedFileOutput {
 export type SortedProgramOutput = SortedFolderOutput;
 
 export type SortedFolderOutput = SortedMap<string, SortedFileOutput | SortedFolderOutput>;
+
+function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput): output is SortedFileOutput {
+    return !(output instanceof SortedMap);
+}
 
 // compare
 
@@ -67,12 +73,6 @@ export function convertToSortedOutput(folderOutput: FolderOutput): SortedFolderO
     }
 
     return new SortedMap(m);
-}
-
-// type
-
-function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput): output is SortedFileOutput {
-    return !(output instanceof SortedMap);
 }
 
 // sort
