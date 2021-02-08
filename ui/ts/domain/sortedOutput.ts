@@ -78,6 +78,14 @@ export function sortFolderByComplexity(folder: SortedFolderOutput) {
     );
 
     folder.sort(sorter);
+
+    for (const folderEntry of folder.values()) {
+        if (isSortedFileOutput(folderEntry)) {
+            sortFileInOrder(folderEntry);
+        } else {
+            sortFolderByComplexity(folderEntry);
+        }
+    }
 }
 
 const sortContainerInOrder = sortFileInOrder;
