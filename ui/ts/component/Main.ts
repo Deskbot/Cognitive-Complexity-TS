@@ -31,10 +31,10 @@ export function Main(complexity: ProgramOutput) {
         GlobalControl("Sort By Complexity", () => {
             controller.sortByComplexity();
         }),
-        GlobalToggleControl(false, "Include Folders", () => {
+        GlobalToggleControl(true, "Include Folders", () => {
 
         }),
-        GlobalToggleControl(false, "Include Files", () => {
+        GlobalToggleControl(true, "Include Files", () => {
 
         }),
 
