@@ -25,6 +25,10 @@ export function createUiServer(combinedOutputsJson: string): http.Server {
     });
 }
 
+function cached(res: ServerResponse) {
+    res.setHeader("Cache-Control", "max-age=365000000; immutable");
+}
+
 async function doesFileExistInFolder(filePath: string, folderPath: string): Promise<boolean> {
     return isPathInsideDir(filePath, folderPath)
         && await doesNotThrow(fsP.access(filePath))
@@ -41,12 +45,14 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
     const url = req.url ?? "/";
 
     if (url === "/" || url === "/index.html") {
+        cached(res);
         res.setHeader("Content-Type", "text/html");
         res.write(await fsP.readFile(indexFilePath));
         return;
     }
 
     if (url === "/json") {
+        // do not cache
         res.setHeader("Content-Type", "text/json");
         res.write(combinedOutputsJson);
         return;
@@ -59,6 +65,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
             return endWith404(res);
         }
 
+        cached(res);
         res.setHeader("Content-Type", "text/css");
         res.write(await fsP.readFile(targetFile));
         return;
@@ -71,6 +78,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
             return endWith404(res);
         }
 
+        cached(res);
         res.setHeader("Content-Type", "text/javascript");
         res.write(await fsP.readFile(targetFile));
         return;
@@ -83,6 +91,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
             return endWith404(res);
         }
 
+        cached(res);
         res.setHeader("Content-Type", "application/json");
         res.write(await fsP.readFile(targetFile));
         return;
@@ -95,6 +104,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
             return endWith404(res);
         }
 
+        cached(res);
         res.setHeader("Content-Type", "text/x-typescript");
         res.write(await fsP.readFile(targetFile));
         return;
