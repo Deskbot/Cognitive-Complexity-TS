@@ -14,7 +14,6 @@ export class File implements Tree {
         path: string,
         name: string,
         score: number,
-        startOpen: boolean,
         children: Container[],
     ) {
         this.children = children;
@@ -28,7 +27,7 @@ export class File implements Tree {
             ]),
             Score(score),
         ],
-            startOpen,
+            false,
         );
 
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
@@ -36,6 +35,11 @@ export class File implements Tree {
 
     get dom(): Node {
         return this.box.dom;
+    }
+
+    setChildren(children: Container[]) {
+        this.children = children;
+        this.box.changeHideableContent(() => this.children.map(child => child.dom));
     }
 
     setOpenness(open: boolean) {

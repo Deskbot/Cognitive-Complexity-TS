@@ -12,7 +12,6 @@ export class Folder implements Tree {
     constructor(
         path: string,
         name: string,
-        startOpen: boolean,
         children: FolderContents,
     ) {
         this.content = children;
@@ -25,7 +24,7 @@ export class Folder implements Tree {
                 CopyText(fullPath),
             ),
         ],
-            startOpen,
+            false,
         );
 
         this.box.changeHideableContent(() => [this.content.dom]);

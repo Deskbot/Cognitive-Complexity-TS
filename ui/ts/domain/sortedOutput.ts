@@ -124,8 +124,8 @@ function convertToSortedFolder(path: string, name: string, folderOutput: FolderO
 
 // sort
 
-function sortFileOrContainer(file: SortedFileOutput | SortedContainerOutput) {
-    file.inner.sort();
+function sortFileOrContainer(file: SortedFileOutput | SortedContainerOutput, sorter?: Sorter<SortedFileOutput | SortedFolderOutput>) {
+    file.inner.sort(sorter);
 
     for (const container of file.inner) {
         sortFileOrContainer(container);
@@ -137,9 +137,9 @@ function sortProgram(program: SortedProgramOutput, sorter?: Sorter<SortedFileOut
 
     for (const fileOrFolder of program.inner) {
         if (isSortedFileOutput(fileOrFolder)) {
-            sortFileOrContainer(fileOrFolder);
+            sortFileOrContainer(fileOrFolder, sorter);
         } else {
-            sortProgram(fileOrFolder);
+            sortProgram(fileOrFolder, sorter);
         }
     }
 }

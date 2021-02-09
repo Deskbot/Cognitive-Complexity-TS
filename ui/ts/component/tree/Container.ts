@@ -33,6 +33,11 @@ export class Container implements Tree {
         return this.box.dom;
     }
 
+    setChildren(children: Container[]) {
+        this.children = children;
+        this.box.changeHideableContent(() => this.children.map(child => child.dom));
+    }
+
     setOpenness(open: boolean) {
         this.box.setOpenness(open);
     }
