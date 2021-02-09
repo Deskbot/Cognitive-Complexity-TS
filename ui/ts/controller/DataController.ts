@@ -9,6 +9,10 @@ import { TreeController } from "./TreeController.js";
 export class DataController {
     private complexity: SortedProgramOutput;
     private treeController: TreeController;
+    private containerMap: Map<SortedContainerOutput, Container> = new Map();
+    private folderMap: Map<SortedFolderOutput, Folder> = new Map();
+    private fileMap: Map<SortedFileOutput, File> = new Map();
+    private folderContentsMap: Map<SortedFolderOutput, FolderContents> = new Map();
 
     constructor(progComp: ProgramOutput, treeController: TreeController) {
         this.complexity = convertToSortedOutput(progComp);
@@ -25,6 +29,7 @@ export class DataController {
     private makeContainer(containerOutput: SortedContainerOutput): Container {
         const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
         this.treeController.register(container);
+        this.containerMap.set(containerOutput, container);
         return container;
     }
 
@@ -38,25 +43,29 @@ export class DataController {
         const file = new File(fileOutput.path, fileOutput.name, fileOutput.score, startOpen, children);
 
         this.treeController.register(file);
+        this.fileMap.set(fileOutput, file);
 
         return file;
     }
 
-    private makeFolderContents(folder: SortedFolderOutput, startOpen: boolean): FolderContents {
-        return new FolderContents(folder.inner.map((folderEntry) => {
+    private makeFolderContents(folderOutput: SortedFolderOutput, startOpen: boolean): FolderContents {
+        const folderContents = new FolderContents(folderOutput.inner.map((folderEntry) => {
             const folderEntryComponent = isSortedFileOutput(folderEntry)
                 ? this.makeFile(folderEntry, startOpen)
                 : this.makeFolder(folderEntry, startOpen);
 
-            this.treeController.register(folderEntryComponent);
-
             return folderEntryComponent;
         }));
+
+        this.folderContentsMap.set(folderOutput, folderContents);
+
+        return folderContents;
     }
 
     private makeFolder(folderOutput: SortedFolderOutput, startOpen: boolean): Folder {
         const folder = new Folder(folderOutput.path, folderOutput.name, startOpen, this.makeFolderContents(folderOutput, false));
         this.treeController.register(folder);
+        this.folderMap.set(folderOutput, folder);
         return folder;
     }
 
