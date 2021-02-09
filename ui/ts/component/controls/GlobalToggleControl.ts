@@ -3,35 +3,53 @@ import { GlobalControl } from "./GlobalControl.js";
 
 addStyleSheet(import.meta.url);
 
-export function GlobalToggleControl(initialState: boolean, inner: string | Node, onClick: () => void) {
-    let state = initialState;
+export class GlobalToggleControl {
+    readonly dom: Node;
 
-    const buttonText = element("span", {}, inner);
+    private cross: SVGElement;
+    private tick: SVGElement;
 
-    const cross = CrossSvg();
-    const tick = TickSvg();
-    cross.classList.add("globaltogglecontrol-svg");
-    tick.classList.add("globaltogglecontrol-svg");
+    private state: boolean;
+    private externalOnStateChange: (state: boolean) => void;
 
-    const button = GlobalControl(
-        fragment(
-            state ? tick : cross,
-            buttonText,
-        ),
-        () => {
-            state = !state;
+    constructor(initialState: boolean, inner: string | Node, onStateChange: (state: boolean) => void) {
+        this.state = initialState;
+        this.externalOnStateChange = onStateChange;
 
-            if (state) {
-                cross.parentElement?.replaceChild(tick, cross);
-            } else {
-                tick.parentElement?.replaceChild(cross, tick);
-            }
+        const buttonText = element("span", {}, inner);
 
-            onClick();
+        this.cross = CrossSvg();
+        this.tick = TickSvg();
+        this.cross.classList.add("globaltogglecontrol-svg");
+        this.tick.classList.add("globaltogglecontrol-svg");
+
+        this.dom = GlobalControl(
+            fragment(
+                this.state ? this.tick : this.cross,
+                buttonText,
+            ),
+            () => this.toggleState()
+        );
+    }
+
+    private onStateChange() {
+        if (this.state) {
+            this.cross.parentElement?.replaceChild(this.tick, this.cross);
+        } else {
+            this.tick.parentElement?.replaceChild(this.cross, this.tick);
         }
-    );
 
-    return button;
+        this.externalOnStateChange(this.state);
+    }
+
+    setState(state: boolean) {
+        this.state = state;
+        this.onStateChange();
+    }
+
+    toggleState() {
+        this.setState(!this.state);
+    }
 }
 
 const crossTemplate = element("template");

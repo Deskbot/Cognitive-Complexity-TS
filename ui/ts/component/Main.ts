@@ -11,6 +11,19 @@ export function Main(complexity: ProgramOutput) {
 
     const topLevelBoxes = dataController.makeTree();
 
+    const includeFolders = new GlobalToggleControl(true, "Include Folders", (state) => {
+        // folders implies files
+        if (state) {
+            includeFiles.setState(true);
+        }
+    });
+    const includeFiles = new GlobalToggleControl(true, "Include Files", (state) => {
+        // no files implies no folders
+        if (!state) {
+            includeFolders.setState(false);
+        }
+    });
+
     return element("main", {},
         GlobalControl("Expand All", () => {
             treeController.expandAll();
@@ -24,12 +37,8 @@ export function Main(complexity: ProgramOutput) {
         GlobalControl("Sort By Complexity", () => {
             dataController.sortByComplexity();
         }),
-        GlobalToggleControl(true, "Include Folders", () => {
-
-        }),
-        GlobalToggleControl(true, "Include Files", () => {
-
-        }),
+        includeFolders.dom,
+        includeFiles.dom,
 
         topLevelBoxes.dom
     );
