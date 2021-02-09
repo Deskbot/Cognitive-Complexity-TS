@@ -30,7 +30,7 @@ export class DataController {
             children.push(this.makeContainer(containerOutput));
         }
 
-        return new File(fileOutput.name, fileOutput.path, fileOutput.score, startOpen, children);
+        return new File(fileOutput.path, fileOutput.name, fileOutput.score, startOpen, children);
     }
 
     private makeFolderContents(folder: SortedFolderOutput, startOpen: boolean): FolderContents {

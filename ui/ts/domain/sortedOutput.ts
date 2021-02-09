@@ -72,7 +72,7 @@ export function convertToSortedOutput(programOutput: ProgramOutput): SortedFolde
     return convertToSortedFolder("", "", programOutput);
 }
 
-function convertToSortedContainer(path:string, containerOutput: ContainerOutput): SortedContainerOutput {
+function convertToSortedContainer(path: string, containerOutput: ContainerOutput): SortedContainerOutput {
     return {
         column: containerOutput.column,
         line: containerOutput.line,
@@ -83,37 +83,41 @@ function convertToSortedContainer(path:string, containerOutput: ContainerOutput)
     };
 }
 
-function convertToSortedFile(name: string, path: string, fileOutput: FileOutput): SortedFileOutput {
+function convertToSortedFile(path: string, name: string, fileOutput: FileOutput): SortedFileOutput {
     const inner = [] as SortedContainerOutput[];
 
+    const innerPath = concatFilePath(path, name);
+
     for (const container of fileOutput.inner) {
-        inner.push(convertToSortedContainer(path, container));
+        inner.push(convertToSortedContainer(innerPath, container));
     }
 
     return {
         name,
-        path: concatFilePath(path, name),
+        path,
         score: fileOutput.score,
         inner,
     };
 }
 
-function convertToSortedFolder(name: string, path: string, folderOutput: FolderOutput): SortedFolderOutput {
+function convertToSortedFolder(path: string, name: string, folderOutput: FolderOutput): SortedFolderOutput {
     const inner = [] as (SortedFileOutput | SortedFolderOutput)[];
+
+    const innerPath = concatFilePath(path, name);
 
     for (const name in folderOutput) {
         const entry = folderOutput[name];
 
         if (isFileOutput(entry)) {
-            inner.push(convertToSortedFile(name, path, entry));
+            inner.push(convertToSortedFile(innerPath, name, entry));
         } else {
-            inner.push(convertToSortedFolder(name, path, entry));
+            inner.push(convertToSortedFolder(innerPath, name, entry));
         }
     }
 
     return {
         name,
-        path: concatFilePath(path, name),
+        path,
         inner,
     };
 }
