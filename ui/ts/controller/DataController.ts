@@ -27,6 +27,10 @@ export class DataController {
     }
 
     private makeContainer(containerOutput: SortedContainerOutput): Container {
+        if (this.containerMap.has(containerOutput)) {
+            return this.containerMap.get(containerOutput)!;
+        }
+
         const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
         this.treeController.register(container);
         this.containerMap.set(containerOutput, container);
@@ -34,6 +38,10 @@ export class DataController {
     }
 
     private makeFile(fileOutput: SortedFileOutput, startOpen: boolean): File {
+        if (this.fileMap.has(fileOutput)) {
+            return this.fileMap.get(fileOutput)!;
+        }
+
         const children = [] as Container[];
 
         for (const containerOutput of fileOutput.inner) {
@@ -49,6 +57,10 @@ export class DataController {
     }
 
     private makeFolderContents(folderOutput: SortedFolderOutput, startOpen: boolean): FolderContents {
+        if (this.folderContentsMap.has(folderOutput)) {
+            return this.folderContentsMap.get(folderOutput)!;
+        }
+
         const folderContents = new FolderContents(folderOutput.inner.map((folderEntry) => {
             const folderEntryComponent = isSortedFileOutput(folderEntry)
                 ? this.makeFile(folderEntry, startOpen)
@@ -63,6 +75,10 @@ export class DataController {
     }
 
     private makeFolder(folderOutput: SortedFolderOutput, startOpen: boolean): Folder {
+        if (this.folderMap.has(folderOutput)) {
+            return this.folderMap.get(folderOutput)!;
+        }
+
         const folder = new Folder(folderOutput.path, folderOutput.name, startOpen, this.makeFolderContents(folderOutput, false));
         this.treeController.register(folder);
         this.folderMap.set(folderOutput, folder);
