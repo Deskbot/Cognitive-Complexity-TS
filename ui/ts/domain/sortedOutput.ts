@@ -10,7 +10,7 @@ export interface SortedContainerOutput extends FunctionNodeInfo {
     name: string;
     path: string;
     score: number;
-    inner: ContainerOutput[];
+    inner: SortedContainerOutput[];
 }
 
 export interface SortedFileOutput {
@@ -129,10 +129,10 @@ function sortFileOrContainer(file: SortedFileOutput | SortedContainerOutput) {
     }
 }
 
-function sortProgram(program: SortedProgramOutput, sorter?: Sorter<string>) {
-    program.sort(sorter);
+function sortProgram(program: SortedProgramOutput, sorter?: Sorter<SortedFileOutput | SortedFolderOutput>) {
+    program.inner.sort(sorter);
 
-    for (const fileOrFolder of program.values()) {
+    for (const fileOrFolder of program.inner) {
         if (isSortedFileOutput(fileOrFolder)) {
             sortFileOrContainer(fileOrFolder);
         } else {
@@ -142,12 +142,7 @@ function sortProgram(program: SortedProgramOutput, sorter?: Sorter<string>) {
 }
 
 export function sortProgramByComplexity(program: SortedProgramOutput) {
-    const sorter: Sorter<string> = (left, right) => compareSortedOutputs(
-        program.get(left)!,
-        program.get(right)!
-    );
-
-    sortProgram(program, sorter);
+    sortProgram(program, compareSortedOutputs);
 }
 
 export function sortProgramInOrder(program: SortedProgramOutput) {
