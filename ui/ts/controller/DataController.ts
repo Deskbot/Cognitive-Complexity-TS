@@ -4,12 +4,15 @@ import { File } from "../component/tree/File.js";
 import { Folder } from "../component/tree/Folder.js";
 import { FolderContents } from "../component/tree/FolderContents.js";
 import { convertToSortedOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { TreeController } from "./TreeController.js";
 
 export class DataController {
     private complexity: SortedProgramOutput;
+    private treeController: TreeController;
 
-    constructor(progComp: ProgramOutput) {
+    constructor(progComp: ProgramOutput, treeController: TreeController) {
         this.complexity = convertToSortedOutput(progComp);
+        this.treeController = treeController;
     }
 
     makeTree() {
@@ -19,8 +22,10 @@ export class DataController {
         return this.makeFolderContents(this.complexity, onlyOneTopLevelNode);
     }
 
-    private makeContainer(container: SortedContainerOutput): Container {
-        return new Container(container, container.path, container.inner.map(inner => this.makeContainer(inner)));
+    private makeContainer(containerOutput: SortedContainerOutput): Container {
+        const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
+        this.treeController.register(container);
+        return container;
     }
 
     private makeFile(fileOutput: SortedFileOutput, startOpen: boolean): File {
@@ -30,21 +35,29 @@ export class DataController {
             children.push(this.makeContainer(containerOutput));
         }
 
-        return new File(fileOutput.path, fileOutput.name, fileOutput.score, startOpen, children);
+        const file = new File(fileOutput.path, fileOutput.name, fileOutput.score, startOpen, children);
+
+        this.treeController.register(file);
+
+        return file;
     }
 
     private makeFolderContents(folder: SortedFolderOutput, startOpen: boolean): FolderContents {
-        return new FolderContents(folder.inner.map((entry) => {
-            if (isSortedFileOutput(entry)) {
-                return this.makeFile(entry, startOpen);
-            } else {
-                return this.makeFolder(entry, startOpen);
-            }
+        return new FolderContents(folder.inner.map((folderEntry) => {
+            const folderEntryComponent = isSortedFileOutput(folderEntry)
+                ? this.makeFile(folderEntry, startOpen)
+                : this.makeFolder(folderEntry, startOpen);
+
+            this.treeController.register(folderEntryComponent);
+
+            return folderEntryComponent;
         }));
     }
 
     private makeFolder(folderOutput: SortedFolderOutput, startOpen: boolean): Folder {
-        return new Folder(folderOutput.path, folderOutput.name, startOpen, this.makeFolderContents(folderOutput, false));
+        const folder = new Folder(folderOutput.path, folderOutput.name, startOpen, this.makeFolderContents(folderOutput, false));
+        this.treeController.register(folder);
+        return folder;
     }
 
     sortByComplexity() {
