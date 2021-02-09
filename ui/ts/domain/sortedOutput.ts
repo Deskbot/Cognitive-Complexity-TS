@@ -35,6 +35,12 @@ function isSortedContainerOutput(output: SortedFileOutput | SortedFolderOutput |
     return (output as SortedContainerOutput).line !== undefined;
 }
 
+// clone
+
+export function cloneSortedOutput(output: SortedProgramOutput): SortedProgramOutput {
+    return JSON.parse(JSON.stringify(output));
+}
+
 // compare
 
 function compareSortedOutputComplexity(

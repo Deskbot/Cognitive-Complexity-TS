@@ -3,11 +3,13 @@ import { Container } from "../component/tree/Container.js";
 import { File } from "../component/tree/File.js";
 import { Folder } from "../component/tree/Folder.js";
 import { FolderContents } from "../component/tree/FolderContents.js";
-import { convertToSortedOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { cloneSortedOutput, convertToSortedOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { TreeController } from "./TreeController.js";
 
 export class DataController {
     private complexity: SortedProgramOutput;
+    private initialComplexity: SortedProgramOutput;
+
     private treeController: TreeController;
     private containerMap: Map<SortedContainerOutput, Container> = new Map();
     private folderMap: Map<SortedFolderOutput, Folder> = new Map();
@@ -16,6 +18,7 @@ export class DataController {
 
     constructor(progComp: ProgramOutput, treeController: TreeController) {
         this.complexity = convertToSortedOutput(progComp);
+        this.initialComplexity = cloneSortedOutput(this.complexity);
         sortProgramInOrder(this.complexity);
         this.treeController = treeController;
     }
