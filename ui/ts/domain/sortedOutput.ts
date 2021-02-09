@@ -31,11 +31,15 @@ export function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput
     return (output as SortedFileOutput).score !== undefined;
 }
 
+function isSortedContainerOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedContainerOutput {
+    return (output as SortedContainerOutput).line !== undefined;
+}
+
 // compare
 
-function compareSortedOutputs(
+function compareSortedOutputComplexity(
     left: SortedFileOutput | SortedFolderOutput,
-    right: SortedFileOutput | SortedFolderOutput
+    right: SortedFileOutput | SortedFolderOutput,
 ): number {
     const leftIsFile = isSortedFileOutput(left);
     const rightIsFile = isSortedFileOutput(right);
@@ -56,14 +60,42 @@ function compareSortedOutputs(
     // folders should be at the bottom of the complexity list
 
     if (!leftIsFile) {
-        return -1;
+        return 1; // left is "bigger"
     }
 
     if (!rightIsFile) {
-        return -1;
+        return -1; // left is "smaller"
     }
 
     return 0; // unreachable
+}
+
+function compareSortedOutputOrder(left: SortedContainerOutput, right: SortedContainerOutput): number;
+function compareSortedOutputOrder(left: SortedFileOutput | SortedFolderOutput, right: SortedFileOutput | SortedFolderOutput): number;
+function compareSortedOutputOrder(
+    left: SortedContainerOutput | SortedFileOutput | SortedFolderOutput,
+    right: SortedContainerOutput | SortedFileOutput | SortedFolderOutput
+): number {
+    const leftIsContainer = isSortedContainerOutput(left);
+    const rightIsContainer = isSortedContainerOutput(right);
+
+    if (leftIsContainer && rightIsContainer) {
+        const leftContainer = left as SortedContainerOutput;
+        const rightContainer = right as SortedContainerOutput;
+
+        // smaller line numbers first
+        const lineDiff = leftContainer.line - rightContainer.line;
+        if (lineDiff !== 0) return lineDiff;
+
+        // tie-breaker: smaller column numbers first
+        return leftContainer.column - rightContainer.column;
+    }
+
+    return left.name < right.name
+        ? -1
+        : left.name > right.name
+            ? 1
+            : 0;
 }
 
 // convert
@@ -145,9 +177,9 @@ function sortProgram(program: SortedProgramOutput, sorter?: Sorter<SortedFileOut
 }
 
 export function sortProgramByComplexity(program: SortedProgramOutput) {
-    sortProgram(program, compareSortedOutputs);
+    sortProgram(program, compareSortedOutputComplexity);
 }
 
 export function sortProgramInOrder(program: SortedProgramOutput) {
-    sortProgram(program);
+    sortProgram(program, compareSortedOutputOrder);
 }

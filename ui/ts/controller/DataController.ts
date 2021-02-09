@@ -16,6 +16,7 @@ export class DataController {
 
     constructor(progComp: ProgramOutput, treeController: TreeController) {
         this.complexity = convertToSortedOutput(progComp);
+        sortProgramInOrder(this.complexity);
         this.treeController = treeController;
     }
 
@@ -92,9 +93,7 @@ export class DataController {
         return folder;
     }
 
-    sortByComplexity() {
-        sortProgramByComplexity(this.complexity);
-
+    private reChild() {
         // folder contents
         for (const [complexity, folderContents] of this.folderContentsMap) {
             folderContents.setChildren(complexity.inner.map((folderEntry) => {
@@ -117,8 +116,14 @@ export class DataController {
         }
     }
 
+    sortByComplexity() {
+        sortProgramByComplexity(this.complexity);
+        this.reChild();
+    }
+
     sortInOrder() {
         sortProgramInOrder(this.complexity);
+        this.reChild();
     }
 
     hideFiles() {
