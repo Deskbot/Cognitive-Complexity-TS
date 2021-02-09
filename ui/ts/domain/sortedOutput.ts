@@ -1,5 +1,4 @@
 import { ContainerOutput, FileOutput, FolderOutput, FunctionNodeInfo, ProgramOutput } from "../../../shared/types.js";
-import { SortedMap } from "../util/SortedMap.js";
 import { Sorter } from "../util/util.js";
 import { isFileOutput } from "./output.js";
 import { concatFilePath } from "./path.js";
@@ -28,8 +27,8 @@ export interface SortedFolderOutput {
     inner: (SortedFileOutput | SortedFolderOutput)[];
 };
 
-function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput): output is SortedFileOutput {
-    return !(output instanceof SortedMap);
+export function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput): output is SortedFileOutput {
+    return (output as SortedFileOutput).score !== undefined;
 }
 
 // compare

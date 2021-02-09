@@ -2,12 +2,12 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { element } from "../../framework.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
-import { FolderContents } from "./FolderContents.js";
 import { Tree } from "../../controller/TreeController.js";
+import { FolderContents } from "./FolderContents.js";
 
 export class Folder implements Tree {
     private box: ToggleableBox;
-    private children: FolderContents; // TODO allow this to change
+    private content: FolderContents;
 
     constructor(
         path: string,
@@ -15,7 +15,7 @@ export class Folder implements Tree {
         startOpen: boolean,
         children: FolderContents,
     ) {
-        this.children = children;
+        this.content = children;
 
         const fullPath = concatFilePath(path, name);
 
@@ -28,7 +28,7 @@ export class Folder implements Tree {
             startOpen,
         );
 
-        this.box.changeHideableContent(() => [this.children.dom]);
+        this.box.changeHideableContent(() => [this.content.dom]);
     }
 
     get dom(): Node {

@@ -1,4 +1,3 @@
-import { FileOutput } from "../../../../shared/types.js";
 import { Container } from "./Container.js";
 import { StickyTitle } from "../text/StickyTitle.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
@@ -14,7 +13,7 @@ export class File implements Tree {
     constructor(
         path: string,
         name: string,
-        complexity: FileOutput,
+        score: number,
         startOpen: boolean,
         children: Container[],
     ) {
@@ -27,7 +26,7 @@ export class File implements Tree {
                 name,
                 CopyText(fullPath),
             ]),
-            Score(complexity.score),
+            Score(score),
         ],
             startOpen,
         );

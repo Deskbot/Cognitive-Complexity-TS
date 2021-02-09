@@ -20,19 +20,6 @@ export function computeOnce<T>(func: () => T): () => T {
     };
 }
 
-export function hasMoreThanOneKey(object: any): boolean {
-    let count = 0;
-
-    for (const _ in object) {
-        count += 1;
-        if (count === 2) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 export function iterMap<T,V>(iter: IterableIterator<T>, mapper: (val: T) => V): V[] {
     const result = [] as V[];
 
