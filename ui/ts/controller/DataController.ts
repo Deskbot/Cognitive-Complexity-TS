@@ -4,6 +4,7 @@ import { File } from "../component/tree/File.js";
 import { Folder } from "../component/tree/Folder.js";
 import { FolderContents } from "../component/tree/FolderContents.js";
 import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { element } from "../framework.js";
 import { removeAll } from "../util/util.js";
 import { TreeController } from "./TreeController.js";
 
@@ -14,6 +15,8 @@ export enum Include {
 }
 
 export class DataController {
+    readonly dom: Element;
+
     private complexity: SortedProgramOutput;
     private initialComplexity: SortedProgramOutput;
 
@@ -26,15 +29,18 @@ export class DataController {
     private include: Include = Include.folders;
 
     constructor(progComp: ProgramOutput, treeController: TreeController) {
+        this.dom = element("div");
         this.complexity = convertToSortedOutput(progComp);
         this.initialComplexity = cloneSortedOutput(this.complexity);
         sortProgramInOrder(this.complexity);
         this.treeController = treeController;
+
+        this.makeTree();
     }
 
     // build
 
-    makeTree() {
+    private makeTree() {
         const contents = this.makeFolderContents(this.complexity);
 
         // If there is only one top level node, show it expanded.
@@ -45,7 +51,8 @@ export class DataController {
             contents.setOpenness(true);
         }
 
-        return contents;
+        this.dom.innerHTML = "";
+        this.dom.appendChild(contents.dom);
     }
 
     private makeContainer(containerOutput: SortedContainerOutput): Container {
@@ -145,6 +152,8 @@ export class DataController {
     // filter
 
     private filter() {
+        this.complexity = cloneSortedOutput(this.initialComplexity);
+
         const removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean
             = this.include === Include.folders
                 ? () => false
@@ -154,7 +163,7 @@ export class DataController {
 
         this.removeComplexityNodes(this.complexity.inner, removeWhat);
 
-        this.reChild();
+        this.makeTree();
     }
 
     private removeComplexityNodes(inner: (SortedFolderOutput | SortedFileOutput | SortedContainerOutput)[], removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean) {

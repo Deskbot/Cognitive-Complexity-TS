@@ -9,8 +9,6 @@ export function Main(complexity: ProgramOutput) {
     const treeController = new TreeController();
     const dataController = new DataController(complexity, treeController);
 
-    const topLevelBoxes = dataController.makeTree();
-
     function updateFilter() {
         if (includeFolders.getState()) {
             dataController.setInclude(Include.folders);
@@ -55,6 +53,6 @@ export function Main(complexity: ProgramOutput) {
         includeFolders.dom,
         includeFiles.dom,
 
-        topLevelBoxes.dom
+        dataController.dom
     );
 }
