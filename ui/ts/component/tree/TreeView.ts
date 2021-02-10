@@ -1,9 +1,9 @@
-import { Container } from "../component/tree/Container.js";
-import { File } from "../component/tree/File.js";
-import { Folder } from "../component/tree/Folder.js";
-import { FolderContents } from "../component/tree/FolderContents.js";
-import { isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../domain/sortedOutput.js";
-import { element } from "../framework.js";
+import { Container } from "./Container.js";
+import { File } from "./File.js";
+import { Folder } from "./Folder.js";
+import { FolderContents } from "./FolderContents.js";
+import { isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
+import { element } from "../../framework.js";
 
 export class TreeView {
     readonly dom: Element;
