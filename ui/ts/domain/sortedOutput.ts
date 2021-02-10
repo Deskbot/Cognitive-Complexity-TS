@@ -24,14 +24,14 @@ export type SortedProgramOutput = SortedFolderOutput;
 export interface SortedFolderOutput {
     name: string;
     path: string;
-    inner: (SortedFileOutput | SortedFolderOutput)[];
+    inner: (SortedFileOutput | SortedFolderOutput | SortedContainerOutput)[];
 };
 
 export function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput): output is SortedFileOutput {
     return (output as SortedFileOutput).score !== undefined;
 }
 
-function isSortedContainerOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedContainerOutput {
+export function isSortedContainerOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedContainerOutput {
     return (output as SortedContainerOutput).line !== undefined;
 }
 

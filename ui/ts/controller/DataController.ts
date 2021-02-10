@@ -3,8 +3,15 @@ import { Container } from "../component/tree/Container.js";
 import { File } from "../component/tree/File.js";
 import { Folder } from "../component/tree/Folder.js";
 import { FolderContents } from "../component/tree/FolderContents.js";
-import { cloneSortedOutput, convertToSortedOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { removeAll } from "../util/util.js";
 import { TreeController } from "./TreeController.js";
+
+enum Include {
+    folders = 1,
+    files,
+    none,
+}
 
 export class DataController {
     private complexity: SortedProgramOutput;
@@ -15,6 +22,8 @@ export class DataController {
     private folderMap: Map<SortedFolderOutput, Folder> = new Map();
     private fileMap: Map<SortedFileOutput, File> = new Map();
     private folderContentsMap: Map<SortedFolderOutput, FolderContents> = new Map();
+
+    private include: Include = Include.folders;
 
     constructor(progComp: ProgramOutput, treeController: TreeController) {
         this.complexity = convertToSortedOutput(progComp);
@@ -130,7 +139,23 @@ export class DataController {
     }
 
     hideFiles() {
+        const removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean
+             = this.include === Include.folders
+                ? () => true
+                : this.include === Include.files
+                    ? isSortedFileOutput
+                    : data => !isSortedContainerOutput(data)
 
+        this.removeComplexityNodes(this.complexity.inner, removeWhat);
+    }
+
+    private removeComplexityNodes(inner: (SortedFolderOutput | SortedFileOutput | SortedContainerOutput)[], removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean) {
+        const removed = removeAll(inner, removeWhat);
+
+        if (removed.length > 0) {
+            inner.push(...removed.flatMap(removedElem => removedElem.inner));
+            this.removeComplexityNodes(inner, removeWhat);
+        }
     }
 
     showFiles() {

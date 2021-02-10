@@ -16,11 +16,24 @@ export function Main(complexity: ProgramOutput) {
         if (state) {
             includeFiles.setState(true);
         }
+
+        if (state) {
+            dataController.showFolders();
+        } else {
+            dataController.hideFolders();
+        }
     });
+
     const includeFiles = new GlobalToggleControl(true, "Include Files", (state) => {
         // no files implies no folders
         if (!state) {
             includeFolders.setState(false);
+        }
+
+        if (state) {
+            dataController.showFiles();
+        } else {
+            dataController.hideFiles();
         }
     });
 
