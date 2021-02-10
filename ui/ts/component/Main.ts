@@ -9,6 +9,20 @@ export function Main(complexity: ProgramOutput) {
     const treeController = new TreeController();
     const dataController = new DataController(complexity, treeController);
 
+    const sortInOrder = new GlobalToggleControl(true, "Sort In Order", (state) => {
+        if (state) {
+            dataController.sortInOrder();
+            sortByComplexity.setState(false);
+        }
+    });
+
+    const sortByComplexity = new GlobalToggleControl(false, "Sort By Complexity", (state) => {
+        if (state) {
+            dataController.sortByComplexity();
+            sortInOrder.setState(false);
+        }
+    });
+
     function updateFilter() {
         if (includeFolders.getState()) {
             dataController.setInclude(Include.folders);
@@ -44,12 +58,10 @@ export function Main(complexity: ProgramOutput) {
         GlobalControl("Collapse All", () => {
             treeController.collapseAll();
         }),
-        GlobalControl("Sort In Order", () => {
-            dataController.sortInOrder();
-        }),
-        GlobalControl("Sort By Complexity", () => {
-            dataController.sortByComplexity();
-        }),
+
+        sortInOrder.dom,
+        sortByComplexity.dom,
+
         includeFolders.dom,
         includeFiles.dom,
 
