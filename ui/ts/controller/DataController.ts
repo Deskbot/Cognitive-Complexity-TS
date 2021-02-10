@@ -7,10 +7,10 @@ import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSo
 import { removeAll } from "../util/util.js";
 import { TreeController } from "./TreeController.js";
 
-enum Include {
+export enum Include {
     folders = 1,
     files,
-    none,
+    containers,
 }
 
 export class DataController {
@@ -31,6 +31,8 @@ export class DataController {
         sortProgramInOrder(this.complexity);
         this.treeController = treeController;
     }
+
+    // build
 
     makeTree() {
         const contents = this.makeFolderContents(this.complexity);
@@ -128,6 +130,8 @@ export class DataController {
         }
     }
 
+    // sort
+
     sortByComplexity() {
         sortProgramByComplexity(this.complexity);
         this.reChild();
@@ -138,15 +142,19 @@ export class DataController {
         this.reChild();
     }
 
-    hideFiles() {
+    // filter
+
+    private filter() {
         const removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean
-             = this.include === Include.folders
-                ? () => true
+            = this.include === Include.folders
+                ? () => false
                 : this.include === Include.files
-                    ? isSortedFileOutput
+                    ? data => !isSortedContainerOutput(data) && !isSortedFileOutput(data)
                     : data => !isSortedContainerOutput(data)
 
         this.removeComplexityNodes(this.complexity.inner, removeWhat);
+
+        this.reChild();
     }
 
     private removeComplexityNodes(inner: (SortedFolderOutput | SortedFileOutput | SortedContainerOutput)[], removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean) {
@@ -158,16 +166,8 @@ export class DataController {
         }
     }
 
-    showFiles() {
-
+    setInclude(include: Include) {
+        this.include = include;
+        this.filter();
     }
-
-    hideFolders() {
-
-    }
-
-    showFolders() {
-
-    }
-
 }

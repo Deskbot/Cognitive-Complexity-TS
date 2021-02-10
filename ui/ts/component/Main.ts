@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../../shared/types";
-import { DataController } from "../controller/DataController.js";
+import { DataController, Include } from "../controller/DataController.js";
 import { TreeController } from "../controller/TreeController.js";
 import { element } from "../framework.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
@@ -11,17 +11,23 @@ export function Main(complexity: ProgramOutput) {
 
     const topLevelBoxes = dataController.makeTree();
 
+    function updateFilter() {
+        if (includeFolders.getState()) {
+            dataController.setInclude(Include.folders);
+        } else if (includeFiles.getState()) {
+            dataController.setInclude(Include.files);
+        } else {
+            dataController.setInclude(Include.containers);
+        }
+    }
+
     const includeFolders = new GlobalToggleControl(true, "Include Folders", (state) => {
         // folders implies files
         if (state) {
             includeFiles.setState(true);
         }
 
-        if (state) {
-            dataController.showFolders();
-        } else {
-            dataController.hideFolders();
-        }
+        updateFilter();
     });
 
     const includeFiles = new GlobalToggleControl(true, "Include Files", (state) => {
@@ -30,11 +36,7 @@ export function Main(complexity: ProgramOutput) {
             includeFolders.setState(false);
         }
 
-        if (state) {
-            dataController.showFiles();
-        } else {
-            dataController.hideFiles();
-        }
+        updateFilter();
     });
 
     return element("main", {},

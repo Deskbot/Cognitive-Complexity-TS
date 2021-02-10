@@ -42,12 +42,16 @@ export class GlobalToggleControl {
         this.externalOnStateChange(this.state);
     }
 
+    getState(): boolean {
+        return this.state;
+    }
+
     setState(state: boolean) {
         this.state = state;
         this.onStateChange();
     }
 
-    toggleState() {
+    private toggleState() {
         this.setState(!this.state);
     }
 }
