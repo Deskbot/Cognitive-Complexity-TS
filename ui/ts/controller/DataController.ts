@@ -14,6 +14,11 @@ export enum Include {
     containers,
 }
 
+enum Sort {
+    inOrder = 1,
+    complexity,
+}
+
 export class DataController {
     readonly dom: Element;
 
@@ -26,7 +31,8 @@ export class DataController {
     private fileMap: Map<SortedFileOutput, File> = new Map();
     private folderContentsMap: Map<SortedFolderOutput, FolderContents> = new Map();
 
-    private include: Include = Include.folders;
+    private include = Include.folders;
+    private sortMethod = Sort.inOrder;
 
     constructor(progComp: ProgramOutput, treeController: TreeController) {
         this.dom = element("div");
@@ -139,20 +145,31 @@ export class DataController {
 
     // sort
 
-    sortByComplexity() {
-        sortProgramByComplexity(this.complexity);
+    private sort() {
+        if (this.sortMethod === Sort.inOrder) {
+            sortProgramInOrder(this.complexity);
+        } else if (this.sortMethod === Sort.complexity) {
+            sortProgramByComplexity(this.complexity);
+        }
+
         this.reChild();
     }
 
+    sortByComplexity() {
+        this.sortMethod = Sort.complexity;
+        this.sort();
+    }
+
     sortInOrder() {
-        sortProgramInOrder(this.complexity);
-        this.reChild();
+        this.sortMethod = Sort.inOrder;
+        this.sort();
     }
 
     // filter
 
     private filter() {
         this.complexity = cloneSortedOutput(this.initialComplexity);
+        this.sort();
 
         const removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean
             = this.include === Include.folders
