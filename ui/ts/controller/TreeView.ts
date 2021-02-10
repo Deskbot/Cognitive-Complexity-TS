@@ -5,7 +5,7 @@ import { FolderContents } from "../component/tree/FolderContents.js";
 import { isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../domain/sortedOutput.js";
 import { element } from "../framework.js";
 
-export class View {
+export class TreeView {
     readonly dom: Element;
 
     private containerMap: Map<SortedContainerOutput, Container> = new Map();

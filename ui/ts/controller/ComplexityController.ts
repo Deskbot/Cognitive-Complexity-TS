@@ -1,7 +1,7 @@
 import { ProgramOutput } from "../../../shared/types.js";
 import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
-import { View } from "./View.js";
+import { TreeView } from "./TreeView.js";
 
 export enum Include {
     folders = 1,
@@ -15,7 +15,7 @@ enum Sort {
 }
 
 export class ComplexityController {
-    private view: View;
+    private view: TreeView;
 
     private complexity: SortedProgramOutput;
     private initialComplexity: SortedProgramOutput;
@@ -23,7 +23,7 @@ export class ComplexityController {
     private include = Include.folders;
     private sortMethod = Sort.inOrder;
 
-    constructor(progComp: ProgramOutput, view: View) {
+    constructor(progComp: ProgramOutput, view: TreeView) {
         this.view = view;
 
         this.complexity = convertToSortedOutput(progComp);
