@@ -3,9 +3,8 @@ import { element } from "../../framework.js";
 import { CopyText } from "../controls/CopyText.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
-import { Tree } from "../../controller/TreeController.js";
 
-export class Container implements Tree {
+export class Container {
     private box: ToggleableBox;
     private children: Container[]; // TODO allow this to change
 

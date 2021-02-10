@@ -2,10 +2,9 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { element } from "../../framework.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
-import { Tree } from "../../controller/TreeController.js";
 import { FolderContents } from "./FolderContents.js";
 
-export class Folder implements Tree {
+export class Folder {
     private box: ToggleableBox;
     private content: FolderContents;
 

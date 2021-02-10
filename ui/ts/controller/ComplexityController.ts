@@ -33,6 +33,16 @@ export class ComplexityController {
         this.view.makeTree(this.complexity);
     }
 
+    // expand & collapse
+
+    collapseAll() {
+        this.view.collapseAll();
+    }
+
+    expandAll() {
+        this.view.expandAll();
+    }
+
     // sort
 
     private sort() {

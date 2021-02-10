@@ -4,9 +4,8 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
-import { Tree } from "../../controller/TreeController.js";
 
-export class File implements Tree {
+export class File {
     private box: ToggleableBox;
     private children: Container[]; // TODO allow this to change
 

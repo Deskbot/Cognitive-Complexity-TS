@@ -4,22 +4,20 @@ import { Folder } from "../component/tree/Folder.js";
 import { FolderContents } from "../component/tree/FolderContents.js";
 import { isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../domain/sortedOutput.js";
 import { element } from "../framework.js";
-import { TreeController } from "./TreeController.js";
 
 export class View {
     readonly dom: Element;
 
-    private treeController: TreeController;
     private containerMap: Map<SortedContainerOutput, Container> = new Map();
     private folderMap: Map<SortedFolderOutput, Folder> = new Map();
     private fileMap: Map<SortedFileOutput, File> = new Map();
     private folderContentsMap: Map<SortedFolderOutput, FolderContents> = new Map();
 
-    constructor(treeController: TreeController) {
+    constructor() {
         this.dom = element("div");
-
-        this.treeController = treeController;
     }
+
+    // make
 
     makeTree(complexity: SortedProgramOutput) {
         const contents = this.makeFolderContents(complexity);
@@ -42,7 +40,6 @@ export class View {
         }
 
         const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
-        this.treeController.register(container);
         this.containerMap.set(containerOutput, container);
         return container;
     }
@@ -60,7 +57,6 @@ export class View {
 
         const file = new File(fileOutput.path, fileOutput.name, fileOutput.score, children);
 
-        this.treeController.register(file);
         this.fileMap.set(fileOutput, file);
 
         return file;
@@ -90,10 +86,11 @@ export class View {
         }
 
         const folder = new Folder(folderOutput.path, folderOutput.name, this.makeFolderContents(folderOutput));
-        this.treeController.register(folder);
         this.folderMap.set(folderOutput, folder);
         return folder;
     }
+
+    // changes
 
     reChild() {
         // folder contents
@@ -118,4 +115,26 @@ export class View {
         }
     }
 
+    collapseAll() {
+        this.setTreeOpenness(false);
+    }
+
+    expandAll() {
+        this.setTreeOpenness(true);
+    }
+
+    private setTreeOpenness(isOpen: boolean) {
+        for (const component of this.containerMap.values()) {
+            component.setOpenness(isOpen);
+        }
+        for (const component of this.folderMap.values()) {
+            component.setOpenness(isOpen);
+        }
+        for (const component of this.fileMap.values()) {
+            component.setOpenness(isOpen);
+        }
+        for (const component of this.folderContentsMap.values()) {
+            component.setOpenness(isOpen);
+        }
+    }
 }

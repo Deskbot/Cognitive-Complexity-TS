@@ -1,37 +1,35 @@
 import { ProgramOutput } from "../../../shared/types";
 import { ComplexityController, Include } from "../controller/ComplexityController.js";
-import { TreeController } from "../controller/TreeController.js";
-import { View } from "../controller/View";
+import { View } from "../controller/View.js";
 import { element } from "../framework.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
 import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
 
 export function Main(complexity: ProgramOutput) {
-    const treeController = new TreeController();
-    const view = new View(treeController);
-    const dataController = new ComplexityController(complexity, view);
+    const view = new View();
+    const controller = new ComplexityController(complexity, view);
 
     const sortInOrder = new GlobalToggleControl(true, "Sort In Order", (state) => {
         if (state) {
-            dataController.sortInOrder();
+            controller.sortInOrder();
             sortByComplexity.setState(false);
         }
     });
 
     const sortByComplexity = new GlobalToggleControl(false, "Sort By Complexity", (state) => {
         if (state) {
-            dataController.sortByComplexity();
+            controller.sortByComplexity();
             sortInOrder.setState(false);
         }
     });
 
     function updateFilter() {
         if (includeFolders.getState()) {
-            dataController.setInclude(Include.folders);
+            controller.setInclude(Include.folders);
         } else if (includeFiles.getState()) {
-            dataController.setInclude(Include.files);
+            controller.setInclude(Include.files);
         } else {
-            dataController.setInclude(Include.containers);
+            controller.setInclude(Include.containers);
         }
     }
 
@@ -55,10 +53,10 @@ export function Main(complexity: ProgramOutput) {
 
     return element("main", {},
         GlobalControl("Expand All", () => {
-            treeController.expandAll();
+            controller.expandAll();
         }),
         GlobalControl("Collapse All", () => {
-            treeController.collapseAll();
+            controller.collapseAll();
         }),
 
         sortInOrder.dom,
