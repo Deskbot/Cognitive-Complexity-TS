@@ -19,7 +19,7 @@ enum Sort {
     complexity,
 }
 
-export class DataController {
+export class ComplexityController {
     readonly dom: Element;
 
     private complexity: SortedProgramOutput;
