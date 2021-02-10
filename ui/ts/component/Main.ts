@@ -12,15 +12,17 @@ export function Main(complexity: ProgramOutput) {
     const sortInOrder = new GlobalToggleControl(true, "Sort In Order", (state) => {
         if (state) {
             controller.sortInOrder();
-            sortByComplexity.setState(false);
         }
+
+        sortByComplexity.setState(!state);
     });
 
     const sortByComplexity = new GlobalToggleControl(false, "Sort By Complexity", (state) => {
         if (state) {
             controller.sortByComplexity();
-            sortInOrder.setState(false);
         }
+
+        sortInOrder.setState(!state);
     });
 
     function updateFilter() {

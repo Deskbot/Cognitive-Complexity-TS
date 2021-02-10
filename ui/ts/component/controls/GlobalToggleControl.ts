@@ -47,8 +47,10 @@ export class GlobalToggleControl {
     }
 
     setState(state: boolean) {
-        this.state = state;
-        this.onStateChange();
+        if (this.state !== state) {
+            this.state = state;
+            this.onStateChange();
+        }
     }
 
     private toggleState() {
