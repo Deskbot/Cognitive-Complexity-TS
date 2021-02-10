@@ -1,13 +1,15 @@
 import { ProgramOutput } from "../../../shared/types";
 import { ComplexityController, Include } from "../controller/ComplexityController.js";
 import { TreeController } from "../controller/TreeController.js";
+import { View } from "../controller/View";
 import { element } from "../framework.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
 import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
 
 export function Main(complexity: ProgramOutput) {
     const treeController = new TreeController();
-    const dataController = new ComplexityController(complexity, treeController);
+    const view = new View(treeController);
+    const dataController = new ComplexityController(complexity, view);
 
     const sortInOrder = new GlobalToggleControl(true, "Sort In Order", (state) => {
         if (state) {
@@ -65,6 +67,6 @@ export function Main(complexity: ProgramOutput) {
         includeFolders.dom,
         includeFiles.dom,
 
-        dataController.dom
+        view.dom
     );
 }
