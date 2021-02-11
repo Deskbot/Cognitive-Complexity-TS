@@ -53,6 +53,17 @@ export function cloneSortedOutput(output: SortedProgramOutput): SortedProgramOut
 
 // compare
 
+function compareOutputsByName(left: SortedContainerOutput | SortedFileOutput | SortedFolderOutput, right: SortedContainerOutput | SortedFileOutput | SortedFolderOutput): number {
+    const leftName = left.name.toLowerCase();
+    const rightName = right.name.toLowerCase();
+
+    return leftName < rightName
+        ? -1
+        : leftName > rightName
+            ? 1
+            : 0;
+}
+
 function compareSortedOutputComplexity(
     left: SortedFileOutput | SortedFolderOutput,
     right: SortedFileOutput | SortedFolderOutput,
@@ -99,6 +110,7 @@ function compareSortedOutputOrder(
         const leftContainer = left as SortedContainerOutput;
         const rightContainer = right as SortedContainerOutput;
 
+        // assume same file
         // smaller line numbers first
         const lineDiff = leftContainer.line - rightContainer.line;
         if (lineDiff !== 0) return lineDiff;
@@ -107,11 +119,7 @@ function compareSortedOutputOrder(
         return leftContainer.column - rightContainer.column;
     }
 
-    return left.name < right.name
-        ? -1
-        : left.name > right.name
-            ? 1
-            : 0;
+    return compareOutputsByName(left, right);
 }
 
 // convert
@@ -197,6 +205,10 @@ function sortProgram(program: SortedProgramOutput, sorter?: Sorter<SortedFileOut
 
 export function sortProgramByComplexity(program: SortedProgramOutput) {
     sortProgram(program, compareSortedOutputComplexity);
+}
+
+export function sortProgramByName(program: SortedProgramOutput) {
+    sortProgram(program, compareOutputsByName);
 }
 
 export function sortProgramInOrder(program: SortedProgramOutput) {

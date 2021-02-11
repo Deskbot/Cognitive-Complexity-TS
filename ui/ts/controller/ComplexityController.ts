@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../../shared/types.js";
-import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFolderOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
 import { Tree } from "../component/tree/Tree.js";
 
@@ -47,7 +47,14 @@ export class ComplexityController {
 
     private sort() {
         if (this.sortMethod === Sort.inOrder) {
-            sortProgramInOrder(this.complexity);
+            if (this.include === Include.containers) {
+                // don't consider relative line numbers of containers
+                sortProgramByName(this.complexity);
+            } else {
+                // consider relative line numbers of containers
+                sortProgramInOrder(this.complexity);
+            }
+
         } else if (this.sortMethod === Sort.complexity) {
             sortProgramByComplexity(this.complexity);
         }
