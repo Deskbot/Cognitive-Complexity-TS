@@ -1,7 +1,7 @@
 import { ProgramOutput } from "../../../shared/types.js";
 import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
-import { TreeView } from "../component/tree/TreeView.js";
+import { TreeView } from "../component/tree/Tree.js";
 
 export enum Include {
     folders = 1,

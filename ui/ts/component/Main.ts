@@ -1,6 +1,6 @@
 import { ProgramOutput } from "../../../shared/types";
 import { ComplexityController, Include } from "../controller/ComplexityController.js";
-import { TreeView } from "./tree/TreeView.js";
+import { TreeView } from "./tree/Tree.js";
 import { element } from "../framework.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
 import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
