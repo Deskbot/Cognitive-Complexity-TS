@@ -2,7 +2,7 @@ import { Container } from "./Container.js";
 import { File } from "./File.js";
 import { Folder } from "./Folder.js";
 import { FolderContents } from "./FolderContents.js";
-import { isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
+import { isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
 import { element } from "../../framework.js";
 
 export class TreeView {
@@ -40,21 +40,28 @@ export class TreeView {
     }
 
     private makeContainer(containerOutput: SortedContainerOutput): Container {
+        this.containerComplexityMap.set(containerOutput.id, containerOutput);
+
         if (this.containerMap.has(containerOutput.id)) {
             return this.containerMap.get(containerOutput.id)!;
+        } else {
+            console.log("container");
         }
 
         const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
 
         this.containerMap.set(containerOutput.id, container);
-        this.containerComplexityMap.set(containerOutput.id, containerOutput);
 
         return container;
     }
 
     private makeFile(fileOutput: SortedFileOutput): File {
+        this.fileComplexityMap.set(fileOutput.id, fileOutput);
+
         if (this.fileMap.has(fileOutput.id)) {
             return this.fileMap.get(fileOutput.id)!;
+        } else {
+            console.log("file");
         }
 
         const children = [] as Container[];
@@ -66,14 +73,17 @@ export class TreeView {
         const file = new File(fileOutput.path, fileOutput.name, fileOutput.score, children);
 
         this.fileMap.set(fileOutput.id, file);
-        this.fileComplexityMap.set(fileOutput.id, fileOutput);
 
         return file;
     }
 
     private makeFolderContents(folderOutput: SortedFolderOutput): FolderContents {
+        this.folderContentsComplexityMap.set(folderOutput.id, folderOutput);
+
         if (this.folderContentsMap.has(folderOutput.id)) {
             return this.folderContentsMap.get(folderOutput.id)!;
+        } else {
+            console.log("folder contents");
         }
 
         const folderContents = new FolderContents(folderOutput.inner.map((folderEntry) => {
@@ -85,20 +95,22 @@ export class TreeView {
         }));
 
         this.folderContentsMap.set(folderOutput.id, folderContents);
-        this.folderContentsComplexityMap.set(folderOutput.id, folderOutput);
 
         return folderContents;
     }
 
     private makeFolder(folderOutput: SortedFolderOutput): Folder {
+        this.folderComplexityMap.set(folderOutput.id, folderOutput);
+
         if (this.folderMap.has(folderOutput.id)) {
             return this.folderMap.get(folderOutput.id)!;
+        } else {
+            console.log("folder");
         }
 
         const folder = new Folder(folderOutput.path, folderOutput.name, this.makeFolderContents(folderOutput));
 
         this.folderMap.set(folderOutput.id, folder);
-        this.folderComplexityMap.set(folderOutput.id, folderOutput);
 
         return folder;
     }
@@ -113,7 +125,9 @@ export class TreeView {
             folderContents.setChildren(complexity.inner.map((folderEntry) => {
                 const folderEntryComponent = isSortedFileOutput(folderEntry)
                     ? this.makeFile(folderEntry)
-                    : this.makeFolder(folderEntry);
+                    : isSortedContainerOutput(folderEntry)
+                        ? this.makeContainer(folderEntry)
+                        : this.makeFolder(folderEntry);
 
                 return folderEntryComponent;
             }));
