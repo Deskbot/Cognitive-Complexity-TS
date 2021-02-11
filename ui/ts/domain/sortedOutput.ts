@@ -30,18 +30,20 @@ export type SortedProgramOutput = SortedFolderOutput;
 export interface SortedFolderOutput extends Unique {
     name: string;
     path: string;
-    inner: (SortedFileOutput | SortedFolderOutput | SortedContainerOutput)[];
+    inner: SortedAnything[];
 };
 
-export function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedFileOutput {
+export type SortedAnything = SortedFolderOutput | SortedFileOutput | SortedContainerOutput;
+
+export function isSortedFileOutput(output: SortedAnything): output is SortedFileOutput {
     return (output as SortedFileOutput).score !== undefined && (output as SortedContainerOutput).line === undefined;
 }
 
-export function isSortedFolderOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedFolderOutput {
+export function isSortedFolderOutput(output: SortedAnything): output is SortedFolderOutput {
     return (output as SortedFileOutput | SortedContainerOutput).score === undefined;
 }
 
-export function isSortedContainerOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedContainerOutput {
+export function isSortedContainerOutput(output: SortedAnything): output is SortedContainerOutput {
     return (output as SortedContainerOutput).line !== undefined;
 }
 
@@ -53,7 +55,7 @@ export function cloneSortedOutput(output: SortedProgramOutput): SortedProgramOut
 
 // compare
 
-function compareOutputsByName(left: SortedContainerOutput | SortedFileOutput | SortedFolderOutput, right: SortedContainerOutput | SortedFileOutput | SortedFolderOutput): number {
+function compareOutputsByName(left: SortedAnything, right: SortedAnything): number {
     const leftName = left.name.toLowerCase();
     const rightName = right.name.toLowerCase();
 
@@ -64,14 +66,11 @@ function compareOutputsByName(left: SortedContainerOutput | SortedFileOutput | S
             : 0;
 }
 
-function compareSortedOutputComplexity(
-    left: SortedFileOutput | SortedFolderOutput,
-    right: SortedFileOutput | SortedFolderOutput,
-): number {
-    const leftIsFile = isSortedFileOutput(left);
-    const rightIsFile = isSortedFileOutput(right);
+function compareSortedOutputComplexity(left: SortedAnything, right: SortedAnything,): number {
+    const leftHasScore = !isSortedFolderOutput(left);
+    const rightHasScore = !isSortedFolderOutput(right);
 
-    if (leftIsFile && rightIsFile) {
+    if (leftHasScore && rightHasScore) {
         // If the typeof statements were directly in the if condition,
         // the casting would not be required by TypeScript.
         const leftScore = (left as SortedFileOutput).score;
@@ -80,17 +79,17 @@ function compareSortedOutputComplexity(
         return rightScore - leftScore;
     }
 
-    if (!leftIsFile && !rightIsFile) {
+    if (!leftHasScore && !rightHasScore) {
         return 0;
     }
 
     // folders should be at the bottom of the complexity list
 
-    if (!leftIsFile) {
+    if (!leftHasScore) {
         return 1; // left is "bigger"
     }
 
-    if (!rightIsFile) {
+    if (!rightHasScore) {
         return -1; // left is "smaller"
     }
 
@@ -99,10 +98,7 @@ function compareSortedOutputComplexity(
 
 function compareSortedOutputOrder(left: SortedContainerOutput, right: SortedContainerOutput): number;
 function compareSortedOutputOrder(left: SortedFileOutput | SortedFolderOutput, right: SortedFileOutput | SortedFolderOutput): number;
-function compareSortedOutputOrder(
-    left: SortedContainerOutput | SortedFileOutput | SortedFolderOutput,
-    right: SortedContainerOutput | SortedFileOutput | SortedFolderOutput
-): number {
+function compareSortedOutputOrder(left: SortedAnything, right: SortedAnything): number {
     const leftIsContainer = isSortedContainerOutput(left);
     const rightIsContainer = isSortedContainerOutput(right);
 
