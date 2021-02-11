@@ -24,15 +24,17 @@ export class TreeView {
 
     // make
 
-    makeTree(complexity: SortedProgramOutput) {
+    makeTree(complexity: SortedProgramOutput, initial = false) {
         const contents = this.makeFolderContents(complexity);
 
-        // If there is only one top level node, show it expanded.
-        // Otherwise show all nodes minimised by default.
-        const onlyOneTopLevelNode = complexity.inner.length <= 1;
+        if (initial) {
+            // If there is only one top level node, show it expanded.
+            // Otherwise show all nodes minimised by default.
+            const onlyOneTopLevelNode = complexity.inner.length === 1;
 
-        if (onlyOneTopLevelNode) {
-            contents.setOpenness(true);
+            if (onlyOneTopLevelNode) {
+                contents.setOpenness(true);
+            }
         }
 
         this.dom.innerHTML = "";

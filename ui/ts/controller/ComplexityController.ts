@@ -30,7 +30,7 @@ export class ComplexityController {
         this.initialComplexity = cloneSortedOutput(this.complexity);
         sortProgramInOrder(this.complexity);
 
-        this.view.makeTree(this.complexity);
+        this.view.makeTree(this.complexity, true);
     }
 
     // expand & collapse
