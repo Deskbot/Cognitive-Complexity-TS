@@ -5,14 +5,20 @@ import { concatFilePath } from "./path.js";
 
 // type
 
-export interface SortedContainerOutput extends FunctionNodeInfo {
+interface Unique {
+    id: number;
+}
+
+let nextId = Number.MIN_SAFE_INTEGER;
+
+export interface SortedContainerOutput extends FunctionNodeInfo, Unique {
     name: string;
     path: string;
     score: number;
     inner: SortedContainerOutput[];
 }
 
-export interface SortedFileOutput {
+export interface SortedFileOutput extends Unique {
     name: string;
     path: string;
     score: number;
@@ -21,7 +27,7 @@ export interface SortedFileOutput {
 
 export type SortedProgramOutput = SortedFolderOutput;
 
-export interface SortedFolderOutput {
+export interface SortedFolderOutput extends Unique {
     name: string;
     path: string;
     inner: (SortedFileOutput | SortedFolderOutput | SortedContainerOutput)[];
@@ -112,6 +118,7 @@ export function convertToSortedOutput(programOutput: ProgramOutput): SortedFolde
 
 function convertToSortedContainer(path: string, containerOutput: ContainerOutput): SortedContainerOutput {
     return {
+        id: nextId++,
         column: containerOutput.column,
         line: containerOutput.line,
         name: containerOutput.name,
@@ -131,6 +138,7 @@ function convertToSortedFile(path: string, name: string, fileOutput: FileOutput)
     }
 
     return {
+        id: nextId++,
         name,
         path,
         score: fileOutput.score,
@@ -154,6 +162,7 @@ function convertToSortedFolder(path: string, name: string, folderOutput: FolderO
     }
 
     return {
+        id: nextId++,
         name,
         path,
         inner,

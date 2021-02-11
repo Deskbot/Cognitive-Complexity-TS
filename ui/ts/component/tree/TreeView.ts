@@ -8,10 +8,15 @@ import { element } from "../../framework.js";
 export class TreeView {
     readonly dom: Element;
 
-    private containerMap: Map<SortedContainerOutput, Container> = new Map();
-    private folderMap: Map<SortedFolderOutput, Folder> = new Map();
-    private fileMap: Map<SortedFileOutput, File> = new Map();
-    private folderContentsMap: Map<SortedFolderOutput, FolderContents> = new Map();
+    private containerMap = new Map<number, Container>();
+    private folderMap = new Map<number, Folder>();
+    private fileMap = new Map<number, File>();
+    private folderContentsMap = new Map<number, FolderContents>();
+
+    private containerComplexityMap = new Map<number, SortedContainerOutput>();
+    private folderComplexityMap = new Map<number, SortedFolderOutput>();
+    private fileComplexityMap = new Map<number, SortedFileOutput>();
+    private folderContentsComplexityMap = new Map<number, SortedFolderOutput>();
 
     constructor() {
         this.dom = element("div");
@@ -35,18 +40,21 @@ export class TreeView {
     }
 
     private makeContainer(containerOutput: SortedContainerOutput): Container {
-        if (this.containerMap.has(containerOutput)) {
-            return this.containerMap.get(containerOutput)!;
+        if (this.containerMap.has(containerOutput.id)) {
+            return this.containerMap.get(containerOutput.id)!;
         }
 
         const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
-        this.containerMap.set(containerOutput, container);
+
+        this.containerMap.set(containerOutput.id, container);
+        this.containerComplexityMap.set(containerOutput.id, containerOutput);
+
         return container;
     }
 
     private makeFile(fileOutput: SortedFileOutput): File {
-        if (this.fileMap.has(fileOutput)) {
-            return this.fileMap.get(fileOutput)!;
+        if (this.fileMap.has(fileOutput.id)) {
+            return this.fileMap.get(fileOutput.id)!;
         }
 
         const children = [] as Container[];
@@ -57,14 +65,15 @@ export class TreeView {
 
         const file = new File(fileOutput.path, fileOutput.name, fileOutput.score, children);
 
-        this.fileMap.set(fileOutput, file);
+        this.fileMap.set(fileOutput.id, file);
+        this.fileComplexityMap.set(fileOutput.id, fileOutput);
 
         return file;
     }
 
     private makeFolderContents(folderOutput: SortedFolderOutput): FolderContents {
-        if (this.folderContentsMap.has(folderOutput)) {
-            return this.folderContentsMap.get(folderOutput)!;
+        if (this.folderContentsMap.has(folderOutput.id)) {
+            return this.folderContentsMap.get(folderOutput.id)!;
         }
 
         const folderContents = new FolderContents(folderOutput.inner.map((folderEntry) => {
@@ -75,18 +84,22 @@ export class TreeView {
             return folderEntryComponent;
         }));
 
-        this.folderContentsMap.set(folderOutput, folderContents);
+        this.folderContentsMap.set(folderOutput.id, folderContents);
+        this.folderContentsComplexityMap.set(folderOutput.id, folderOutput);
 
         return folderContents;
     }
 
     private makeFolder(folderOutput: SortedFolderOutput): Folder {
-        if (this.folderMap.has(folderOutput)) {
-            return this.folderMap.get(folderOutput)!;
+        if (this.folderMap.has(folderOutput.id)) {
+            return this.folderMap.get(folderOutput.id)!;
         }
 
         const folder = new Folder(folderOutput.path, folderOutput.name, this.makeFolderContents(folderOutput));
-        this.folderMap.set(folderOutput, folder);
+
+        this.folderMap.set(folderOutput.id, folder);
+        this.folderComplexityMap.set(folderOutput.id, folderOutput);
+
         return folder;
     }
 
@@ -94,7 +107,9 @@ export class TreeView {
 
     reChild() {
         // folder contents
-        for (const [complexity, folderContents] of this.folderContentsMap) {
+        for (const [complexityId, folderContents] of this.folderContentsMap) {
+            const complexity = this.folderComplexityMap.get(complexityId)!;
+
             folderContents.setChildren(complexity.inner.map((folderEntry) => {
                 const folderEntryComponent = isSortedFileOutput(folderEntry)
                     ? this.makeFile(folderEntry)
@@ -105,12 +120,16 @@ export class TreeView {
         }
 
         // files
-        for (const [complexity, file] of this.fileMap) {
+        for (const [complexityId, file] of this.fileMap) {
+            const complexity = this.fileComplexityMap.get(complexityId)!;
+
             file.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
         }
 
         // containers
-        for (const [complexity, container] of this.containerMap) {
+        for (const [complexityId, container] of this.containerMap) {
+            const complexity = this.containerComplexityMap.get(complexityId)!;
+
             container.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
         }
     }
