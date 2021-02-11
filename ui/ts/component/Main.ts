@@ -9,7 +9,7 @@ export function Main(complexity: ProgramOutput) {
     const view = new Tree();
     const controller = new ComplexityController(complexity, view);
 
-    const sortInOrder = new GlobalToggleControl(true, "Sort In Order", (state) => {
+    const sortInOrder = new GlobalToggleControl(true, "Sort A-Z & By Line", (state) => {
         if (state) {
             controller.sortInOrder();
         }
