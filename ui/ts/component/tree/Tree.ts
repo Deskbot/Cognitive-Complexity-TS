@@ -27,21 +27,11 @@ export class Tree {
         this.changeFolderContents(complexity);
     }
 
-    private changeContainer(containerOutput: SortedContainerOutput): Container {
+    private changeContainer(containerOutput: SortedContainerOutput) {
         const observableContainer = this.containerComplexityMap.set(containerOutput);
         observableContainer.onChange(newContainer => this.reChildContainer(newContainer));
 
-        if (this.containerMap.has(containerOutput.id)) {
-            return this.containerMap.get(containerOutput.id)!;
-        } else {
-            console.log("container");
-        }
-
-        const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
-
-        this.containerMap.set(containerOutput.id, container);
-
-        return container;
+        containerOutput.inner.forEach(inner => this.makeContainer(inner));
     }
 
     private changeFile(fileOutput: SortedFileOutput) {
