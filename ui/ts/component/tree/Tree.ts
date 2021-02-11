@@ -3,7 +3,7 @@ import { File } from "./File.js";
 import { Folder } from "./Folder.js";
 import { FolderContents } from "./FolderContents.js";
 import { isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
-import { element } from "../../framework.js";
+import { element, Store } from "../../framework.js";
 
 export class Tree {
     readonly dom: Element;
@@ -13,13 +13,61 @@ export class Tree {
     private fileMap = new Map<number, File>();
     private folderContentsMap = new Map<number, FolderContents>();
 
-    private containerComplexityMap = new Map<number, SortedContainerOutput>();
-    private folderComplexityMap = new Map<number, SortedFolderOutput>();
-    private fileComplexityMap = new Map<number, SortedFileOutput>();
-    private folderContentsComplexityMap = new Map<number, SortedFolderOutput>();
+    private containerComplexityMap = new Store<SortedContainerOutput>();
+    private fileComplexityMap = new Store<SortedFileOutput>();
+    private folderContentsComplexityMap = new Store<SortedFolderOutput>();
 
     constructor() {
         this.dom = element("div");
+    }
+
+    // change complexity
+
+    changeComplexity(complexity: SortedProgramOutput) {
+        this.changeFolderContents(complexity);
+    }
+
+    private changeContainer(containerOutput: SortedContainerOutput): Container {
+        const observableContainer = this.containerComplexityMap.set(containerOutput);
+        observableContainer.onChange(newContainer => this.reChildContainer(newContainer));
+
+        if (this.containerMap.has(containerOutput.id)) {
+            return this.containerMap.get(containerOutput.id)!;
+        } else {
+            console.log("container");
+        }
+
+        const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
+
+        this.containerMap.set(containerOutput.id, container);
+
+        return container;
+    }
+
+    private changeFile(fileOutput: SortedFileOutput) {
+        const observableFile = this.fileComplexityMap.set(fileOutput);
+        observableFile.onChange(newFile => this.reChildFile(newFile));
+
+        for (const containerOutput of fileOutput.inner) {
+            this.changeContainer(containerOutput);
+        }
+    }
+
+    private changeFolderContents(folderOutput: SortedFolderOutput) {
+        const observableFolderContents = this.folderContentsComplexityMap.set(folderOutput);
+        observableFolderContents.onChange(newFolder => this.reChildFolderContents(newFolder));
+
+        folderOutput.inner.forEach((folderEntry) => {
+            isSortedContainerOutput(folderEntry)
+                ? this.changeContainer(folderEntry)
+                : isSortedFileOutput(folderEntry)
+                    ? this.changeFile(folderEntry)
+                    : this.changeFolder(folderEntry);
+        });
+    }
+
+    private changeFolder(folderOutput: SortedFolderOutput) {
+        this.changeFolderContents(folderOutput)
     }
 
     // make
@@ -42,7 +90,8 @@ export class Tree {
     }
 
     private makeContainer(containerOutput: SortedContainerOutput): Container {
-        this.containerComplexityMap.set(containerOutput.id, containerOutput);
+        const observableContainer = this.containerComplexityMap.set(containerOutput);
+        observableContainer.onChange(newContainer => this.reChildContainer(newContainer));
 
         if (this.containerMap.has(containerOutput.id)) {
             return this.containerMap.get(containerOutput.id)!;
@@ -58,7 +107,8 @@ export class Tree {
     }
 
     private makeFile(fileOutput: SortedFileOutput): File {
-        this.fileComplexityMap.set(fileOutput.id, fileOutput);
+        const observableFile = this.fileComplexityMap.set(fileOutput);
+        observableFile.onChange(newFile => this.reChildFile(newFile));
 
         if (this.fileMap.has(fileOutput.id)) {
             return this.fileMap.get(fileOutput.id)!;
@@ -80,7 +130,8 @@ export class Tree {
     }
 
     private makeFolderContents(folderOutput: SortedFolderOutput): FolderContents {
-        this.folderContentsComplexityMap.set(folderOutput.id, folderOutput);
+        const observableFolderContents = this.folderContentsComplexityMap.set(folderOutput);
+        observableFolderContents.onChange(newFolder => this.reChildFolderContents(newFolder));
 
         if (this.folderContentsMap.has(folderOutput.id)) {
             return this.folderContentsMap.get(folderOutput.id)!;
@@ -104,8 +155,6 @@ export class Tree {
     }
 
     private makeFolder(folderOutput: SortedFolderOutput): Folder {
-        this.folderComplexityMap.set(folderOutput.id, folderOutput);
-
         if (this.folderMap.has(folderOutput.id)) {
             return this.folderMap.get(folderOutput.id)!;
         } else {
@@ -119,38 +168,33 @@ export class Tree {
         return folder;
     }
 
-    // changes
+    // sorting
 
-    reChild() {
-        // folder contents
-        for (const [complexityId, folderContents] of this.folderContentsMap) {
-            const complexity = this.folderContentsComplexityMap.get(complexityId)!;
+    reChildFolderContents(complexity: SortedFolderOutput) {
+        const folderContents = this.folderContentsMap.get(complexity.id)!;
 
-            folderContents.setChildren(complexity.inner.map((folderEntry) => {
-                const folderEntryComponent = isSortedContainerOutput(folderEntry)
-                    ? this.makeContainer(folderEntry)
-                    : isSortedFileOutput(folderEntry)
-                        ? this.makeFile(folderEntry)
-                        : this.makeFolder(folderEntry);
+        folderContents.setChildren(complexity.inner.map((folderEntry) => {
+            const folderEntryComponent = isSortedContainerOutput(folderEntry)
+                ? this.makeContainer(folderEntry)
+                : isSortedFileOutput(folderEntry)
+                    ? this.makeFile(folderEntry)
+                    : this.makeFolder(folderEntry);
 
-                return folderEntryComponent;
-            }));
-        }
-
-        // files
-        for (const [complexityId, file] of this.fileMap) {
-            const complexity = this.fileComplexityMap.get(complexityId)!;
-
-            file.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
-        }
-
-        // containers
-        for (const [complexityId, container] of this.containerMap) {
-            const complexity = this.containerComplexityMap.get(complexityId)!;
-
-            container.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
-        }
+            return folderEntryComponent;
+        }));
     }
+
+    reChildFile(complexity: SortedFileOutput) {
+        const file = this.fileMap.get(complexity.id)!;
+        file.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
+    }
+
+    reChildContainer(complexity: SortedContainerOutput) {
+        const containers = this.containerMap.get(complexity.id)!;
+        containers.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
+    }
+
+    // collapse & expand
 
     collapseAll() {
         this.setTreeOpenness(false);

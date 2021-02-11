@@ -43,3 +43,51 @@ export function fragment(...children: (string | Node)[]) {
     fragment.append(...children);
     return fragment;
 }
+
+export class Observable<T> {
+    private handler: ((newValue: T) => void) | undefined;
+
+    constructor(private value: T) {
+
+    }
+
+    get(): T {
+        return this.value;
+    }
+
+    onChange(handler: (newValue: T) => void) {
+        this.handler = handler;
+    }
+
+    set(newValue: T) {
+        this.value = newValue;
+
+        if (this.handler) {
+            this.handler(this.value);
+        }
+    }
+}
+
+export class Store<T extends Unique> {
+    private map = new Map<number, Observable<T>>();
+
+    set(item: T) {
+        // override content of existing Observable
+        if (this.map.has(item.id)) {
+            const obs = this.map.get(item.id)!
+            obs.set(item);
+            return obs;
+        }
+
+        // create a new observable
+        else {
+            const obs = new Observable(item);
+            this.map.set(item.id, obs);
+            return obs;
+        }
+    }
+}
+
+export interface Unique {
+    id: number;
+}
