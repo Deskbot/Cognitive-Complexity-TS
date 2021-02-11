@@ -1,12 +1,12 @@
 import { ProgramOutput } from "../../../shared/types";
 import { ComplexityController, Include } from "../controller/ComplexityController.js";
-import { TreeView } from "./tree/Tree.js";
+import { Tree } from "./tree/Tree.js";
 import { element } from "../framework.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
 import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
 
 export function Main(complexity: ProgramOutput) {
-    const view = new TreeView();
+    const view = new Tree();
     const controller = new ComplexityController(complexity, view);
 
     const sortInOrder = new GlobalToggleControl(true, "Sort In Order", (state) => {

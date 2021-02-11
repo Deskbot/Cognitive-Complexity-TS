@@ -2,10 +2,10 @@ import { Container } from "./Container.js";
 import { File } from "./File.js";
 import { Folder } from "./Folder.js";
 import { FolderContents } from "./FolderContents.js";
-import { isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
+import { isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
 import { element } from "../../framework.js";
 
-export class TreeView {
+export class Tree {
     readonly dom: Element;
 
     private containerMap = new Map<number, Container>();
