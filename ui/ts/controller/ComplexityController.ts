@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../../shared/types.js";
-import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFolderOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFolderOutput, SortedAnything, SortedProgramOutput, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
 import { Tree } from "../component/tree/Tree.js";
 
@@ -77,7 +77,7 @@ export class ComplexityController {
     private filter() {
         this.complexity = cloneSortedOutput(this.initialComplexity);
 
-        const removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean
+        const removeWhat: (data: SortedAnything) => boolean
             = this.include === Include.folders
                 ? () => false
                 : this.include === Include.files
@@ -92,7 +92,7 @@ export class ComplexityController {
         this.view.changeComplexity(this.complexity);
     }
 
-    private removeComplexityNodes(inner: (SortedFolderOutput | SortedFileOutput | SortedContainerOutput)[], removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean) {
+    private removeComplexityNodes(inner: SortedAnything[], removeWhat: (data: SortedAnything) => boolean) {
         const removed = removeAll(inner, removeWhat);
 
         if (removed.length > 0) {
