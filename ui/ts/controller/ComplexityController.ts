@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../../shared/types.js";
-import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, sortProgramByComplexity, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
 import { TreeView } from "../component/tree/Tree.js";
 
@@ -75,7 +75,7 @@ export class ComplexityController {
             = this.include === Include.folders
                 ? () => false
                 : this.include === Include.files
-                    ? data => !isSortedContainerOutput(data) && !isSortedFileOutput(data)
+                    ? data => isSortedFolderOutput(data)
                     : data => !isSortedContainerOutput(data)
 
         this.removeComplexityNodes(this.complexity.inner, removeWhat);

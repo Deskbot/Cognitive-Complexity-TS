@@ -33,8 +33,12 @@ export interface SortedFolderOutput extends Unique {
     inner: (SortedFileOutput | SortedFolderOutput | SortedContainerOutput)[];
 };
 
-export function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput): output is SortedFileOutput {
-    return (output as SortedFileOutput).score !== undefined;
+export function isSortedFileOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedFileOutput {
+    return (output as SortedFileOutput).score !== undefined && (output as SortedContainerOutput).line === undefined;
+}
+
+export function isSortedFolderOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedFolderOutput {
+    return (output as SortedFileOutput | SortedContainerOutput).score === undefined;
 }
 
 export function isSortedContainerOutput(output: SortedFileOutput | SortedFolderOutput | SortedContainerOutput): output is SortedContainerOutput {

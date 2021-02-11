@@ -2,7 +2,7 @@ import { Container } from "./Container.js";
 import { File } from "./File.js";
 import { Folder } from "./Folder.js";
 import { FolderContents } from "./FolderContents.js";
-import { isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
+import { isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
 import { element } from "../../framework.js";
 
 export class TreeView {
@@ -89,9 +89,11 @@ export class TreeView {
         }
 
         const folderContents = new FolderContents(folderOutput.inner.map((folderEntry) => {
-            const folderEntryComponent = isSortedFileOutput(folderEntry)
-                ? this.makeFile(folderEntry)
-                : this.makeFolder(folderEntry);
+            const folderEntryComponent = isSortedContainerOutput(folderEntry)
+                ? this.makeContainer(folderEntry)
+                : isSortedFileOutput(folderEntry)
+                    ? this.makeFile(folderEntry)
+                    : this.makeFolder(folderEntry);
 
             return folderEntryComponent;
         }));
@@ -125,10 +127,10 @@ export class TreeView {
             const complexity = this.folderContentsComplexityMap.get(complexityId)!;
 
             folderContents.setChildren(complexity.inner.map((folderEntry) => {
-                const folderEntryComponent = isSortedFileOutput(folderEntry)
-                    ? this.makeFile(folderEntry)
-                    : isSortedContainerOutput(folderEntry)
-                        ? this.makeContainer(folderEntry)
+                const folderEntryComponent = isSortedContainerOutput(folderEntry)
+                    ? this.makeContainer(folderEntry)
+                    : isSortedFileOutput(folderEntry)
+                        ? this.makeFile(folderEntry)
                         : this.makeFolder(folderEntry);
 
                 return folderEntryComponent;
