@@ -108,7 +108,7 @@ export class TreeView {
     reChild() {
         // folder contents
         for (const [complexityId, folderContents] of this.folderContentsMap) {
-            const complexity = this.folderComplexityMap.get(complexityId)!;
+            const complexity = this.folderContentsComplexityMap.get(complexityId)!;
 
             folderContents.setChildren(complexity.inner.map((folderEntry) => {
                 const folderEntryComponent = isSortedFileOutput(folderEntry)
