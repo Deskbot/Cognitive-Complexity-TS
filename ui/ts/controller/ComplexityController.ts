@@ -76,7 +76,6 @@ export class ComplexityController {
 
     private filter() {
         this.complexity = cloneSortedOutput(this.initialComplexity);
-        this.sort();
 
         const removeWhat: (data: SortedFolderOutput | SortedFileOutput | SortedContainerOutput) => boolean
             = this.include === Include.folders
@@ -86,6 +85,8 @@ export class ComplexityController {
                     : data => !isSortedContainerOutput(data)
 
         this.removeComplexityNodes(this.complexity.inner, removeWhat);
+
+        this.sort();
 
         this.view.makeTree(this.complexity);
         this.view.changeComplexity(this.complexity);
