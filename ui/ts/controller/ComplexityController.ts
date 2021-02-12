@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../../shared/types.js";
-import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedAnything, SortedProgramOutput, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedAnything, SortedProgram, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
 import { Tree } from "../component/tree/Tree.js";
 import { ComplexityModel } from "../model/ComplexityModel.js";
@@ -19,8 +19,8 @@ export class ComplexityController {
     private model: ComplexityModel;
     private view: Tree;
 
-    private complexity: SortedProgramOutput;
-    private initialComplexity: SortedProgramOutput;
+    private complexity: SortedProgram;
+    private initialComplexity: SortedProgram;
 
     private include = Include.folders;
     private sortMethod = Sort.inOrder;

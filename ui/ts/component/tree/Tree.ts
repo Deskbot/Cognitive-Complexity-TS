@@ -2,7 +2,7 @@ import { Container } from "./Container.js";
 import { File } from "./File.js";
 import { Folder } from "./Folder.js";
 import { FolderContents } from "./FolderContents.js";
-import { isSortedContainerOutput, isSortedFileOutput, SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput } from "../../domain/sortedOutput.js";
+import { isSortedContainerOutput, isSortedFileOutput, SortedContainer, SortedFile, SortedFolder, SortedProgram } from "../../domain/sortedOutput.js";
 import { element, Store } from "../../framework.js";
 
 export class Tree {
@@ -19,7 +19,7 @@ export class Tree {
 
     // make
 
-    makeTree(complexity: SortedProgramOutput, initial = false) {
+    makeTree(complexity: SortedProgram, initial = false) {
         const contents = this.makeFolderContents(complexity);
 
         if (initial) {
@@ -36,7 +36,7 @@ export class Tree {
         this.dom.appendChild(contents.dom);
     }
 
-    private makeContainer(containerOutput: SortedContainerOutput): Container {
+    private makeContainer(containerOutput: SortedContainer): Container {
         if (this.containerMap.has(containerOutput.id)) {
             return this.containerMap.get(containerOutput.id)!;
         } else {
@@ -50,7 +50,7 @@ export class Tree {
         return container;
     }
 
-    private makeFile(fileOutput: SortedFileOutput): File {
+    private makeFile(fileOutput: SortedFile): File {
         if (this.fileMap.has(fileOutput.id)) {
             return this.fileMap.get(fileOutput.id)!;
         } else {
@@ -70,7 +70,7 @@ export class Tree {
         return file;
     }
 
-    private makeFolderContents(folderOutput: SortedFolderOutput): FolderContents {
+    private makeFolderContents(folderOutput: SortedFolder): FolderContents {
         if (this.folderContentsMap.has(folderOutput.id)) {
             return this.folderContentsMap.get(folderOutput.id)!;
         } else {
@@ -92,7 +92,7 @@ export class Tree {
         return folderContents;
     }
 
-    private makeFolder(folderOutput: SortedFolderOutput): Folder {
+    private makeFolder(folderOutput: SortedFolder): Folder {
         if (this.folderMap.has(folderOutput.id)) {
             return this.folderMap.get(folderOutput.id)!;
         } else {
@@ -108,7 +108,7 @@ export class Tree {
 
     // sorting
 
-    reChildFolderContents(complexity: SortedFolderOutput) {
+    reChildFolderContents(complexity: SortedFolder) {
         const folderContents = this.folderContentsMap.get(complexity.id)!;
 
         folderContents.setChildren(complexity.inner.map((folderEntry) => {
@@ -122,12 +122,12 @@ export class Tree {
         }));
     }
 
-    reChildFile(complexity: SortedFileOutput) {
+    reChildFile(complexity: SortedFile) {
         const file = this.fileMap.get(complexity.id)!;
         file.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
     }
 
-    reChildContainer(complexity: SortedContainerOutput) {
+    reChildContainer(complexity: SortedContainer) {
         const containers = this.containerMap.get(complexity.id)!;
         containers.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
     }

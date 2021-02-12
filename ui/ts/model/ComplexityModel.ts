@@ -1,33 +1,33 @@
 import { Tree } from "../component/tree/Tree.js";
-import { SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProgramOutput, isSortedContainerOutput, isSortedFileOutput } from "../domain/sortedOutput.js";
+import { SortedContainer, SortedFile, SortedFolder, SortedProgram, isSortedContainerOutput, isSortedFileOutput } from "../domain/sortedOutput.js";
 import { Store } from "../framework.js";
 
 export class ComplexityModel {
-    private containers = new Store<SortedContainerOutput>();
-    private files = new Store<SortedFileOutput>();
-    private folderContents = new Store<SortedFolderOutput>();
+    private containers = new Store<SortedContainer>();
+    private files = new Store<SortedFile>();
+    private folderContents = new Store<SortedFolder>();
 
     constructor(private view: Tree) {
 
     }
 
-    updateContainer(container: SortedContainerOutput) {
+    updateContainer(container: SortedContainer) {
         this.containers.set(container);
     }
 
-    updateFile(file: SortedFileOutput) {
+    updateFile(file: SortedFile) {
         this.files.set(file);
     }
 
-    updateFolder(folder: SortedFolderOutput) {
+    updateFolder(folder: SortedFolder) {
         this.folderContents.set(folder);
     }
 
-    overwriteComplexity(complexity: SortedProgramOutput) {
+    overwriteComplexity(complexity: SortedProgram) {
         this.overwriteFolderContents(complexity);
     }
 
-    private overwriteContainer(containerOutput: SortedContainerOutput) {
+    private overwriteContainer(containerOutput: SortedContainer) {
         const observableContainer = this.containers.set(containerOutput);
         observableContainer.onChange(newContainer => this.view.reChildContainer(newContainer));
 
@@ -36,7 +36,7 @@ export class ComplexityModel {
         }
     }
 
-    private overwriteFile(fileOutput: SortedFileOutput) {
+    private overwriteFile(fileOutput: SortedFile) {
         const observableFile = this.files.set(fileOutput);
         observableFile.onChange(newFile => this.view.reChildFile(newFile));
 
@@ -45,7 +45,7 @@ export class ComplexityModel {
         }
     }
 
-    private overwriteFolderContents(folderOutput: SortedFolderOutput) {
+    private overwriteFolderContents(folderOutput: SortedFolder) {
         const observableFolderContents = this.folderContents.set(folderOutput);
         observableFolderContents.onChange(newFolder => this.view.reChildFolderContents(newFolder));
 
@@ -58,7 +58,7 @@ export class ComplexityModel {
         });
     }
 
-    private overwriteFolder(folderOutput: SortedFolderOutput) {
+    private overwriteFolder(folderOutput: SortedFolder) {
         this.overwriteFolderContents(folderOutput)
     }
 }

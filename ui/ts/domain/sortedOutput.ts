@@ -11,45 +11,45 @@ interface Unique {
 
 let nextId = Number.MIN_SAFE_INTEGER;
 
-export interface SortedContainerOutput extends FunctionNodeInfo, Unique {
+export interface SortedContainer extends FunctionNodeInfo, Unique {
     name: string;
     path: string;
     score: number;
-    inner: SortedContainerOutput[];
+    inner: SortedContainer[];
 }
 
-export interface SortedFileOutput extends Unique {
+export interface SortedFile extends Unique {
     name: string;
     path: string;
     score: number;
-    inner: SortedContainerOutput[];
+    inner: SortedContainer[];
 }
 
-export type SortedProgramOutput = SortedFolderOutput;
+export type SortedProgram = SortedFolder;
 
-export interface SortedFolderOutput extends Unique {
+export interface SortedFolder extends Unique {
     name: string;
     path: string;
     inner: SortedAnything[];
 };
 
-export type SortedAnything = SortedFolderOutput | SortedFileOutput | SortedContainerOutput;
+export type SortedAnything = SortedFolder | SortedFile | SortedContainer;
 
-export function isSortedFileOutput(output: SortedAnything): output is SortedFileOutput {
-    return (output as SortedFileOutput).score !== undefined && (output as SortedContainerOutput).line === undefined;
+export function isSortedFileOutput(output: SortedAnything): output is SortedFile {
+    return (output as SortedFile).score !== undefined && (output as SortedContainer).line === undefined;
 }
 
-export function isSortedFolderOutput(output: SortedAnything): output is SortedFolderOutput {
-    return (output as SortedFileOutput | SortedContainerOutput).score === undefined;
+export function isSortedFolderOutput(output: SortedAnything): output is SortedFolder {
+    return (output as SortedFile | SortedContainer).score === undefined;
 }
 
-export function isSortedContainerOutput(output: SortedAnything): output is SortedContainerOutput {
-    return (output as SortedContainerOutput).line !== undefined;
+export function isSortedContainerOutput(output: SortedAnything): output is SortedContainer {
+    return (output as SortedContainer).line !== undefined;
 }
 
 // clone
 
-export function cloneSortedOutput(output: SortedProgramOutput): SortedProgramOutput {
+export function cloneSortedOutput(output: SortedProgram): SortedProgram {
     return JSON.parse(JSON.stringify(output));
 }
 
@@ -73,8 +73,8 @@ function compareSortedOutputComplexity(left: SortedAnything, right: SortedAnythi
     if (leftHasScore && rightHasScore) {
         // If the typeof statements were directly in the if condition,
         // the casting would not be required by TypeScript.
-        const leftScore = (left as SortedFileOutput).score;
-        const rightScore = (right as SortedFileOutput).score;
+        const leftScore = (left as SortedFile).score;
+        const rightScore = (right as SortedFile).score;
 
         return rightScore - leftScore;
     }
@@ -96,15 +96,15 @@ function compareSortedOutputComplexity(left: SortedAnything, right: SortedAnythi
     return 0; // unreachable
 }
 
-function compareSortedOutputOrder(left: SortedContainerOutput, right: SortedContainerOutput): number;
-function compareSortedOutputOrder(left: SortedFileOutput | SortedFolderOutput, right: SortedFileOutput | SortedFolderOutput): number;
+function compareSortedOutputOrder(left: SortedContainer, right: SortedContainer): number;
+function compareSortedOutputOrder(left: SortedFile | SortedFolder, right: SortedFile | SortedFolder): number;
 function compareSortedOutputOrder(left: SortedAnything, right: SortedAnything): number {
     const leftIsContainer = isSortedContainerOutput(left);
     const rightIsContainer = isSortedContainerOutput(right);
 
     if (leftIsContainer && rightIsContainer) {
-        const leftContainer = left as SortedContainerOutput;
-        const rightContainer = right as SortedContainerOutput;
+        const leftContainer = left as SortedContainer;
+        const rightContainer = right as SortedContainer;
 
         // assume same file
         // smaller line numbers first
@@ -120,11 +120,11 @@ function compareSortedOutputOrder(left: SortedAnything, right: SortedAnything): 
 
 // convert
 
-export function convertToSortedOutput(programOutput: ProgramOutput): SortedFolderOutput {
+export function convertToSortedOutput(programOutput: ProgramOutput): SortedFolder {
     return convertToSortedFolder("", "", programOutput);
 }
 
-function convertToSortedContainer(path: string, containerOutput: ContainerOutput): SortedContainerOutput {
+function convertToSortedContainer(path: string, containerOutput: ContainerOutput): SortedContainer {
     return {
         id: nextId++,
         column: containerOutput.column,
@@ -136,8 +136,8 @@ function convertToSortedContainer(path: string, containerOutput: ContainerOutput
     };
 }
 
-function convertToSortedFile(path: string, name: string, fileOutput: FileOutput): SortedFileOutput {
-    const inner = [] as SortedContainerOutput[];
+function convertToSortedFile(path: string, name: string, fileOutput: FileOutput): SortedFile {
+    const inner = [] as SortedContainer[];
 
     const innerPath = concatFilePath(path, name);
 
@@ -154,8 +154,8 @@ function convertToSortedFile(path: string, name: string, fileOutput: FileOutput)
     };
 }
 
-function convertToSortedFolder(path: string, name: string, folderOutput: FolderOutput): SortedFolderOutput {
-    const inner = [] as (SortedFileOutput | SortedFolderOutput)[];
+function convertToSortedFolder(path: string, name: string, folderOutput: FolderOutput): SortedFolder {
+    const inner = [] as (SortedFile | SortedFolder)[];
 
     const innerPath = concatFilePath(path, name);
 
@@ -179,7 +179,7 @@ function convertToSortedFolder(path: string, name: string, folderOutput: FolderO
 
 // sort
 
-function sortFileOrContainer(file: SortedFileOutput | SortedContainerOutput, sorter?: Sorter<SortedFileOutput | SortedFolderOutput>) {
+function sortFileOrContainer(file: SortedFile | SortedContainer, sorter?: Sorter<SortedFile | SortedFolder>) {
     file.inner.sort(sorter);
 
     for (const container of file.inner) {
@@ -187,7 +187,7 @@ function sortFileOrContainer(file: SortedFileOutput | SortedContainerOutput, sor
     }
 }
 
-function sortProgram(program: SortedProgramOutput, sorter?: Sorter<SortedFileOutput | SortedFolderOutput>) {
+function sortProgram(program: SortedProgram, sorter?: Sorter<SortedFile | SortedFolder>) {
     program.inner.sort(sorter);
 
     for (const fileOrFolder of program.inner) {
@@ -199,14 +199,14 @@ function sortProgram(program: SortedProgramOutput, sorter?: Sorter<SortedFileOut
     }
 }
 
-export function sortProgramByComplexity(program: SortedProgramOutput) {
+export function sortProgramByComplexity(program: SortedProgram) {
     sortProgram(program, compareSortedOutputComplexity);
 }
 
-export function sortProgramByName(program: SortedProgramOutput) {
+export function sortProgramByName(program: SortedProgram) {
     sortProgram(program, compareOutputsByName);
 }
 
-export function sortProgramInOrder(program: SortedProgramOutput) {
+export function sortProgramInOrder(program: SortedProgram) {
     sortProgram(program, compareSortedOutputOrder);
 }
