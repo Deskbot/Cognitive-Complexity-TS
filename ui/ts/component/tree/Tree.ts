@@ -3,7 +3,7 @@ import { File } from "./File.js";
 import { Folder } from "./Folder.js";
 import { FolderContents } from "./FolderContents.js";
 import { isSortedContainerOutput, isSortedFileOutput, SortedContainer, SortedFile, SortedFolder, SortedProgram } from "../../domain/sortedOutput.js";
-import { element, Store } from "../../framework.js";
+import { element } from "../../framework.js";
 
 export class Tree {
     readonly dom: Element;

@@ -93,7 +93,6 @@ export class ComplexityController {
 
         this.sort();
 
-        this.view.makeTree(this.complexity);
         this.model.overwriteComplexity(this.complexity);
     }
 
