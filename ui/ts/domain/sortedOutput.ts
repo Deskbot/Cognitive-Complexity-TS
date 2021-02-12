@@ -1,15 +1,8 @@
 import { ContainerOutput, FileOutput, FolderOutput, FunctionNodeInfo, ProgramOutput } from "../../../shared/types.js";
+import { Unique, UniqueId } from "../framework.js";
 import { Sorter } from "../util/util.js";
 import { isFileOutput } from "./output.js";
 import { concatFilePath } from "./path.js";
-
-// type
-
-interface Unique {
-    id: number;
-}
-
-let nextId = Number.MIN_SAFE_INTEGER;
 
 export interface SortedContainer extends FunctionNodeInfo, Unique {
     name: string;
@@ -126,7 +119,7 @@ export function convertToSortedOutput(programOutput: ProgramOutput): SortedFolde
 
 function convertToSortedContainer(path: string, containerOutput: ContainerOutput): SortedContainer {
     return {
-        id: nextId++,
+        id: UniqueId.next(),
         column: containerOutput.column,
         line: containerOutput.line,
         name: containerOutput.name,
@@ -146,7 +139,7 @@ function convertToSortedFile(path: string, name: string, fileOutput: FileOutput)
     }
 
     return {
-        id: nextId++,
+        id: UniqueId.next(),
         name,
         path,
         score: fileOutput.score,
@@ -170,7 +163,7 @@ function convertToSortedFolder(path: string, name: string, folderOutput: FolderO
     }
 
     return {
-        id: nextId++,
+        id: UniqueId.next(),
         name,
         path,
         inner,

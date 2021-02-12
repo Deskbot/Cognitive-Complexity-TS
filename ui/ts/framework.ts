@@ -99,3 +99,11 @@ export class Store<T extends Unique> {
 export interface Unique {
     id: number;
 }
+
+export class UniqueId {
+    private static nextId = Number.MIN_SAFE_INTEGER;
+
+    static next() {
+        return UniqueId.nextId++;
+    }
+}
