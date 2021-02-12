@@ -11,6 +11,18 @@ export class ComplexityModel {
 
     }
 
+    updateContainer(container: SortedContainerOutput) {
+        this.containers.set(container);
+    }
+
+    updateFile(file: SortedFileOutput) {
+        this.files.set(file);
+    }
+
+    updateFolder(folder: SortedFolderOutput) {
+        this.folderContents.set(folder);
+    }
+
     overwriteComplexity(complexity: SortedProgramOutput) {
         this.overwriteFolderContents(complexity);
     }

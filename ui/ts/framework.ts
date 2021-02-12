@@ -86,6 +86,14 @@ export class Store<T extends Unique> {
             return obs;
         }
     }
+
+    *values(): IterableIterator<T> {
+        const iter = this.map.values();
+
+        for (const obs of iter) {
+            yield obs.get();
+        }
+    }
 }
 
 export interface Unique {

@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../../shared/types.js";
-import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFolderOutput, SortedAnything, SortedProgramOutput, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
+import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedAnything, SortedProgramOutput, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
 import { Tree } from "../component/tree/Tree.js";
 import { ComplexityModel } from "../model/ComplexityModel.js";
@@ -89,7 +89,7 @@ export class ComplexityController {
                     ? data => isSortedFolderOutput(data)
                     : data => !isSortedContainerOutput(data)
 
-        this.removeComplexityNodes(this.complexity.inner, removeWhat);
+        this.moveComplexityNodes(this.complexity.inner, removeWhat);
 
         this.sort();
 
@@ -97,7 +97,7 @@ export class ComplexityController {
         this.model.overwriteComplexity(this.complexity);
     }
 
-    private removeComplexityNodes(inner: SortedAnything[], removeWhat: (data: SortedAnything) => boolean) {
+    private moveComplexityNodes(inner: SortedAnything[], removeWhat: (data: SortedAnything) => boolean) {
         const removed = removeAll(inner, removeWhat);
 
         if (removed.length > 0) {
@@ -107,10 +107,21 @@ export class ComplexityController {
             inner.push(...removed.flatMap(removedElem => removedElem.inner));
 
             // remove those same items from the inner of the children
-            removed.forEach(removedElem => removedElem.inner.splice(0));
+            for (const removedElem of removed) {
+                removedElem.inner.splice(0);
+
+                // update these elements here because they are removed from the tree and won't be updated when the tree is overwritten
+                if (isSortedFolderOutput(removedElem)) {
+                    this.model.updateFolder(removedElem);
+                } else if (isSortedFileOutput(removedElem)) {
+                    this.model.updateFile(removedElem);
+                } else if (isSortedContainerOutput(removedElem)) {
+                    this.model.updateContainer(removedElem);
+                }
+            }
 
             // now there are more nodes in the parent inner, consider filtering it again
-            this.removeComplexityNodes(inner, removeWhat);
+            this.moveComplexityNodes(inner, removeWhat);
         }
     }
 
