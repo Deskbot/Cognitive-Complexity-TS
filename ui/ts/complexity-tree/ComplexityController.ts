@@ -35,7 +35,7 @@ export class ComplexityController {
         // post-construct
 
         this.sortInOrder();
-        this.view.makeTree(this.complexity, true);
+        this.view.makeTree(this.complexity);
     }
 
     // expand & collapse

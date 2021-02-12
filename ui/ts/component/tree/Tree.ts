@@ -19,17 +19,15 @@ export class Tree {
 
     // make
 
-    makeTree(complexity: SortedProgram, initial = false) {
+    makeTree(complexity: SortedProgram) {
         const contents = this.makeFolderContents(complexity);
 
-        if (initial) {
-            // If there is only one top level node, show it expanded.
-            // Otherwise show all nodes minimised by default.
-            const onlyOneTopLevelNode = complexity.inner.length === 1;
+        // If there is only one top level node, show it expanded.
+        // Otherwise show all nodes minimised by default.
+        const onlyOneTopLevelNode = complexity.inner.length === 1;
 
-            if (onlyOneTopLevelNode) {
-                contents.setOpenness(true);
-            }
+        if (onlyOneTopLevelNode) {
+            contents.setOpenness(true);
         }
 
         this.dom.innerHTML = "";
