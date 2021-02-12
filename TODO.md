@@ -12,10 +12,6 @@
 * see full path somehow without it getting the way or being inconsistent
 * Option to hide anything with a score of 0.
     * on the json command level, not the ui level
-* filter out types of nodes in the UI tree
-    * everything
-    * no folders
-    * no folders or files
 * Choose the TS version used
 * Give relative colours to complexities
 * recalculate button
@@ -47,6 +43,8 @@
 
 # Performance
 
+* Do I need "folder concepts" distinct from folders?
+    * It helps that the top-most level is just folder contents for displaying adjacent files/containers.
 * Should script imports become attached tags to shadow DOM?
 * Make the JavaScript served for the UI to be minimised
 

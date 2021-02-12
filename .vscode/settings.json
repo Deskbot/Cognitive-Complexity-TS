@@ -5,8 +5,10 @@
         "Newed",
         "Toggleable",
         "Unstatefully",
+        "buttoncontrol",
         "ccts",
         "checkbox",
+        "cloneable",
         "consts",
         "contentwrapper",
         "copytext",
@@ -14,6 +16,7 @@
         "fallback",
         "flexbox",
         "globalcontrol",
+        "globaltogglecontrol",
         "muts",
         "rerender",
         "stickys",
@@ -21,7 +24,10 @@
         "tempfile",
         "toggleablebox",
         "togglebutton",
+        "togglecontrol",
         "topbanner",
-        "visitable"
+        "viewbox",
+        "visitable",
+        "xlink"
     ],
 }

@@ -3,7 +3,8 @@
     "compilerOptions": {
         "module": "ESNEXT",
         "lib": [
-            "DOM"
+            "DOM",
+            "ES2019.Array"
         ],
         "outDir": "../build",
         "removeComments": true,

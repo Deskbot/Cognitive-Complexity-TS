@@ -20,19 +20,6 @@ export function computeOnce<T>(func: () => T): () => T {
     };
 }
 
-export function hasMoreThanOneKey(object: any): boolean {
-    let count = 0;
-
-    for (const _ in object) {
-        count += 1;
-        if (count === 2) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 export function iterMap<T,V>(iter: IterableIterator<T>, mapper: (val: T) => V): V[] {
     const result = [] as V[];
 
@@ -42,3 +29,30 @@ export function iterMap<T,V>(iter: IterableIterator<T>, mapper: (val: T) => V): 
 
     return result;
 }
+
+/**
+ * Modifies the given array to remove everything matched by the predicate.
+ * @returns The items removed from the given array.
+ */
+export function removeAll<T>(arr: T[], predicate: (elem: T) => boolean): T[] {
+    const badIndexes = [] as number[];
+    const badElems = [] as T[];
+
+    for (let i = 0; i < arr.length; i++) {
+        if (predicate(arr[i])) {
+            badIndexes.push(i);
+            badElems.push(arr[i]);
+        }
+    }
+
+    // remove elements from right to left so that the indexes still refer to the same elements
+
+    for (let i = badElems.length - 1; i >= 0; i--) {
+        const badIndex = badIndexes[i];
+        arr.splice(badIndex, 1);
+    }
+
+    return badElems;
+}
+
+export type Sorter<T> = (left: T, right: T) => number;

@@ -21,9 +21,7 @@ export type FolderOutput = {
     [name: string]: FileOutput | FolderOutput;
 };
 
-export interface ProgramOutput {
-    [fileName: string]: FileOutput | FolderOutput;
-}
+export type ProgramOutput = FolderOutput;
 
 export interface ScoreAndInner {
     score: number;

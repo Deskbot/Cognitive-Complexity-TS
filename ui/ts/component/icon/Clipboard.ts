@@ -9,5 +9,5 @@ svgTemplate.innerHTML =
     </svg>`;
 
 export function ClipboardSvg() {
-    return svgTemplate.content.cloneNode(true);
+    return svgTemplate.content.firstElementChild!.cloneNode(true);
 }

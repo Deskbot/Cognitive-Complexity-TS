@@ -1,33 +1,28 @@
 import { ProgramOutput } from "../../../shared/types";
-import { TreeController } from "../controller/TreeController.js";
+import { ComplexityController } from "../complexity-tree/ComplexityController.js";
+import { Tree } from "./tree/Tree.js";
 import { element } from "../framework.js";
-import { hasMoreThanOneKey } from "../util.js";
-import { GlobalControl } from "./controls/GlobalControl.js";
-import { FolderContents } from "./tree/FolderContents.js";
+import { ButtonControl } from "./controls/ButtonControl.js";
+import { ComplexityModel } from "../complexity-tree/ComplexityModel.js";
+import { Filterers } from "./Filterers.js";
+import { Sorters } from "./Sorters.js";
 
 export function Main(complexity: ProgramOutput) {
-    const controller = new TreeController();
-
-    // If there is only one top level node, show it expanded.
-    // Otherwise show all nodes minimised by default.
-    const onlyOneTopLevelNode = hasMoreThanOneKey(complexity);
-
-    const topLevelBoxes = new FolderContents(controller, complexity, "", onlyOneTopLevelNode);
+    const view = new Tree();
+    const model = new ComplexityModel(view);
+    const controller = new ComplexityController(complexity, model, view);
 
     return element("main", {},
-        GlobalControl("Expand All", () => {
+        ButtonControl("Expand All", () => {
             controller.expandAll();
         }),
-        GlobalControl("Collapse All", () => {
+        ButtonControl("Collapse All", () => {
             controller.collapseAll();
         }),
-        GlobalControl("Sort In Order", () => {
-            controller.sortInOrder();
-        }),
-        GlobalControl("Sort By Complexity", () => {
-            controller.sortByComplexity();
-        }),
 
-        topLevelBoxes.dom
+        ...Sorters(controller),
+        ...Filterers(controller),
+
+        view.dom
     );
 }

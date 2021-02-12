@@ -37,3 +37,73 @@ export function element<K extends keyof HTMLElementTagNameMap>(
 
     return elem;
 }
+
+export function fragment(...children: (string | Node)[]) {
+    const fragment = document.createDocumentFragment();
+    fragment.append(...children);
+    return fragment;
+}
+
+export class Observable<T> {
+    private handler: ((newValue: T) => void) | undefined;
+
+    constructor(private value: T) {
+
+    }
+
+    get(): T {
+        return this.value;
+    }
+
+    onChange(handler: (newValue: T) => void) {
+        this.handler = handler;
+    }
+
+    set(newValue: T) {
+        this.value = newValue;
+
+        if (this.handler) {
+            this.handler(this.value);
+        }
+    }
+}
+
+export class Store<T extends Unique> {
+    private map = new Map<number, Observable<T>>();
+
+    set(item: T) {
+        // override content of existing Observable
+        if (this.map.has(item.id)) {
+            const obs = this.map.get(item.id)!
+            obs.set(item);
+            return obs;
+        }
+
+        // create a new observable
+        else {
+            const obs = new Observable(item);
+            this.map.set(item.id, obs);
+            return obs;
+        }
+    }
+
+    *values(): IterableIterator<T> {
+        const iter = this.map.values();
+
+        for (const obs of iter) {
+            yield obs.get();
+        }
+    }
+}
+
+export interface Unique {
+    id: number;
+}
+
+export class UniqueId {
+    private static nextId = Number.MIN_SAFE_INTEGER;
+
+    static next() {
+        return UniqueId.nextId++;
+    }
+}

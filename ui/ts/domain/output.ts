@@ -4,31 +4,35 @@ export function compareOutputs(
     left: FileOutput | FolderOutput,
     right: FileOutput | FolderOutput
 ): number {
-    const leftScore = left.score;
-    const rightScore = right.score;
+    const leftIsFile = isFileOutput(left);
+    const rightIsFile = isFileOutput(right);
 
-    const leftIsFolder = typeof leftScore === "number";
-    const rightIsFolder = typeof rightScore === "number";
-
-    if (leftIsFolder && rightIsFolder) {
+    if (leftIsFile && rightIsFile) {
         // If the typeof statements were directly in the if condition,
         // the casting would not be required by TypeScript.
-        return (rightScore as number) - (leftScore as number);
+        const leftScore = (left as FileOutput).score;
+        const rightScore = (right as FileOutput).score;
+
+        return rightScore - leftScore;
     }
 
-    if (!leftIsFolder && !rightIsFolder) {
+    if (!leftIsFile && !rightIsFile) {
         return 0;
     }
 
     // folders should be at the bottom of the complexity list
 
-    if (!leftIsFolder) {
+    if (!leftIsFile) {
         return -1;
     }
 
-    if (!rightIsFolder) {
+    if (!rightIsFile) {
         return -1;
     }
 
     return 0; // unreachable
+}
+
+export function isFileOutput(output: FileOutput | FolderOutput): output is FileOutput {
+    return typeof (output as any).score === "number";
 }
