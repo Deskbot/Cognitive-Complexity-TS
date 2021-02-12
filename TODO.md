@@ -5,6 +5,8 @@
 
 # Possible Features
 
+* Make folder and container titles sticky in such a way that you can see the path to nodes in view.
+    * This is a bit complicated and requires setting the "top" style with JS, which is fine until it comes to reparenting.
 * Gracefully handle incorrect arguments to package.json scripts
 * json and ui commands handle input differently
     * give json a help text
