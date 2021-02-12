@@ -10,11 +10,9 @@ export class ToggleControl {
     private tick: SVGElement;
 
     private state: boolean;
-    private externalOnStateChange: (state: boolean) => void;
 
-    constructor(initialState: boolean, inner: string | Node, onStateChange: (state: boolean) => void) {
+    constructor(initialState: boolean, inner: string | Node, onManualChange: (state: boolean) => void) {
         this.state = initialState;
-        this.externalOnStateChange = onStateChange;
 
         const buttonText = element("span", {}, inner);
 
@@ -28,18 +26,19 @@ export class ToggleControl {
                 this.state ? this.tick : this.cross,
                 buttonText,
             ),
-            () => this.toggleState()
+            () => {
+                this.toggleState();
+                onManualChange(this.state);
+            }
         );
     }
 
-    private onStateChange() {
+    private onChange() {
         if (this.state) {
             this.cross.parentElement?.replaceChild(this.tick, this.cross);
         } else {
             this.tick.parentElement?.replaceChild(this.cross, this.tick);
         }
-
-        this.externalOnStateChange(this.state);
     }
 
     getState(): boolean {
@@ -47,10 +46,8 @@ export class ToggleControl {
     }
 
     setState(state: boolean) {
-        if (this.state !== state) {
-            this.state = state;
-            this.onStateChange();
-        }
+        this.state = state;
+        this.onChange();
     }
 
     private toggleState() {

@@ -10,7 +10,7 @@ export enum Include {
     containers,
 }
 
-enum Sort {
+export enum Sort {
     inOrder = 1,
     complexity,
 }
@@ -34,7 +34,8 @@ export class ComplexityController {
 
         // post-construct
 
-        this.sortInOrder();
+        this.sort();
+        this.model.overwriteComplexity(this.complexity);
         this.view.makeTree(this.complexity);
     }
 
@@ -51,6 +52,8 @@ export class ComplexityController {
     // sort
 
     private sort() {
+        console.log("sort");
+
         if (this.sortMethod === Sort.inOrder) {
             if (this.include === Include.containers) {
                 // don't consider relative line numbers of containers
@@ -65,14 +68,8 @@ export class ComplexityController {
         }
     }
 
-    sortByComplexity() {
-        this.sortMethod = Sort.complexity;
-        this.sort();
-        this.model.overwriteComplexity(this.complexity);
-    }
-
-    sortInOrder() {
-        this.sortMethod = Sort.inOrder;
+    setSortBy(method: Sort) {
+        this.sortMethod = method;
         this.sort();
         this.model.overwriteComplexity(this.complexity);
     }
@@ -80,6 +77,8 @@ export class ComplexityController {
     // filter
 
     private filter() {
+        console.log("filter");
+
         this.complexity = cloneSortedOutput(this.initialComplexity);
 
         const removeWhat: (data: SortedAnything) => boolean

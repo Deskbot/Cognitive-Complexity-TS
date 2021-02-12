@@ -1,5 +1,5 @@
 import { ProgramOutput } from "../../../shared/types";
-import { ComplexityController, Include } from "../complexity-tree/ComplexityController.js";
+import { ComplexityController, Include, Sort } from "../complexity-tree/ComplexityController.js";
 import { Tree } from "./tree/Tree.js";
 import { element } from "../framework.js";
 import { ButtonControl } from "./controls/ButtonControl.js";
@@ -11,20 +11,22 @@ export function Main(complexity: ProgramOutput) {
     const model = new ComplexityModel(view);
     const controller = new ComplexityController(complexity, model, view);
 
-    const sortInOrder = new ToggleControl(true, "Sort A-Z & By Line", (state) => {
-        if (state) {
-            controller.sortInOrder();
+    function updateSort() {
+        if (sortInOrder.getState()) {
+            controller.setSortBy(Sort.inOrder);
+        } else if (sortByComplexity.getState()) {
+            controller.setSortBy(Sort.complexity);
         }
+    }
 
+    const sortInOrder = new ToggleControl(true, "Sort A-Z & By Line", (state) => {
         sortByComplexity.setState(!state);
+        updateSort();
     });
 
     const sortByComplexity = new ToggleControl(false, "Sort By Complexity", (state) => {
-        if (state) {
-            controller.sortByComplexity();
-        }
-
         sortInOrder.setState(!state);
+        updateSort();
     });
 
     function updateFilter() {
