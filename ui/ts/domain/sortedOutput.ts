@@ -7,6 +7,7 @@ import { concatFilePath } from "./path.js";
 export interface SortedContainer extends FunctionNodeInfo, Unique {
     name: string;
     path: string;
+    depth: number;
     score: number;
     inner: SortedContainer[];
 }
@@ -14,6 +15,7 @@ export interface SortedContainer extends FunctionNodeInfo, Unique {
 export interface SortedFile extends Unique {
     name: string;
     path: string;
+    depth: number;
     score: number;
     inner: SortedContainer[];
 }
@@ -23,6 +25,7 @@ export type SortedProgram = SortedFolder;
 export interface SortedFolder extends Unique {
     name: string;
     path: string;
+    depth: number;
     inner: SortedAnything[];
 };
 
@@ -114,40 +117,42 @@ function compareSortedOutputOrder(left: SortedAnything, right: SortedAnything): 
 // convert
 
 export function convertToSortedOutput(programOutput: ProgramOutput): SortedFolder {
-    return convertToSortedFolder("", "", programOutput);
+    return convertToSortedFolder("", "", 0, programOutput);
 }
 
-function convertToSortedContainer(path: string, containerOutput: ContainerOutput): SortedContainer {
+function convertToSortedContainer(path: string, depth: number, containerOutput: ContainerOutput): SortedContainer {
     return {
         id: UniqueId.next(),
         column: containerOutput.column,
         line: containerOutput.line,
         name: containerOutput.name,
         path,
+        depth,
         score: containerOutput.score,
-        inner: containerOutput.inner.map(container => convertToSortedContainer(path, container)),
+        inner: containerOutput.inner.map(container => convertToSortedContainer(path, depth + 1, container)),
     };
 }
 
-function convertToSortedFile(path: string, name: string, fileOutput: FileOutput): SortedFile {
+function convertToSortedFile(path: string, name: string, depth: number, fileOutput: FileOutput): SortedFile {
     const inner = [] as SortedContainer[];
 
     const innerPath = concatFilePath(path, name);
 
     for (const container of fileOutput.inner) {
-        inner.push(convertToSortedContainer(innerPath, container));
+        inner.push(convertToSortedContainer(innerPath, depth + 1, container));
     }
 
     return {
         id: UniqueId.next(),
         name,
         path,
+        depth,
         score: fileOutput.score,
         inner,
     };
 }
 
-function convertToSortedFolder(path: string, name: string, folderOutput: FolderOutput): SortedFolder {
+function convertToSortedFolder(path: string, name: string, depth: number, folderOutput: FolderOutput): SortedFolder {
     const inner = [] as (SortedFile | SortedFolder)[];
 
     const innerPath = concatFilePath(path, name);
@@ -156,9 +161,9 @@ function convertToSortedFolder(path: string, name: string, folderOutput: FolderO
         const entry = folderOutput[name];
 
         if (isFileOutput(entry)) {
-            inner.push(convertToSortedFile(innerPath, name, entry));
+            inner.push(convertToSortedFile(innerPath, name, depth + 1, entry));
         } else {
-            inner.push(convertToSortedFolder(innerPath, name, entry));
+            inner.push(convertToSortedFolder(innerPath, name, depth + 1, entry));
         }
     }
 
@@ -166,6 +171,7 @@ function convertToSortedFolder(path: string, name: string, folderOutput: FolderO
         id: UniqueId.next(),
         name,
         path,
+        depth,
         inner,
     };
 }

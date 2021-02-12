@@ -107,6 +107,7 @@ export class ComplexityController {
 
             // add inners of children items to parent inner
             inner.push(...removed.flatMap(removedElem => removedElem.inner));
+            removed.forEach(removedElem => removedElem.depth -= 1);
 
             // remove those same items from the inner of the children
             for (const removedElem of removed) {

@@ -46,7 +46,7 @@ export class Tree {
             console.log("container");
         }
 
-        const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
+        const container = new Container(containerOutput, containerOutput.inner.map(inner => this.makeContainer(inner)));
 
         this.containerMap.set(containerOutput.id, container);
 
@@ -66,7 +66,7 @@ export class Tree {
             children.push(this.makeContainer(containerOutput));
         }
 
-        const file = new File(fileOutput.path, fileOutput.name, fileOutput.score, children);
+        const file = new File(fileOutput, children);
 
         this.fileMap.set(fileOutput.id, file);
 
@@ -102,7 +102,7 @@ export class Tree {
             console.log("folder");
         }
 
-        const folder = new Folder(folderOutput.path, folderOutput.name, this.makeFolderContents(folderOutput));
+        const folder = new Folder(folderOutput, this.makeFolderContents(folderOutput));
 
         this.folderMap.set(folderOutput.id, folder);
 

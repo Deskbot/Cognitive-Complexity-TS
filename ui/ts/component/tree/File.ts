@@ -4,27 +4,28 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
+import { SortedFile } from "../../domain/sortedOutput.js";
 
 export class File {
     private box: ToggleableBox;
     private children: Container[];
 
     constructor(
-        path: string,
-        name: string,
-        score: number,
+        file: SortedFile,
         children: Container[],
     ) {
         this.children = children;
 
-        const fullPath = concatFilePath(path, name);
+        const fullPath = concatFilePath(file.path, file.name);
 
         this.box = new ToggleableBox([
             StickyTitle([
-                name,
+                file.name,
                 CopyText(fullPath),
-            ]),
-            Score(score),
+            ],
+                file.depth
+            ),
+            Score(file.score),
         ],
             false,
         );

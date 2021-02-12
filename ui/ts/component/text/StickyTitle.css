@@ -4,7 +4,6 @@
     position: sticky;
     margin: var(--half-spacing) 0;
     margin-right: var(--spacing);
-    top: 0;
 
     background: var(--background-color);
 }
