@@ -13,51 +13,8 @@ export class Tree {
     private fileMap = new Map<number, File>();
     private folderContentsMap = new Map<number, FolderContents>();
 
-    private containerComplexityMap = new Store<SortedContainerOutput>();
-    private fileComplexityMap = new Store<SortedFileOutput>();
-    private folderContentsComplexityMap = new Store<SortedFolderOutput>();
-
     constructor() {
         this.dom = element("div");
-    }
-
-    // change complexity
-
-    changeComplexity(complexity: SortedProgramOutput) {
-        this.changeFolderContents(complexity);
-    }
-
-    private changeContainer(containerOutput: SortedContainerOutput) {
-        const observableContainer = this.containerComplexityMap.set(containerOutput);
-        observableContainer.onChange(newContainer => this.reChildContainer(newContainer));
-
-        containerOutput.inner.forEach(inner => this.makeContainer(inner));
-    }
-
-    private changeFile(fileOutput: SortedFileOutput) {
-        const observableFile = this.fileComplexityMap.set(fileOutput);
-        observableFile.onChange(newFile => this.reChildFile(newFile));
-
-        for (const containerOutput of fileOutput.inner) {
-            this.changeContainer(containerOutput);
-        }
-    }
-
-    private changeFolderContents(folderOutput: SortedFolderOutput) {
-        const observableFolderContents = this.folderContentsComplexityMap.set(folderOutput);
-        observableFolderContents.onChange(newFolder => this.reChildFolderContents(newFolder));
-
-        folderOutput.inner.forEach((folderEntry) => {
-            isSortedContainerOutput(folderEntry)
-                ? this.changeContainer(folderEntry)
-                : isSortedFileOutput(folderEntry)
-                    ? this.changeFile(folderEntry)
-                    : this.changeFolder(folderEntry);
-        });
-    }
-
-    private changeFolder(folderOutput: SortedFolderOutput) {
-        this.changeFolderContents(folderOutput)
     }
 
     // make
@@ -80,9 +37,6 @@ export class Tree {
     }
 
     private makeContainer(containerOutput: SortedContainerOutput): Container {
-        const observableContainer = this.containerComplexityMap.set(containerOutput);
-        observableContainer.onChange(newContainer => this.reChildContainer(newContainer));
-
         if (this.containerMap.has(containerOutput.id)) {
             return this.containerMap.get(containerOutput.id)!;
         } else {
@@ -97,9 +51,6 @@ export class Tree {
     }
 
     private makeFile(fileOutput: SortedFileOutput): File {
-        const observableFile = this.fileComplexityMap.set(fileOutput);
-        observableFile.onChange(newFile => this.reChildFile(newFile));
-
         if (this.fileMap.has(fileOutput.id)) {
             return this.fileMap.get(fileOutput.id)!;
         } else {
@@ -120,9 +71,6 @@ export class Tree {
     }
 
     private makeFolderContents(folderOutput: SortedFolderOutput): FolderContents {
-        const observableFolderContents = this.folderContentsComplexityMap.set(folderOutput);
-        observableFolderContents.onChange(newFolder => this.reChildFolderContents(newFolder));
-
         if (this.folderContentsMap.has(folderOutput.id)) {
             return this.folderContentsMap.get(folderOutput.id)!;
         } else {

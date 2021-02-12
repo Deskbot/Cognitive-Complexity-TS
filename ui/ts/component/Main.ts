@@ -4,10 +4,12 @@ import { Tree } from "./tree/Tree.js";
 import { element } from "../framework.js";
 import { GlobalControl } from "./controls/GlobalControl.js";
 import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
+import { ComplexityModel } from "../model/ComplexityModel.js";
 
 export function Main(complexity: ProgramOutput) {
     const view = new Tree();
-    const controller = new ComplexityController(complexity, view);
+    const model = new ComplexityModel(view);
+    const controller = new ComplexityController(complexity, model, view);
 
     const sortInOrder = new GlobalToggleControl(true, "Sort A-Z & By Line", (state) => {
         if (state) {

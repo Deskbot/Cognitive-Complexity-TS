@@ -2,6 +2,7 @@ import { ProgramOutput } from "../../../shared/types.js";
 import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFolderOutput, SortedAnything, SortedProgramOutput, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util/util.js";
 import { Tree } from "../component/tree/Tree.js";
+import { ComplexityModel } from "../model/ComplexityModel.js";
 
 export enum Include {
     folders = 1,
@@ -15,6 +16,7 @@ enum Sort {
 }
 
 export class ComplexityController {
+    private model: ComplexityModel;
     private view: Tree;
 
     private complexity: SortedProgramOutput;
@@ -23,13 +25,16 @@ export class ComplexityController {
     private include = Include.folders;
     private sortMethod = Sort.inOrder;
 
-    constructor(progComp: ProgramOutput, view: Tree) {
+    constructor(progComp: ProgramOutput, model: ComplexityModel, view: Tree) {
+        this.model = model;
         this.view = view;
 
         this.complexity = convertToSortedOutput(progComp);
         this.initialComplexity = cloneSortedOutput(this.complexity);
-        sortProgramInOrder(this.complexity);
 
+        // post-construct
+
+        this.sortInOrder();
         this.view.makeTree(this.complexity, true);
     }
 
@@ -63,13 +68,13 @@ export class ComplexityController {
     sortByComplexity() {
         this.sortMethod = Sort.complexity;
         this.sort();
-        this.view.changeComplexity(this.complexity);
+        this.model.changeComplexity(this.complexity);
     }
 
     sortInOrder() {
         this.sortMethod = Sort.inOrder;
         this.sort();
-        this.view.changeComplexity(this.complexity);
+        this.model.changeComplexity(this.complexity);
     }
 
     // filter
@@ -89,7 +94,7 @@ export class ComplexityController {
         this.sort();
 
         this.view.makeTree(this.complexity);
-        this.view.changeComplexity(this.complexity);
+        this.model.changeComplexity(this.complexity);
     }
 
     private removeComplexityNodes(inner: SortedAnything[], removeWhat: (data: SortedAnything) => boolean) {
