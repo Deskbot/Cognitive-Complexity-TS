@@ -96,7 +96,15 @@ export class ComplexityController {
         const removed = removeAll(inner, removeWhat);
 
         if (removed.length > 0) {
+            // move nodes from inner of removed element to the parent element's inner
+
+            // add inners of children items to parent inner
             inner.push(...removed.flatMap(removedElem => removedElem.inner));
+
+            // remove those same items from the inner of the children
+            removed.forEach(removedElem => removedElem.inner.splice(0));
+
+            // now there are more nodes in the parent inner, consider filtering it again
             this.removeComplexityNodes(inner, removeWhat);
         }
     }
