@@ -11,6 +11,8 @@ export class ComplexityModel {
 
     }
 
+    // update
+
     updateContainer(container: SortedContainer) {
         this.containers.set(container);
     }
@@ -22,6 +24,8 @@ export class ComplexityModel {
     updateFolder(folder: SortedFolder) {
         this.folderContents.set(folder);
     }
+
+    // overwrite
 
     overwriteComplexity(complexity: SortedProgram) {
         this.overwriteFolderContents(complexity);
