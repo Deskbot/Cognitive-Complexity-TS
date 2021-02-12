@@ -6,7 +6,7 @@ import { Score } from "../text/Score.js";
 
 export class Container {
     private box: ToggleableBox;
-    private children: Container[]; // TODO allow this to change
+    private children: Container[];
 
     constructor(
         complexity: ContainerOutput,

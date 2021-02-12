@@ -7,7 +7,7 @@ import { concatFilePath } from "../../domain/path.js";
 
 export class File {
     private box: ToggleableBox;
-    private children: Container[]; // TODO allow this to change
+    private children: Container[];
 
     constructor(
         path: string,
