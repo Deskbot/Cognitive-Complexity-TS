@@ -15,6 +15,10 @@ export enum Sort {
     complexity,
 }
 
+/**
+ * Responsible for enacting UI changes to the complexity tree.
+ * It does this by changing the tree representation and saving it in the model.
+ */
 export class ComplexityController {
     private model: ComplexityModel;
     private view: Tree;

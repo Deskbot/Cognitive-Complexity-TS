@@ -5,6 +5,11 @@ import { FolderContents } from "./FolderContents.js";
 import { isSortedContainerOutput, isSortedFileOutput, SortedContainer, SortedFile, SortedFolder, SortedProgram } from "../../domain/sortedOutput.js";
 import { element } from "../../framework.js";
 
+/**
+ * Creates other tree components.
+ * Calls update methods on those components.
+ * Responsible for keeping the component hierarchy correct in response to updates to this component.
+ */
 export class Tree {
     readonly dom: Element;
 

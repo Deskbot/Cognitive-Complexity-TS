@@ -11,6 +11,8 @@ Although frameworks allow for declarative code that is very short and readable, 
 
 I am experimenting with ways of writing simple, well-organised, performant web UI code. I think it is important for this project because people may wish to look at an entire project at once.
 
+I'm not entirely happy with certain aspects of this code, but it has been a learning experience.
+
 ## Guiding Principles
 
 * In reality UI is mutable and simple changes are simple to do in modern JavaScript.

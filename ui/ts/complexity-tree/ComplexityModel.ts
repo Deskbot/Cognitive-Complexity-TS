@@ -2,6 +2,10 @@ import { Tree } from "../component/tree/Tree.js";
 import { SortedContainer, SortedFile, SortedFolder, SortedProgram, isSortedContainerOutput, isSortedFileOutput } from "../domain/sortedOutput.js";
 import { Store } from "../framework.js";
 
+/**
+ * Holds the live copy of the current representation of the complexity tree.
+ * Responsible for driving changes to the tree view in response to changes to the representation of the tree.
+ */
 export class ComplexityModel {
     private containers = new Store<SortedContainer>();
     private files = new Store<SortedFile>();
