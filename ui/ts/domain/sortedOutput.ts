@@ -1,6 +1,6 @@
 import { ContainerOutput, FileOutput, FolderOutput, FunctionNodeInfo, ProgramOutput } from "../../../shared/types.js";
 import { Unique, UniqueId } from "../framework.js";
-import { Sorter } from "../util/util.js";
+import { Sorter } from "../util.js";
 import { isFileOutput } from "./output.js";
 import { concatFilePath } from "./path.js";
 

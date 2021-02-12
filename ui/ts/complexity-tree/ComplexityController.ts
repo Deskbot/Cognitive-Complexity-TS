@@ -1,8 +1,8 @@
 import { ProgramOutput } from "../../../shared/types.js";
 import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedAnything, SortedProgram, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
-import { removeAll } from "../util/util.js";
+import { removeAll } from "../util.js";
 import { Tree } from "../component/tree/Tree.js";
-import { ComplexityModel } from "../model/ComplexityModel.js";
+import { ComplexityModel } from "./ComplexityModel.js";
 
 export enum Include {
     folders = 1,
