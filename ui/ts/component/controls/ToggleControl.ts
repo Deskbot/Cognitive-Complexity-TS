@@ -1,9 +1,9 @@
 import { addStyleSheet, element, fragment } from "../../framework.js";
-import { GlobalControl } from "./GlobalControl.js";
+import { ButtonControl } from "./ButtonControl.js";
 
 addStyleSheet(import.meta.url);
 
-export class GlobalToggleControl {
+export class ToggleControl {
     readonly dom: Node;
 
     private cross: SVGElement;
@@ -20,10 +20,10 @@ export class GlobalToggleControl {
 
         this.cross = CrossSvg();
         this.tick = TickSvg();
-        this.cross.classList.add("globaltogglecontrol-svg");
-        this.tick.classList.add("globaltogglecontrol-svg");
+        this.cross.classList.add("togglecontrol-svg");
+        this.tick.classList.add("togglecontrol-svg");
 
-        this.dom = GlobalControl(
+        this.dom = ButtonControl(
             fragment(
                 this.state ? this.tick : this.cross,
                 buttonText,

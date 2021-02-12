@@ -1,4 +1,4 @@
-.globalcontrol {
+.buttoncontrol {
     margin-bottom: var(--spacing);
     margin-right: var(--spacing);
     padding: var(--half-spacing);
@@ -10,10 +10,10 @@
     font-size: 0.85rem;
 }
 
-.globalcontrol:active {
+.buttoncontrol:active {
     background-color: var(--interactive-color);
 }
 
-.globalcontrol:first-of-type {
+.buttoncontrol:first-of-type {
     margin-left: auto;
 }

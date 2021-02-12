@@ -2,8 +2,8 @@ import { ProgramOutput } from "../../../shared/types";
 import { ComplexityController, Include } from "../complexity-tree/ComplexityController.js";
 import { Tree } from "./tree/Tree.js";
 import { element } from "../framework.js";
-import { GlobalControl } from "./controls/GlobalControl.js";
-import { GlobalToggleControl } from "./controls/GlobalToggleControl.js";
+import { ButtonControl } from "./controls/ButtonControl.js";
+import { ToggleControl } from "./controls/ToggleControl.js";
 import { ComplexityModel } from "../complexity-tree/ComplexityModel.js";
 
 export function Main(complexity: ProgramOutput) {
@@ -11,7 +11,7 @@ export function Main(complexity: ProgramOutput) {
     const model = new ComplexityModel(view);
     const controller = new ComplexityController(complexity, model, view);
 
-    const sortInOrder = new GlobalToggleControl(true, "Sort A-Z & By Line", (state) => {
+    const sortInOrder = new ToggleControl(true, "Sort A-Z & By Line", (state) => {
         if (state) {
             controller.sortInOrder();
         }
@@ -19,7 +19,7 @@ export function Main(complexity: ProgramOutput) {
         sortByComplexity.setState(!state);
     });
 
-    const sortByComplexity = new GlobalToggleControl(false, "Sort By Complexity", (state) => {
+    const sortByComplexity = new ToggleControl(false, "Sort By Complexity", (state) => {
         if (state) {
             controller.sortByComplexity();
         }
@@ -37,7 +37,7 @@ export function Main(complexity: ProgramOutput) {
         }
     }
 
-    const includeFolders = new GlobalToggleControl(true, "Include Folders", (state) => {
+    const includeFolders = new ToggleControl(true, "Include Folders", (state) => {
         // folders implies files
         if (state) {
             includeFiles.setState(true);
@@ -46,7 +46,7 @@ export function Main(complexity: ProgramOutput) {
         updateFilter();
     });
 
-    const includeFiles = new GlobalToggleControl(true, "Include Files", (state) => {
+    const includeFiles = new ToggleControl(true, "Include Files", (state) => {
         // no files implies no folders
         if (!state) {
             includeFolders.setState(false);
@@ -56,10 +56,10 @@ export function Main(complexity: ProgramOutput) {
     });
 
     return element("main", {},
-        GlobalControl("Expand All", () => {
+        ButtonControl("Expand All", () => {
             controller.expandAll();
         }),
-        GlobalControl("Collapse All", () => {
+        ButtonControl("Collapse All", () => {
             controller.collapseAll();
         }),
 
