@@ -68,13 +68,13 @@ export class ComplexityController {
     sortByComplexity() {
         this.sortMethod = Sort.complexity;
         this.sort();
-        this.model.changeComplexity(this.complexity);
+        this.model.overwriteComplexity(this.complexity);
     }
 
     sortInOrder() {
         this.sortMethod = Sort.inOrder;
         this.sort();
-        this.model.changeComplexity(this.complexity);
+        this.model.overwriteComplexity(this.complexity);
     }
 
     // filter
@@ -94,7 +94,7 @@ export class ComplexityController {
         this.sort();
 
         this.view.makeTree(this.complexity);
-        this.model.changeComplexity(this.complexity);
+        this.model.overwriteComplexity(this.complexity);
     }
 
     private removeComplexityNodes(inner: SortedAnything[], removeWhat: (data: SortedAnything) => boolean) {

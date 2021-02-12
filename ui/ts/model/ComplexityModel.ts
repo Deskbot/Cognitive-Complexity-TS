@@ -3,51 +3,50 @@ import { SortedContainerOutput, SortedFileOutput, SortedFolderOutput, SortedProg
 import { Store } from "../framework.js";
 
 export class ComplexityModel {
-    private containerComplexityMap = new Store<SortedContainerOutput>();
-    private fileComplexityMap = new Store<SortedFileOutput>();
-    private folderContentsComplexityMap = new Store<SortedFolderOutput>();
+    private containers = new Store<SortedContainerOutput>();
+    private files = new Store<SortedFileOutput>();
+    private folderContents = new Store<SortedFolderOutput>();
 
     constructor(private view: Tree) {
 
     }
 
-    changeComplexity(complexity: SortedProgramOutput) {
-        this.changeFolderContents(complexity);
+    overwriteComplexity(complexity: SortedProgramOutput) {
+        this.overwriteFolderContents(complexity);
     }
 
-    private changeContainer(containerOutput: SortedContainerOutput) {
-        const observableContainer = this.containerComplexityMap.set(containerOutput);
-
+    private overwriteContainer(containerOutput: SortedContainerOutput) {
+        const observableContainer = this.containers.set(containerOutput);
         observableContainer.onChange(newContainer => this.view.reChildContainer(newContainer));
 
         for (const container of containerOutput.inner) {
-            this.changeContainer(container);
+            this.overwriteContainer(container);
         }
     }
 
-    private changeFile(fileOutput: SortedFileOutput) {
-        const observableFile = this.fileComplexityMap.set(fileOutput);
+    private overwriteFile(fileOutput: SortedFileOutput) {
+        const observableFile = this.files.set(fileOutput);
         observableFile.onChange(newFile => this.view.reChildFile(newFile));
 
         for (const containerOutput of fileOutput.inner) {
-            this.changeContainer(containerOutput);
+            this.overwriteContainer(containerOutput);
         }
     }
 
-    private changeFolderContents(folderOutput: SortedFolderOutput) {
-        const observableFolderContents = this.folderContentsComplexityMap.set(folderOutput);
+    private overwriteFolderContents(folderOutput: SortedFolderOutput) {
+        const observableFolderContents = this.folderContents.set(folderOutput);
         observableFolderContents.onChange(newFolder => this.view.reChildFolderContents(newFolder));
 
         folderOutput.inner.forEach((folderEntry) => {
             isSortedContainerOutput(folderEntry)
-                ? this.changeContainer(folderEntry)
+                ? this.overwriteContainer(folderEntry)
                 : isSortedFileOutput(folderEntry)
-                    ? this.changeFile(folderEntry)
-                    : this.changeFolder(folderEntry);
+                    ? this.overwriteFile(folderEntry)
+                    : this.overwriteFolder(folderEntry);
         });
     }
 
-    private changeFolder(folderOutput: SortedFolderOutput) {
-        this.changeFolderContents(folderOutput)
+    private overwriteFolder(folderOutput: SortedFolderOutput) {
+        this.overwriteFolderContents(folderOutput)
     }
 }
