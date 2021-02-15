@@ -1,5 +1,5 @@
 import { Container } from "./Container.js";
-import { StickyTitle } from "../text/StickyTitle.js";
+import { StickyTitle } from "./StickyTitle.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
