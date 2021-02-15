@@ -5,14 +5,17 @@ import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
 import { SortedFile } from "../../domain/sortedOutput.js";
+import { showInTree } from "./showInTree.js";
 
 export class File {
     private box: ToggleableBox;
     private title: StickyTitle;
     private children: Container[];
+    private depth: number;
 
     constructor(file: SortedFile, children: Container[]) {
         this.children = children;
+        this.depth = file.depth;
 
         const fullPath = concatFilePath(file.path, file.name);
 
@@ -28,21 +31,7 @@ export class File {
             Score(file.score),
         ],
             false,
-            () => {
-                const depth = file.depth;
-                const targetTopPos = 39 * (depth - 1);
-
-                // if top of elem is above the target position, scroll it down.
-                const rect = this.dom.getBoundingClientRect();
-                if (rect.top < targetTopPos) {
-
-                    // put the top of the element at the top of the screen
-                    this.dom.scrollIntoView(true);
-
-                    // scroll the window down to put the element at its target position
-                    window.scrollBy(0, -39 * (depth - 1));
-                }
-            }
+            () => this.scrollIntoView(),
         );
 
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
@@ -52,12 +41,17 @@ export class File {
         return this.box.dom;
     }
 
+    private scrollIntoView() {
+        showInTree(this.dom, this.depth);
+    }
+
     setChildren(children: Container[]) {
         this.children = children;
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
     }
 
     setDepth(depth: number) {
+        this.depth = depth;
         this.title.setDepth(depth);
     }
 

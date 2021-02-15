@@ -3,14 +3,17 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { StickyTitle } from "./StickyTitle.js";
 import { SortedContainer } from "../../domain/sortedOutput.js";
+import { showInTree } from "./showInTree.js";
 
 export class Container {
     private box: ToggleableBox;
     private title: StickyTitle;
     private children: Container[];
+    private depth: number;
 
     constructor(complexity: SortedContainer, children: Container[]) {
         this.children = children;
+        this.depth = complexity.depth;
 
         this.title = new StickyTitle([
             complexity.name,
@@ -24,21 +27,7 @@ export class Container {
             Score(complexity.score),
         ],
             false,
-            () => {
-                const depth = complexity.depth;
-                const targetTopPos = 39 * (depth - 1);
-
-                // if top of elem is above the target position, scroll it down.
-                const rect = this.dom.getBoundingClientRect();
-                if (rect.top < targetTopPos) {
-
-                    // put the top of the element at the top of the screen
-                    this.dom.scrollIntoView(true);
-
-                    // scroll the window down to put the element at its target position
-                    window.scrollBy(0, -39 * (depth - 1));
-                }
-            }
+            () => this.scrollIntoView(),
         );
 
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
@@ -48,12 +37,17 @@ export class Container {
         return this.box.dom;
     }
 
+    private scrollIntoView() {
+        showInTree(this.dom, this.depth);
+    }
+
     setChildren(children: Container[]) {
         this.children = children;
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
     }
 
     setDepth(depth: number) {
+        this.depth = depth;
         this.title.setDepth(depth);
     }
 

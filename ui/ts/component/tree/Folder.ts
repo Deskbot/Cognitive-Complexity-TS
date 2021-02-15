@@ -4,14 +4,17 @@ import { concatFilePath } from "../../domain/path.js";
 import { FolderContents } from "./FolderContents.js";
 import { StickyTitle } from "./StickyTitle.js";
 import { SortedFolder } from "../../domain/sortedOutput.js";
+import { showInTree } from "./showInTree.js";
 
 export class Folder {
     private box: ToggleableBox;
     private title: StickyTitle;
     private content: FolderContents;
+    private depth: number;
 
     constructor(folder: SortedFolder, children: FolderContents) {
         this.content = children;
+        this.depth = folder.depth;
 
         const fullPath = concatFilePath(folder.path, folder.name);
 
@@ -26,21 +29,7 @@ export class Folder {
             this.title.dom,
         ],
             false,
-            () => {
-                const depth = folder.depth;
-                const targetTopPos = 39 * (depth - 1);
-
-                // if top of elem is above the target position, scroll it down.
-                const rect = this.dom.getBoundingClientRect();
-                if (rect.top < targetTopPos) {
-
-                    // put the top of the element at the top of the screen
-                    this.dom.scrollIntoView(true);
-
-                    // scroll the window down to put the element at its target position
-                    window.scrollBy(0, -39 * (depth - 1));
-                }
-            }
+            () => this.scrollIntoView(),
         );
 
         this.box.changeHideableContent(() => [this.content.dom]);
@@ -48,6 +37,10 @@ export class Folder {
 
     get dom() {
         return this.box.dom;
+    }
+
+    private scrollIntoView() {
+        showInTree(this.dom, this.depth);
     }
 
     setDepth(depth: number) {
