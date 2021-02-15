@@ -2,7 +2,7 @@ import { Container } from "./Container.js";
 import { File } from "./File.js";
 import { Folder } from "./Folder.js";
 import { FolderContents } from "./FolderContents.js";
-import { isSortedContainerOutput, isSortedFileOutput, SortedContainer, SortedFile, SortedFolder, SortedProgram } from "../../domain/sortedOutput.js";
+import { isSortedContainerOutput, isSortedFileOutput, SortedAnything, SortedContainer, SortedFile, SortedFolder, SortedProgram } from "../../domain/sortedOutput.js";
 import { element } from "../../framework.js";
 
 /**
@@ -46,7 +46,7 @@ export class Tree {
             console.log("container");
         }
 
-        const container = new Container(containerOutput, containerOutput.path, containerOutput.inner.map(inner => this.makeContainer(inner)));
+        const container = new Container(containerOutput, containerOutput.inner.map(inner => this.makeContainer(inner)));
 
         this.containerMap.set(containerOutput.id, container);
 
@@ -66,7 +66,7 @@ export class Tree {
             children.push(this.makeContainer(containerOutput));
         }
 
-        const file = new File(fileOutput.path, fileOutput.name, fileOutput.score, children);
+        const file = new File(fileOutput, children);
 
         this.fileMap.set(fileOutput.id, file);
 
@@ -102,7 +102,7 @@ export class Tree {
             console.log("folder");
         }
 
-        const folder = new Folder(folderOutput.path, folderOutput.name, this.makeFolderContents(folderOutput));
+        const folder = new Folder(folderOutput, this.makeFolderContents(folderOutput));
 
         this.folderMap.set(folderOutput.id, folder);
 
@@ -133,6 +133,23 @@ export class Tree {
     reChildContainer(complexity: SortedContainer) {
         const containers = this.containerMap.get(complexity.id)!;
         containers.setChildren(complexity.inner.map(containerOutput => this.makeContainer(containerOutput)));
+    }
+
+    // depth
+
+    reDepthContainer(complexity: SortedContainer) {
+        const container = this.containerMap.get(complexity.id)!;
+        container.setDepth(complexity.depth);
+    }
+
+    reDepthFile(complexity: SortedFile) {
+        const file = this.fileMap.get(complexity.id)!;
+        file.setDepth(complexity.depth);
+    }
+
+    reDepthFolder(complexity: SortedFolder) {
+        const folder = this.folderMap.get(complexity.id)!;
+        folder.setDepth(complexity.depth);
     }
 
     // collapse & expand

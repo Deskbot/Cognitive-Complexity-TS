@@ -1,27 +1,32 @@
 import { ToggleableBox } from "../box/ToggleableBox.js";
-import { element } from "../../framework.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
 import { FolderContents } from "./FolderContents.js";
+import { StickyTitle } from "../text/StickyTitle.js";
+import { SortedFolder } from "../../domain/sortedOutput.js";
 
 export class Folder {
     private box: ToggleableBox;
+    private title: StickyTitle;
     private content: FolderContents;
 
     constructor(
-        path: string,
-        name: string,
+        folder: SortedFolder,
         children: FolderContents,
     ) {
         this.content = children;
 
-        const fullPath = concatFilePath(path, name);
+        const fullPath = concatFilePath(folder.path, folder.name);
+
+        this.title = new StickyTitle([
+            folder.name,
+            CopyText(fullPath),
+        ],
+            folder.depth
+        );
 
         this.box = new ToggleableBox([
-            element("p", {},
-                name,
-                CopyText(fullPath),
-            ),
+            this.title.dom,
         ],
             false,
         );
@@ -31,6 +36,10 @@ export class Folder {
 
     get dom(): Node {
         return this.box.dom;
+    }
+
+    setDepth(depth: number) {
+        this.title.setDepth(depth);
     }
 
     setOpenness(open: boolean) {

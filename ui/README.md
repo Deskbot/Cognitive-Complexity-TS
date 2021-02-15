@@ -11,7 +11,7 @@ Although frameworks allow for declarative code that is very short and readable, 
 
 I am experimenting with ways of writing simple, well-organised, performant web UI code. I think it is important for this project because people may wish to look at an entire project at once.
 
-I'm not entirely happy with certain aspects of this code, but it has been a learning experience.
+I'm not entirely happy with certain aspects of this code, but it has been a learning experience. A lot of this turned out rather ad-hoc instead of like a framework, but I know how I would like things to look; the time that would be required to get to that point isn't worth it.
 
 ## Guiding Principles
 

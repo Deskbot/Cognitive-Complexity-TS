@@ -71,6 +71,10 @@ export class Observable<T> {
 export class Store<T extends Unique> {
     private map = new Map<number, Observable<T>>();
 
+    get(id: number): Observable<T> | undefined {
+        return this.map.get(id);
+    }
+
     set(item: T) {
         // override content of existing Observable
         if (this.map.has(item.id)) {

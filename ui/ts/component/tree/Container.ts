@@ -1,25 +1,29 @@
-import { ContainerOutput } from "../../../../shared/types.js";
-import { element } from "../../framework.js";
 import { CopyText } from "../controls/CopyText.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
+import { StickyTitle } from "../text/StickyTitle.js";
+import { SortedContainer } from "../../domain/sortedOutput.js";
 
 export class Container {
     private box: ToggleableBox;
+    private title: StickyTitle;
     private children: Container[];
 
     constructor(
-        complexity: ContainerOutput,
-        filePath: string,
+        complexity: SortedContainer,
         children: Container[],
     ) {
         this.children = children;
 
+        this.title = new StickyTitle([
+            complexity.name,
+            CopyText(`${complexity.path}:${complexity.line}:${complexity.column}`),
+        ],
+            complexity.depth
+        );
+
         this.box = new ToggleableBox([
-            element("p", {},
-                complexity.name,
-                CopyText(`${filePath}:${complexity.line}:${complexity.column}`),
-            ),
+            this.title.dom,
             Score(complexity.score),
         ],
             false,
@@ -35,6 +39,10 @@ export class Container {
     setChildren(children: Container[]) {
         this.children = children;
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
+    }
+
+    setDepth(depth: number) {
+        this.title.setDepth(depth);
     }
 
     setOpenness(open: boolean) {

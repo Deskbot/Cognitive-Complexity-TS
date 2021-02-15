@@ -4,27 +4,31 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
+import { SortedFile } from "../../domain/sortedOutput.js";
 
 export class File {
     private box: ToggleableBox;
+    private title: StickyTitle;
     private children: Container[];
 
     constructor(
-        path: string,
-        name: string,
-        score: number,
+        file: SortedFile,
         children: Container[],
     ) {
         this.children = children;
 
-        const fullPath = concatFilePath(path, name);
+        const fullPath = concatFilePath(file.path, file.name);
+
+        this.title = new StickyTitle([
+            file.name,
+            CopyText(fullPath),
+        ],
+            file.depth
+        );
 
         this.box = new ToggleableBox([
-            StickyTitle([
-                name,
-                CopyText(fullPath),
-            ]),
-            Score(score),
+            this.title.dom,
+            Score(file.score),
         ],
             false,
         );
@@ -39,6 +43,10 @@ export class File {
     setChildren(children: Container[]) {
         this.children = children;
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
+    }
+
+    setDepth(depth: number) {
+        this.title.setDepth(depth);
     }
 
     setOpenness(open: boolean) {
