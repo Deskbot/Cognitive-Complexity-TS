@@ -1,5 +1,5 @@
 import { Container } from "./Container.js";
-import { StickyTitle } from "../text/StickyTitle.js";
+import { showInTree, StickyTitle } from "./StickyTitle.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
@@ -10,12 +10,11 @@ export class File {
     private box: ToggleableBox;
     private title: StickyTitle;
     private children: Container[];
+    private depth: number;
 
-    constructor(
-        file: SortedFile,
-        children: Container[],
-    ) {
+    constructor(file: SortedFile, children: Container[]) {
         this.children = children;
+        this.depth = file.depth;
 
         const fullPath = concatFilePath(file.path, file.name);
 
@@ -31,13 +30,18 @@ export class File {
             Score(file.score),
         ],
             false,
+            () => this.scrollIntoView(),
         );
 
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
     }
 
-    get dom(): Node {
+    get dom() {
         return this.box.dom;
+    }
+
+    private scrollIntoView() {
+        showInTree(this.dom, this.depth);
     }
 
     setChildren(children: Container[]) {
@@ -46,6 +50,7 @@ export class File {
     }
 
     setDepth(depth: number) {
+        this.depth = depth;
         this.title.setDepth(depth);
     }
 
