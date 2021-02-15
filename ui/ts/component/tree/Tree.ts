@@ -172,8 +172,5 @@ export class Tree {
         for (const component of this.fileMap.values()) {
             component.setOpenness(isOpen);
         }
-        for (const component of this.folderContentsMap.values()) {
-            component.setOpenness(isOpen);
-        }
     }
 }
