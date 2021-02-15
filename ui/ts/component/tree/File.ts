@@ -1,11 +1,10 @@
 import { Container } from "./Container.js";
-import { StickyTitle } from "./StickyTitle.js";
+import { showInTree, StickyTitle } from "./StickyTitle.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
 import { SortedFile } from "../../domain/sortedOutput.js";
-import { showInTree } from "./showInTree.js";
 
 export class File {
     private box: ToggleableBox;

@@ -2,9 +2,8 @@ import { ToggleableBox } from "../box/ToggleableBox.js";
 import { CopyText } from "../controls/CopyText.js";
 import { concatFilePath } from "../../domain/path.js";
 import { FolderContents } from "./FolderContents.js";
-import { StickyTitle } from "./StickyTitle.js";
+import { showInTree, StickyTitle } from "./StickyTitle.js";
 import { SortedFolder } from "../../domain/sortedOutput.js";
-import { showInTree } from "./showInTree.js";
 
 export class Folder {
     private box: ToggleableBox;

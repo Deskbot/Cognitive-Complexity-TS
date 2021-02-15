@@ -1,9 +1,8 @@
 import { CopyText } from "../controls/CopyText.js";
 import { ToggleableBox } from "../box/ToggleableBox.js";
 import { Score } from "../text/Score.js";
-import { StickyTitle } from "./StickyTitle.js";
+import { showInTree, StickyTitle } from "./StickyTitle.js";
 import { SortedContainer } from "../../domain/sortedOutput.js";
-import { showInTree } from "./showInTree.js";
 
 export class Container {
     private box: ToggleableBox;
