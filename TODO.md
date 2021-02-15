@@ -3,6 +3,11 @@
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 
+# User Experience
+
+* Don't include empty folders and files in the output.
+* Expand and collapse are a bit slower than I'd like.
+
 # Possible Features
 
 * Make folder and container titles sticky in such a way that you can see the path to nodes in view.
