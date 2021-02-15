@@ -11,10 +11,7 @@ export class File {
     private title: StickyTitle;
     private children: Container[];
 
-    constructor(
-        file: SortedFile,
-        children: Container[],
-    ) {
+    constructor(file: SortedFile, children: Container[]) {
         this.children = children;
 
         const fullPath = concatFilePath(file.path, file.name);
@@ -31,12 +28,19 @@ export class File {
             Score(file.score),
         ],
             false,
+            () => {
+                // if off the screen, put it on screen.
+                const rect = this.dom.getBoundingClientRect();
+                if (rect.top < 0) {
+                    this.dom.scrollIntoView(true);
+                }
+            }
         );
 
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
     }
 
-    get dom(): Node {
+    get dom() {
         return this.box.dom;
     }
 

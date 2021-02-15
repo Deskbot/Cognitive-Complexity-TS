@@ -15,7 +15,7 @@ export class ToggleableBox {
 
     private showHideable: boolean;
 
-    constructor(visibleContent: Node[], isTopLevel: boolean) {
+    constructor(visibleContent: Node[], isTopLevel: boolean, onStateChange: (isOpen: boolean) => void) {
         this.showHideable = isTopLevel;
 
         this.box = new FlexBox();
@@ -24,6 +24,7 @@ export class ToggleableBox {
         this.toggleButton = flexNone(new ToggleButton(this.showHideable, (newIsOpen) => {
             this.showHideable = newIsOpen;
             this.rerender();
+            onStateChange(newIsOpen);
         }));
         this.visibleContent = visibleContent;
 

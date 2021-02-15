@@ -10,10 +10,7 @@ export class Folder {
     private title: StickyTitle;
     private content: FolderContents;
 
-    constructor(
-        folder: SortedFolder,
-        children: FolderContents,
-    ) {
+    constructor(folder: SortedFolder, children: FolderContents) {
         this.content = children;
 
         const fullPath = concatFilePath(folder.path, folder.name);
@@ -29,12 +26,19 @@ export class Folder {
             this.title.dom,
         ],
             false,
+            () => {
+                // if off the screen, put it on screen.
+                const rect = this.dom.getBoundingClientRect();
+                if (rect.top < 0) {
+                    this.dom.scrollIntoView(true);
+                }
+            }
         );
 
         this.box.changeHideableContent(() => [this.content.dom]);
     }
 
-    get dom(): Node {
+    get dom() {
         return this.box.dom;
     }
 

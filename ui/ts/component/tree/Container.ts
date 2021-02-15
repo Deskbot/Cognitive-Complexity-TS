@@ -9,10 +9,7 @@ export class Container {
     private title: StickyTitle;
     private children: Container[];
 
-    constructor(
-        complexity: SortedContainer,
-        children: Container[],
-    ) {
+    constructor(complexity: SortedContainer, children: Container[]) {
         this.children = children;
 
         this.title = new StickyTitle([
@@ -27,6 +24,13 @@ export class Container {
             Score(complexity.score),
         ],
             false,
+            () => {
+                // if off the screen, put it on screen.
+                const rect = this.dom.getBoundingClientRect();
+                if (rect.top < 0) {
+                    this.dom.scrollIntoView(true);
+                }
+            }
         );
 
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
