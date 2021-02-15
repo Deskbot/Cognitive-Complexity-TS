@@ -43,7 +43,10 @@ export class Folder {
     }
 
     setDepth(depth: number) {
-        this.title.setDepth(depth);
+        if (this.depth !== depth) {
+            this.depth = depth;
+            this.title.setDepth(depth);
+        }
     }
 
     setOpenness(open: boolean) {
