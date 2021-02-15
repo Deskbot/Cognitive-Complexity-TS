@@ -25,10 +25,18 @@ export class Container {
         ],
             false,
             () => {
-                // if off the screen, put it on screen.
+                const depth = complexity.depth;
+                const targetTopPos = 39 * (depth - 1);
+
+                // if top of elem is above the target position, scroll it down.
                 const rect = this.dom.getBoundingClientRect();
-                if (rect.top < 0) {
+                if (rect.top < targetTopPos) {
+
+                    // put the top of the element at the top of the screen
                     this.dom.scrollIntoView(true);
+
+                    // scroll the window down to put the element at its target position
+                    window.scrollBy(0, -39 * (depth - 1));
                 }
             }
         );
@@ -36,7 +44,7 @@ export class Container {
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
     }
 
-    get dom(): HTMLElement {
+    get dom() {
         return this.box.dom;
     }
 
