@@ -6,6 +6,7 @@ import { SortedContainer } from "../../domain/sortedOutput.js";
 
 export class Container {
     private box: ToggleableBox;
+    private title: StickyTitle;
     private children: Container[];
 
     constructor(
@@ -14,13 +15,15 @@ export class Container {
     ) {
         this.children = children;
 
+        this.title = new StickyTitle([
+            complexity.name,
+            CopyText(`${complexity.path}:${complexity.line}:${complexity.column}`),
+        ],
+            complexity.depth
+        );
+
         this.box = new ToggleableBox([
-            StickyTitle([
-                complexity.name,
-                CopyText(`${complexity.path}:${complexity.line}:${complexity.column}`),
-            ],
-                complexity.depth
-            ),
+            this.title.dom,
             Score(complexity.score),
         ],
             false,
@@ -36,6 +39,10 @@ export class Container {
     setChildren(children: Container[]) {
         this.children = children;
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
+    }
+
+    setDepth(depth: number) {
+        this.title.setDepth(depth);
     }
 
     setOpenness(open: boolean) {

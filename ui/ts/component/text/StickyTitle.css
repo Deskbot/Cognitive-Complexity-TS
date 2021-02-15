@@ -3,7 +3,7 @@
     padding: var(--half-spacing) 0;
     position: sticky;
     margin: var(--half-spacing) 0;
-    margin-right: var(--spacing);
+    margin-right: 0;
 
     background: var(--background-color);
 }

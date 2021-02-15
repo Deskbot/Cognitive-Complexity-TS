@@ -8,6 +8,7 @@ import { SortedFile } from "../../domain/sortedOutput.js";
 
 export class File {
     private box: ToggleableBox;
+    private title: StickyTitle;
     private children: Container[];
 
     constructor(
@@ -18,13 +19,15 @@ export class File {
 
         const fullPath = concatFilePath(file.path, file.name);
 
+        this.title = new StickyTitle([
+            file.name,
+            CopyText(fullPath),
+        ],
+            file.depth
+        );
+
         this.box = new ToggleableBox([
-            StickyTitle([
-                file.name,
-                CopyText(fullPath),
-            ],
-                file.depth
-            ),
+            this.title.dom,
             Score(file.score),
         ],
             false,
@@ -40,6 +43,10 @@ export class File {
     setChildren(children: Container[]) {
         this.children = children;
         this.box.changeHideableContent(() => this.children.map(child => child.dom));
+    }
+
+    setDepth(depth: number) {
+        this.title.setDepth(depth);
     }
 
     setOpenness(open: boolean) {

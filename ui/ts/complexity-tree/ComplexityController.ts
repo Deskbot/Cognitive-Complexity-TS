@@ -94,6 +94,7 @@ export class ComplexityController {
 
         this.moveComplexityNodes(this.complexity.inner, removeWhat);
 
+        this.reDepth();
         this.sort();
 
         this.model.overwriteComplexity(this.complexity);
@@ -107,7 +108,6 @@ export class ComplexityController {
 
             // add inners of children items to parent inner
             inner.push(...removed.flatMap(removedElem => removedElem.inner));
-            removed.forEach(removedElem => removedElem.depth -= 1);
 
             // remove those same items from the inner of the children
             for (const removedElem of removed) {
@@ -126,6 +126,11 @@ export class ComplexityController {
             // now there are more nodes in the parent inner, consider filtering it again
             this.moveComplexityNodes(inner, removeWhat);
         }
+    }
+
+    private reDepth(complexity = this.complexity, depth = 0) {
+        complexity.depth = depth;
+        complexity.inner.forEach(child => this.reDepth(child, depth + 1));
     }
 
     setInclude(include: Include) {

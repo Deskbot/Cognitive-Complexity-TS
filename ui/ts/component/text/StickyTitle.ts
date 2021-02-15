@@ -4,11 +4,16 @@ addStyleSheet(import.meta.url);
 
 const maxZIndex = 2147483647;
 
-export function StickyTitle(title: (string | Node)[], depth: number): Node {
-    const p = element("p", { className: "stickytext" }, ...title);
+export class StickyTitle {
+    readonly dom: HTMLParagraphElement;
 
-    p.style.top = `${39 * (depth - 1)}px`; // boo! number comes from looking at the real height in the browser
-    p.style.zIndex = (maxZIndex-depth).toString();
+    constructor(title: (string | Node)[], depth: number) {
+        this.dom = element("p", { className: "stickytext" }, ...title);
+        this.setDepth(depth);
+    }
 
-    return p;
+    setDepth(depth: number) {
+        this.dom.style.top = `${39 * (depth - 1)}px`; // boo! number comes from looking at the real height in the browser
+        this.dom.style.zIndex = (maxZIndex - depth).toString();
+    }
 }

@@ -7,6 +7,7 @@ import { SortedFolder } from "../../domain/sortedOutput.js";
 
 export class Folder {
     private box: ToggleableBox;
+    private title: StickyTitle;
     private content: FolderContents;
 
     constructor(
@@ -17,13 +18,15 @@ export class Folder {
 
         const fullPath = concatFilePath(folder.path, folder.name);
 
+        this.title = new StickyTitle([
+            folder.name,
+            CopyText(fullPath),
+        ],
+            folder.depth
+        );
+
         this.box = new ToggleableBox([
-            StickyTitle([
-                folder.name,
-                CopyText(fullPath),
-            ],
-                folder.depth
-            ),
+            this.title.dom,
         ],
             false,
         );
@@ -33,6 +36,10 @@ export class Folder {
 
     get dom(): Node {
         return this.box.dom;
+    }
+
+    setDepth(depth: number) {
+        this.title.setDepth(depth);
     }
 
     setOpenness(open: boolean) {
