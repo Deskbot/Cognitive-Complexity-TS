@@ -9,7 +9,11 @@ export class ToggleButton {
 
     private onStateChange: (isOpen: boolean) => void;
 
-    constructor(isOpen: boolean, onStateChange: (isOpen: boolean) => void) {
+    constructor(
+        isOpen: boolean,
+        onStateChange: (isOpen: boolean) => void,
+        onManualStateChange: (isOpen: boolean) => void
+    ) {
         this.onStateChange = onStateChange;
 
         this.stateSymbol = new StateSymbol();
@@ -25,7 +29,10 @@ export class ToggleButton {
             this.stateSymbol.text,
         );
 
-        this.dom.addEventListener("change", () => this.handleStateChange());
+        this.dom.addEventListener("change", () => {
+            this.handleStateChange();
+            onManualStateChange(this.input.checked);
+        });
 
         this.setSymbol();
     }

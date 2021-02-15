@@ -15,17 +15,20 @@ export class ToggleableBox {
 
     private showHideable: boolean;
 
-    constructor(visibleContent: Node[], isTopLevel: boolean, onStateChange: (isOpen: boolean) => void) {
+    constructor(visibleContent: Node[], isTopLevel: boolean, onManualStateChange: (isOpen: boolean) => void) {
         this.showHideable = isTopLevel;
 
         this.box = new FlexBox();
         this.toggleableContent = () => [];
         this.toggleableContentWrapper = flexGrow(new ContentWrapper());
-        this.toggleButton = flexNone(new ToggleButton(this.showHideable, (newIsOpen) => {
-            this.showHideable = newIsOpen;
-            this.rerender();
-            onStateChange(newIsOpen);
-        }));
+        this.toggleButton = flexNone(new ToggleButton(
+            this.showHideable,
+            (newIsOpen) => {
+                this.showHideable = newIsOpen;
+                this.rerender();
+            },
+            onManualStateChange
+        ));
         this.visibleContent = visibleContent;
 
         this.rerender();
