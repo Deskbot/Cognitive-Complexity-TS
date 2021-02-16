@@ -6,6 +6,9 @@
 # User Experience
 
 * Don't include empty folders and files in the output.
+* show/hide anonymous functions
+* show/hide 0 complexity
+* icons to show whether something is a file or folder
 
 # Possible Features
 
