@@ -6,7 +6,6 @@
 # User Experience
 
 * Don't include empty folders and files in the output.
-* Expand and collapse are a bit slower than I'd like.
 
 # Possible Features
 
