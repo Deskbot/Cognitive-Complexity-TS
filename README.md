@@ -1,10 +1,8 @@
-This program analyses TypeScript and JavaScript code according to the [Cognitive Complexity metric](https://www.sonarsource.com/docs/CognitiveComplexity.pdf).
-
-Right now it creates a JSON output. In future I expect to add an interactive html output.
+This program analyses TypeScript and JavaScript code according to the [Cognitive Complexity metric](https://www.sonarsource.com/docs/CognitiveComplexity.pdf). It produces a JSON summary and a GUI for exploring the complexity of your codebase.
 
 ## Disclaimer
 
-Myself and this project are completely unaffiliated with Sonar Source.
+I and this project are completely unaffiliated with Sonar Source.
 
 ## Install
 
