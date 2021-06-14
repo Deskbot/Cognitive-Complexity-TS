@@ -1,6 +1,6 @@
 {
   "name": "cognitive-complexity-ts",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "",
   "keywords": [
     "typescript",
@@ -9,7 +9,7 @@
     "metric"
   ],
   "main": "./build/src/api.js",
-  "types": "./build/src",
+  "types": "./build/src/api.d.ts",
   "scripts": {
     "build": "tsc -i",
     "build-tools": "tsc -i -p ./tools",
