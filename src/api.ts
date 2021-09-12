@@ -1,3 +1,5 @@
+export * from '../shared/types'
+
 export {
     getFileOrFolderOutput,
     getFolderOutput,
