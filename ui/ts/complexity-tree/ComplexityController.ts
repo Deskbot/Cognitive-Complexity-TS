@@ -56,8 +56,6 @@ export class ComplexityController {
     // sort
 
     private sort() {
-        console.log("sort");
-
         if (this.sortMethod === Sort.inOrder) {
             if (this.include === Include.containers) {
                 // don't consider relative line numbers of containers
@@ -81,8 +79,6 @@ export class ComplexityController {
     // filter
 
     private filter() {
-        console.log("filter");
-
         this.complexity = cloneSortedOutput(this.initialComplexity);
 
         const removeWhat: (data: SortedAnything) => boolean

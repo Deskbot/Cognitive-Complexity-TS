@@ -42,8 +42,6 @@ export class Tree {
     private makeContainer(containerOutput: SortedContainer): Container {
         if (this.containerMap.has(containerOutput.id)) {
             return this.containerMap.get(containerOutput.id)!;
-        } else {
-            console.log("container");
         }
 
         const container = new Container(containerOutput, containerOutput.inner.map(inner => this.makeContainer(inner)));
@@ -56,8 +54,6 @@ export class Tree {
     private makeFile(fileOutput: SortedFile): File {
         if (this.fileMap.has(fileOutput.id)) {
             return this.fileMap.get(fileOutput.id)!;
-        } else {
-            console.log("file");
         }
 
         const children = [] as Container[];
@@ -76,8 +72,6 @@ export class Tree {
     private makeFolderContents(folderOutput: SortedFolder): FolderContents {
         if (this.folderContentsMap.has(folderOutput.id)) {
             return this.folderContentsMap.get(folderOutput.id)!;
-        } else {
-            console.log("folder contents");
         }
 
         const folderContents = new FolderContents(folderOutput.inner.map((folderEntry) => {
@@ -98,8 +92,6 @@ export class Tree {
     private makeFolder(folderOutput: SortedFolder): Folder {
         if (this.folderMap.has(folderOutput.id)) {
             return this.folderMap.get(folderOutput.id)!;
-        } else {
-            console.log("folder");
         }
 
         const folder = new Folder(folderOutput, this.makeFolderContents(folderOutput));
