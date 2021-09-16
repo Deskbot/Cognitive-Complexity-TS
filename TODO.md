@@ -5,22 +5,19 @@
 
 # User Experience
 
-* Require a path to be specified
+* Gracefully handle incorrect arguments to package.json scripts
+    * Require a path to be specified
 * When the UI server is running, prevent errors about source map files not being found.
-* Don't include empty folders and files in the output.
-* show/hide anonymous functions
-* show/hide 0 complexity
-* icons to show whether something is a file or folder
 
 # Possible Features
 
-* Make folder and container titles sticky in such a way that you can see the path to nodes in view.
-    * This is a bit complicated and requires setting the "top" style with JS, which is fine until it comes to reparenting.
-* Gracefully handle incorrect arguments to package.json scripts
+* Don't include empty folders and files in the output.
+* show/hide 0 complexity
+* icons to show whether something is a file or folder
+* show/hide anonymous functions
 * json and ui commands handle input differently
     * give json a help text
     * let json take multiple files
-* see full path somehow without it getting the way or being inconsistent
 * Option to hide anything with a score of 0.
     * on the json command level, not the ui level
 * Choose the TS version used
