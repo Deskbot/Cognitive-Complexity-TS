@@ -4,13 +4,15 @@ import { nonNaN, keysToAsyncValues } from "./util/util";
 import { getFileOrFolderOutput } from "./cognitive-complexity/output";
 import { createUiServer } from "./ui-server/ui-server";
 
+const helpText = "Arguments: [-h | --help] [--port <NUMBER>] [FILE]..."
+
 main();
 
 async function main() {
     const args = minimist(process.argv.slice(2));
 
     if (args["h"] || args["help"]) {
-        printHelp();
+        console.log(helpText);
         return;
     }
 
@@ -19,6 +21,13 @@ async function main() {
     const url = `http://localhost:${port}`;
 
     const inputFiles = args["_"];
+
+    if (inputFiles.length === 0) {
+        console.error("No files given.");
+        console.error(helpText);
+        return;
+    }
+
     const combinedOutputsJson = await generateComplexityJson(inputFiles);
 
     const server = createUiServer(combinedOutputsJson);
@@ -35,8 +44,4 @@ async function generateComplexityJson(inputFiles: string[]): Promise<string> {
     );
 
     return JSON.stringify(combinedOutputs);
-}
-
-function printHelp() {
-    console.log("Arguments: [-h | --help] [--port <NUMBER>] [FILE]...");
 }

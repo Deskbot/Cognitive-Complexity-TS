@@ -5,8 +5,6 @@
 
 # User Experience
 
-* Gracefully handle incorrect arguments to package.json scripts
-    * Require a path to be specified
 * When the UI server is running, prevent errors about source map files not being found.
 
 # Possible Features
