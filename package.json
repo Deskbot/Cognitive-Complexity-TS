@@ -15,7 +15,7 @@
     "build-tools": "tsc -i -p ./tools",
     "build-ui": "npm run build && tsc -i -p ./ui",
     "json": "npm run build && node -r source-map-support/register ./build/src/json",
-    "ui": "npm run build && npm run build-ui && node -r source-map-support/register ./build/src/ui",
+    "ui": "npm run build && npm run build-ui && DEV=true node -r source-map-support/register ./build/src/ui",
     "test": "npm run build && node -r source-map-support/register ./build/test/main",
     "what": "npm run build-tools && node -r source-map-support/register ./build/tools/what-is-it",
     "prepublishOnly": "rm -rf ./build && npm run build && npm run build-ui && npm run test"

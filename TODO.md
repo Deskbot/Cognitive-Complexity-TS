@@ -3,10 +3,6 @@
 * Bug: Should increment when a value is recursively referenced but not called.
     * .call .apply etc should count towards recursion because they are referenced
 
-# User Experience
-
-* When the UI server is running, prevent errors about source map files not being found.
-
 # Possible Features
 
 * Don't include empty folders and files in the output.

@@ -4,6 +4,8 @@ import * as path from "path";
 import { ServerResponse, IncomingMessage } from "http";
 import { doesNotThrow } from "../util/util";
 
+const DEV_MODE = !!process.env["DEV"];
+
 const sourcePath = __dirname + "/../../..";
 
 const cssPath =       path.normalize(sourcePath + "/ui/ts");
@@ -84,7 +86,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
         return;
     }
 
-    if (url.endsWith(".js.map")) {
+    if (DEV_MODE && url.endsWith(".js.map")) {
         const targetFile = jsPath + "/" + url;
 
         if (!doesFileExistInFolder(targetFile, jsPath)) {
@@ -97,7 +99,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse, combined
         return;
     }
 
-    if (url.endsWith(".ts")) {
+    if (DEV_MODE && url.endsWith(".ts")) {
         const targetFile = tsPath + "/" + url;
 
         if (!doesFileExistInFolder(targetFile, tsPath)) {
