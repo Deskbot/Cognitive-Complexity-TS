@@ -5,6 +5,8 @@
 
 # User Experience
 
+* Require a path to be specified
+* When the UI server is running, prevent errors about source map files not being found.
 * Don't include empty folders and files in the output.
 * show/hide anonymous functions
 * show/hide 0 complexity
