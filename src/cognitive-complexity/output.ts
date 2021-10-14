@@ -26,13 +26,13 @@ export async function getFileOrFolderOutput(entryPath: string): Promise<FileOutp
 // API
 export async function getFileOutput(filePath: string): Promise<FileOutput> {
     const fileContent = (await fsP.readFile(filePath)).toString();
-    return getSourceOutput(fileContent, filePath);
+    return getSourceOutput(fileContent, path.basename(filePath));
 }
 
 // API
-export function getSourceOutput(sourceCode: string, filePath = ''): FileOutput {
+export function getSourceOutput(sourceCode: string, fileName = ""): FileOutput {
     const parsedFile = ts.createSourceFile(
-        path.basename(filePath),
+        fileName,
         sourceCode,
         ts.ScriptTarget.Latest,
         true,
