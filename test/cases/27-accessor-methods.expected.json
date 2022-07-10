@@ -25,13 +25,13 @@
             {
                 "name": "Setter",
                 "score": 2,
-                "line": 18,
+                "line": 17,
                 "column": 1,
                 "inner": [
                     {
                         "name": "f",
                         "score": 1,
-                        "line": 22,
+                        "line": 18,
                         "column": 5
                     },
                     {
