@@ -1,0 +1,13 @@
+{
+    "37-square-bracket-object-methods.ts": {
+        "score": 1,
+        "inner": [
+            {
+                "name": "[something]",
+                "score": 1,
+                "line": 4,
+                "column": 5
+            }
+        ]
+    }
+}

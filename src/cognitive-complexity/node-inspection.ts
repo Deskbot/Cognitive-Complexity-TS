@@ -22,7 +22,7 @@ export function getColumnAndLine(node: ts.Node): ColumnAndLine {
 
 export function getIdentifier(node: ts.Node): string | undefined {
     for (const child of node.getChildren()) {
-        if (ts.isIdentifier(child)) {
+        if (ts.isIdentifier(child) || ts.isComputedPropertyName(child)) {
             return child.getText();
         }
     }
