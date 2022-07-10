@@ -1,0 +1,27 @@
+{
+    "36-square-bracket-methods.ts": {
+        "score": 2,
+        "inner": [
+            {
+                "name": "C",
+                "score": 2,
+                "line": 3,
+                "column": 1,
+                "inner": [
+                    {
+                        "name": "[Symbol.iterator]",
+                        "score": 1,
+                        "line": 4,
+                        "column": 5
+                    },
+                    {
+                        "name": "[recursive]",
+                        "score": 1,
+                        "line": 10,
+                        "column": 5
+                    }
+                ]
+            }
+        ]
+    }
+}
