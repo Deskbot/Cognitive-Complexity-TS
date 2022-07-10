@@ -1,8 +1,13 @@
-// would be too hard to detect recursion here
+var recursive;
+
 class C {
     [Symbol.iterator]() {
         if (true) {
 
         }
+    }
+
+    [recursive]() {
+        this[recursive]();
     }
 }

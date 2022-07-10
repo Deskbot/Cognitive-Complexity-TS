@@ -121,20 +121,26 @@ export function getNameOfAssignment(node: ts.Node): string | undefined {
     return undefined;
 }
 
-export function getNameIfObjectMember(node: ts.Node): string | undefined {
+export function getExpressionToAccessObjectMember(node: ts.Node): string | undefined {
     if (ts.isMethodDeclaration(node)) {
-        return getMethodDeclarationName(node);
+        const [name, requiresDot] = getMethodDeclarationName(node);
+
+        if (requiresDot) {
+            return "this." + name;
+        } else {
+            return "this" + name;
+        }
     }
 
     if (ts.isAccessor(node)) {
-        return getFirstIdentifierName(node);
+        return "this." + getFirstIdentifierName(node);
     }
 
     return undefined;
 }
 
 function getIdentifierDespiteBrackets(node: ts.Node): string | undefined {
-    if (ts.isIdentifier(node)) {
+    if (ts.isIdentifier(node) || ts.isElementAccessExpression(node)) {
         return node.getText();
     }
 
@@ -192,7 +198,7 @@ function getFunctionNodeName(func: FunctionNode): string | undefined {
         }
     }
 
-    const name = getMethodDeclarationName(func);
+    const [name] = getMethodDeclarationName(func);
     if (name !== undefined) {
         return name;
     }
@@ -228,11 +234,18 @@ function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
     return moduleIdentifier.getText();
 }
 
-function getMethodDeclarationName(node: ts.MethodDeclaration): string {
-    const name = getIdentifier(node);
+/**
+ * @return [name, requires dot syntax]
+ */
+function getMethodDeclarationName(node: ts.MethodDeclaration): [string, boolean] {
+    for (const child of node.getChildren()) {
+        if (ts.isIdentifier(child)) {
+            return [child.getText(), true];
+        }
 
-    if (name !== undefined) {
-        return name;
+        if (ts.isComputedPropertyName(child)) {
+            return [child.getText(), false];
+        }
     }
 
     throw new UnreachableNodeState(node, "Method has no identifier.");
