@@ -1,31 +1,43 @@
 {
     "27-accessor-methods.ts": {
-        "score": 2,
+        "score": 4,
         "inner": [
             {
                 "name": "Getter",
-                "score": 1,
-                "line": 1,
+                "score": 2,
+                "line": 3,
                 "column": 1,
                 "inner": [
                     {
                         "name": "f",
                         "score": 1,
-                        "line": 3,
+                        "line": 5,
+                        "column": 5
+                    },
+                    {
+                        "name": "[property]",
+                        "score": 1,
+                        "line": 11,
                         "column": 5
                     }
                 ]
             },
             {
                 "name": "Setter",
-                "score": 1,
-                "line": 9,
+                "score": 2,
+                "line": 18,
                 "column": 1,
                 "inner": [
                     {
                         "name": "f",
                         "score": 1,
-                        "line": 10,
+                        "line": 22,
+                        "column": 5
+                    },
+                    {
+                        "name": "[property]",
+                        "score": 1,
+                        "line": 22,
                         "column": 5
                     }
                 ]
