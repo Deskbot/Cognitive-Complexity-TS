@@ -1,10 +1,10 @@
 {
     "27-accessor-methods.ts": {
-        "score": 4,
+        "score": 2,
         "inner": [
             {
                 "name": "Getter",
-                "score": 2,
+                "score": 1,
                 "line": 3,
                 "column": 1,
                 "inner": [
@@ -16,15 +16,15 @@
                     },
                     {
                         "name": "[property]",
-                        "score": 1,
-                        "line": 11,
+                        "score": 0,
+                        "line": 10,
                         "column": 5
                     }
                 ]
             },
             {
                 "name": "Setter",
-                "score": 2,
+                "score": 1,
                 "line": 17,
                 "column": 1,
                 "inner": [
@@ -36,7 +36,7 @@
                     },
                     {
                         "name": "[property]",
-                        "score": 1,
+                        "score": 0,
                         "line": 22,
                         "column": 5
                     }

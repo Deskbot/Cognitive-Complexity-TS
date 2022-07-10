@@ -7,10 +7,10 @@ class Getter {
         return this.f; // +1 for recursion
     }
 
-    // depth 0
     get [property](): string {
-        // depth 0
-        return this[property]; // +1 for recursion
+        // just trying to prove it doesn't fall over
+        // not worth figuring out whether there's recursion here
+        return ""
     }
 }
 
@@ -20,6 +20,7 @@ class Setter {
     }
 
     set [property](value) {
-        this[property] = 1;
+        // just trying to prove it doesn't fall over
+        // not worth figuring out whether there's recursion here
     }
 }
