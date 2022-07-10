@@ -133,10 +133,33 @@ export function getExpressionToAccessObjectMember(node: ts.Node): string | undef
     }
 
     if (ts.isAccessor(node)) {
-        return "this." + getFirstIdentifierName(node);
+        const [name, requiresDot] = getAccessorIdentifierName(node);
+
+        if (requiresDot) {
+            return "this." + name;
+        } else {
+            return "this" + name;
+        }
     }
 
     return undefined;
+}
+
+/**
+ * @return [name, requires dot syntax]
+ */
+function getAccessorIdentifierName(node: ts.Node): [string, boolean] {
+    for (const child of node.getChildren()) {
+        if (ts.isIdentifier(child)) {
+            return [child.getText(), true];
+        }
+
+        if (ts.isComputedPropertyName(child)) {
+            return [child.getText(), false];
+        }
+    }
+
+    throw new UnreachableNodeState(node, "The accessor was expected to have an identifier or computed property name.");
 }
 
 function getIdentifierDespiteBrackets(node: ts.Node): string | undefined {
@@ -174,7 +197,8 @@ function getClassExpressionName(
 
 function getFunctionNodeName(func: FunctionNode): string | undefined {
     if (ts.isAccessor(func)) {
-        return getFirstIdentifierName(func);
+        const [name] = getAccessorIdentifierName(func);
+        return name;
     }
 
     if (ts.isArrowFunction(func)) {
@@ -198,8 +222,8 @@ function getFunctionNodeName(func: FunctionNode): string | undefined {
         }
     }
 
-    const [name] = getMethodDeclarationName(func);
-    if (name !== undefined) {
+    if (ts.isMethodDeclaration(func)) {
+        const [name] = getMethodDeclarationName(func);
         return name;
     }
 
@@ -208,17 +232,6 @@ function getFunctionNodeName(func: FunctionNode): string | undefined {
 
 function getInterfaceDeclarationName(node: ts.InterfaceDeclaration): string {
     return node.getChildAt(1).getText();
-}
-
-function getFirstIdentifierName(node: ts.Node): string {
-    const name = node.getChildren()
-        .find(child => ts.isIdentifier(child));
-
-    if (name === undefined) {
-        throw new UnreachableNodeState(node, "Node was expected to have an identifier.");
-    }
-
-    return name.getText();
 }
 
 function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
