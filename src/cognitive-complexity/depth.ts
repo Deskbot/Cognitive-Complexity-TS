@@ -67,13 +67,9 @@ function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
 
 function catchClause(node: ts.CatchClause): DepthOfChildren {
     const children = node.getChildren();
-
-    const variableDefinition = children[2];
-    const catchCode = children[4];
-
     return {
-        same: [variableDefinition],
-        below: [catchCode]
+        same: children.filter(child => child.kind === ts.SyntaxKind.VariableDeclaration),
+        below: children.filter(child => child.kind === ts.SyntaxKind.Block),
     };
 }
 
