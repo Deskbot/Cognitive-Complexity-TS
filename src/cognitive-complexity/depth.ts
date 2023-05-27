@@ -3,6 +3,7 @@
  */
 
 import * as ts from "typescript";
+import { UnreachableNodeState } from "../util/node-util";
 import { isForLikeStatement, ForLikeStatement } from "./node-inspection";
 
 interface DepthOfChildren {
@@ -67,9 +68,14 @@ function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
 
 function catchClause(node: ts.CatchClause): DepthOfChildren {
     const children = node.getChildren();
+    const variableDeclaration = children.find(child => ts.isVariableDeclaration(child));
+    const block = children.find(child => ts.isBlock(child));
+
+    if (block === undefined) throw new UnreachableNodeState(node, "catch clause has no block");
+
     return {
-        same: children.filter(child => child.kind === ts.SyntaxKind.VariableDeclaration),
-        below: children.filter(child => child.kind === ts.SyntaxKind.Block),
+        same: variableDeclaration ? [variableDeclaration] : [],
+        below: [block],
     };
 }
 

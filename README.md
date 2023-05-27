@@ -110,7 +110,6 @@ npm i
 # All builds are incremental.
 # These scripts also build dependencies incrementally.
 npm run build       # The main complexity analysis program and UI back-end server.
-npm run build-test
 npm run build-tools
 npm run build-ui    # The in-browser UI code only.
 ```
