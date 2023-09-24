@@ -150,7 +150,7 @@ export function getExpressionToAccessObjectMember(node: ts.Node): string | undef
  */
 function getAccessorIdentifierName(node: ts.Node): [string, boolean] {
     for (const child of node.getChildren()) {
-        if (ts.isIdentifier(child)) {
+        if (ts.isIdentifierOrPrivateIdentifier(child)) {
             return [child.getText(), true];
         }
 
@@ -163,7 +163,7 @@ function getAccessorIdentifierName(node: ts.Node): [string, boolean] {
 }
 
 function getIdentifierDespiteBrackets(node: ts.Node): string | undefined {
-    if (ts.isIdentifier(node) || ts.isElementAccessExpression(node)) {
+    if (ts.isIdentifierOrPrivateIdentifier(node) || ts.isElementAccessExpression(node)) {
         return node.getText();
     }
 
@@ -215,7 +215,7 @@ function getFunctionNodeName(func: FunctionNode): string | undefined {
 
     if (ts.isFunctionExpression(func)) {
         const maybeIdentifier = func.getChildren()[1];
-        if (ts.isIdentifier(maybeIdentifier)) {
+        if (ts.isIdentifierOrPrivateIdentifier(maybeIdentifier)) {
             return maybeIdentifier.getText();
         } else {
             return undefined;
@@ -274,7 +274,7 @@ function getTypeAliasName(node: ts.TypeAliasDeclaration): string {
 
 function maybeGetFirstIdentifierName(node: ts.Node): string | undefined {
     const name = node.getChildren()
-        .find(child => ts.isIdentifier(child));
+        .find(child => ts.isIdentifierOrPrivateIdentifier(child));
 
     return name?.getText();
 }
