@@ -252,7 +252,7 @@ function getModuleDeclarationName(node: ts.ModuleDeclaration): string {
  */
 function getMethodDeclarationName(node: ts.MethodDeclaration): [string, boolean] {
     for (const child of node.getChildren()) {
-        if (ts.isIdentifier(child)) {
+        if (ts.isIdentifierOrPrivateIdentifier(child)) {
             return [child.getText(), true];
         }
 
