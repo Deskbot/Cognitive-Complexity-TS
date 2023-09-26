@@ -1,4 +1,6 @@
 class A {
+    #z;
+
     #b() {
         return this.#b();
     }
