@@ -22,7 +22,7 @@ export function getColumnAndLine(node: ts.Node): ColumnAndLine {
 
 export function getIdentifier(node: ts.Node): string | undefined {
     for (const child of node.getChildren()) {
-        if (ts.isIdentifier(child) || ts.isComputedPropertyName(child)) {
+        if (ts.isIdentifierOrPrivateIdentifier(child) || ts.isComputedPropertyName(child)) {
             return child.getText();
         }
     }
@@ -58,7 +58,7 @@ export function isBinaryTypeOperator(node: ts.Node): node is ts.UnionOrIntersect
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     if (ts.isBreakOrContinueStatement(node)) {
         for (const child of node.getChildren()) {
-            if (ts.isIdentifier(child)) {
+            if (ts.isIdentifierOrPrivateIdentifier(child)) {
                 return true;
             }
         }
