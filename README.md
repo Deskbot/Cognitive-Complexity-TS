@@ -14,13 +14,13 @@ npm install cognitive-complexity-ts
 
 ```bash
 # UI output (any of the following)
+npx ccts [file path]
+npx cognitive-complexity-ts [file path]
 npx cognitive-complexity-ts-ui [file path]
 npx ccts-ui [file path]
 
 # JSON output (any of the following)
-npx cognitive-complexity-ts [file path]
 npx cognitive-complexity-ts-json [file path]
-npx ccts [file path]
 npx ccts-json [file path]
 
 ```
