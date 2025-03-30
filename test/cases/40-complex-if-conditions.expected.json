@@ -1,0 +1,55 @@
+{
+    "40-complex-if-conditions.ts": {
+        "score": 29,
+        "inner": [
+            {
+                "name": "simpleSingleCondition",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "singleBooleanNegation",
+                "score": 2,
+                "line": 7,
+                "column": 1
+            },
+            {
+                "name": "multipleAndConditions",
+                "score": 2,
+                "line": 13,
+                "column": 1
+            },
+            {
+                "name": "multipleOrConditions",
+                "score": 2,
+                "line": 19,
+                "column": 1
+            },
+            {
+                "name": "mixedAndOrConditions",
+                "score": 5,
+                "line": 25,
+                "column": 1
+            },
+            {
+                "name": "complexParenthesizedConditions",
+                "score": 4,
+                "line": 31,
+                "column": 1
+            },
+            {
+                "name": "negatedComplexConditions",
+                "score": 8,
+                "line": 37,
+                "column": 1
+            },
+            {
+                "name": "elseIfWithComplexConditions",
+                "score": 5,
+                "line": 43,
+                "column": 1
+            }
+        ]
+    }
+}
