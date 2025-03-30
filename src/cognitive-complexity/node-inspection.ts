@@ -129,6 +129,11 @@ export function passThroughNameBeingAssigned(node: ts.Node): boolean {
         || ts.isParenthesizedExpression(node);
 }
 
+export function isNegatedExpression(node: ts.Node): boolean {
+    return ts.isPrefixUnaryExpression(node) &&
+           node.operator === ts.SyntaxKind.ExclamationToken;
+}
+
 export function report(node: ts.Node, depth: number = 0) {
     const toLog = [repeat("\t", depth), ts.SyntaxKind[node.kind], node.kind];
 

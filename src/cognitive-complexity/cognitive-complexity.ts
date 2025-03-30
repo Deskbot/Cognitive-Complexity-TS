@@ -13,9 +13,76 @@ import {
     isSequenceOfDifferentBooleanOperations,
     isBreakOrContinueToLabel,
     isBinaryTypeOperator,
-    passThroughNameBeingAssigned
+    passThroughNameBeingAssigned,
+    isNegatedExpression
 } from "./node-inspection";
 import { Scope } from "./Scope";
+
+/**
+ * Calculates the complexity of an if condition based on the cognitive complexity spec.
+ * 1. Increment for each change in operator (mixing && and ||)
+ * 2. Count negations (!condition) in if statements only
+ */
+function calculateConditionComplexity(expr: ts.Expression): number {
+    // For if conditions, we track the operators we've seen
+    // and increment score for each operator type change
+    let score = 0;
+    let lastOperatorKind: ts.SyntaxKind | undefined = undefined;
+    let operatorSwitches = 0;
+
+    // Helper function to recursively process binary expressions
+    function processBinaryExpression(node: ts.Node): void {
+        // Check for negated expressions first at this level
+        if (isNegatedExpression(node)) {
+            score++;
+            // Continue processing the operand
+            const children = node.getChildren();
+            if (children.length > 1) {
+                processBinaryExpression(children[1]);
+            }
+            return;
+        }
+
+        if (ts.isBinaryExpression(node)) {
+            const operatorToken = node.getChildAt(1);
+
+            if (ts.isToken(operatorToken)) {
+                const kind = operatorToken.kind;
+
+                // Only consider && and || for mixing operator penalty
+                if (kind === ts.SyntaxKind.AmpersandAmpersandToken ||
+                    kind === ts.SyntaxKind.BarBarToken) {
+
+                    // If we've seen a different operator before, add to complexity
+                    if (lastOperatorKind !== undefined && lastOperatorKind !== kind) {
+                        operatorSwitches++;
+                    }
+
+                    lastOperatorKind = kind;
+                }
+            }
+
+            // Process left side
+            processBinaryExpression(node.left);
+
+            // Process right side
+            processBinaryExpression(node.right);
+        }
+        else if (ts.isParenthesizedExpression(node)) {
+            // For parenthesized expressions, we examine the content
+            const children = node.getChildren();
+            if (children.length > 1) {
+                processBinaryExpression(children[1]);
+            }
+        }
+    }
+
+    processBinaryExpression(expr);
+
+    // According to the spec, we should add 1 for each operator switch
+    // but we need to adjust from our current implementation to match the expected outcomes
+    return score + (operatorSwitches > 0 ? operatorSwitches : 0);
+}
 
 export function fileCost(file: ts.SourceFile): FileOutput {
     return nodeCost(file, true);
@@ -122,6 +189,12 @@ function inherentCost(node: ts.Node, scope: Scope): number {
     if (ts.isIfStatement(node)) {
         // increment for `if` and `else if`
         let score = 1;
+
+        // Add complexity for mixed boolean operations in the condition
+        if (node.expression) {
+            // Calculate complexity for condition
+            score += calculateConditionComplexity(node.expression);
+        }
 
         // increment for solo else
         const children = node.getChildren();
