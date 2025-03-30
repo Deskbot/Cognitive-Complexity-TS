@@ -57,7 +57,6 @@
     "@types/js-beautify": "^1.8.2",
     "@types/minimist": "^1.2.0",
     "@types/node": "^12.12.6",
-    "@types/tempfile": "^3.0.0",
     "deep-diff": "^1.0.2",
     "glob": "^7.1.6",
     "json-stream": "^1.0.0",
