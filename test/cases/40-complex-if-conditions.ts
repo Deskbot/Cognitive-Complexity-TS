@@ -48,4 +48,10 @@ function elseIfWithComplexConditions() {
     }
 }
 
-let condition1, condition2, condition3, condition4, condition5, val, someConstant, someOtherConstant;
+function negatedInnerSequence() {
+    if (a && !(b && c)) {
+        // do something
+    }
+}
+
+let condition1, condition2, condition3, condition4, condition5, val, someConstant, someOtherConstant, a, b, c;

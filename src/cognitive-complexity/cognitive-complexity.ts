@@ -20,68 +20,71 @@ import { Scope } from "./Scope";
 
 /**
  * Calculates the complexity of an if condition based on the cognitive complexity spec.
- * 1. Increment for each change in operator (mixing && and ||)
- * 2. Count negations (!condition) in if statements only
+ * Increments for each logical AND (&&) and OR (||) operator that is different from the previous one.
+ * Negations (!) do not add complexity.
  */
 function calculateConditionComplexity(expr: ts.Expression): number {
-    // For if conditions, we track the operators we've seen
-    // and increment score for each operator type change
     let score = 0;
     let lastOperatorKind: ts.SyntaxKind | undefined = undefined;
-    let operatorSwitches = 0;
 
-    // Helper function to recursively process binary expressions
-    function processBinaryExpression(node: ts.Node): void {
-        // Check for negated expressions first at this level
+    // Helper function to recursively process expressions
+    function processExpression(node: ts.Node): void {
         if (isNegatedExpression(node)) {
-            score++;
-            // Continue processing the operand
+            // Negation breaks the sequence of operators temporarily
+            const savedLastOperator = lastOperatorKind;
+            lastOperatorKind = undefined; // Reset for the negated expression's content
+
+            // Process the operand of negation
             const children = node.getChildren();
             if (children.length > 1) {
-                processBinaryExpression(children[1]);
+                processExpression(children[1]); // The operand
             }
-            return;
+
+            // After processing the negated part, restore the operator sequence
+            // context from *before* the negation.
+            lastOperatorKind = savedLastOperator;
+            return; // Don't process this node further as a binary/paren expr
         }
 
         if (ts.isBinaryExpression(node)) {
             const operatorToken = node.getChildAt(1);
+            let currentOperatorKind: ts.SyntaxKind | undefined = undefined;
 
             if (ts.isToken(operatorToken)) {
                 const kind = operatorToken.kind;
 
-                // Only consider && and || for mixing operator penalty
+                // Check if it's a boolean operator we care about
                 if (kind === ts.SyntaxKind.AmpersandAmpersandToken ||
                     kind === ts.SyntaxKind.BarBarToken) {
-
-                    // If we've seen a different operator before, add to complexity
-                    if (lastOperatorKind !== undefined && lastOperatorKind !== kind) {
-                        operatorSwitches++;
-                    }
-
-                    lastOperatorKind = kind;
+                    currentOperatorKind = kind;
                 }
             }
 
-            // Process left side
-            processBinaryExpression(node.left);
+            // Process left side first to establish the operator sequence order
+            processExpression(node.left);
+
+            // Increment score if the current operator is different from the last one seen
+            if (currentOperatorKind !== undefined) {
+                 if (lastOperatorKind === undefined || lastOperatorKind !== currentOperatorKind) {
+                    score++;
+                    lastOperatorKind = currentOperatorKind;
+                 } else {
+                    // Same operator, doesn't increment, but we continue the sequence
+                 }
+            }
 
             // Process right side
-            processBinaryExpression(node.right);
+            processExpression(node.right);
         }
         else if (ts.isParenthesizedExpression(node)) {
-            // For parenthesized expressions, we examine the content
-            const children = node.getChildren();
-            if (children.length > 1) {
-                processBinaryExpression(children[1]);
-            }
+            // Process the inner expression. The state of lastOperatorKind
+            // might be updated by the inner expression and should persist.
+            processExpression(node.expression);
         }
     }
 
-    processBinaryExpression(expr);
-
-    // According to the spec, we should add 1 for each operator switch
-    // but we need to adjust from our current implementation to match the expected outcomes
-    return score + (operatorSwitches > 0 ? operatorSwitches : 0);
+    processExpression(expr);
+    return score;
 }
 
 export function fileCost(file: ts.SourceFile): FileOutput {

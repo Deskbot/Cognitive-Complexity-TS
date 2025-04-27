@@ -1,6 +1,6 @@
 {
     "40-complex-if-conditions.ts": {
-        "score": 29,
+        "score": 32,
         "inner": [
             {
                 "name": "simpleSingleCondition",
@@ -10,7 +10,7 @@
             },
             {
                 "name": "singleBooleanNegation",
-                "score": 2,
+                "score": 1,
                 "line": 7,
                 "column": 1
             },
@@ -28,26 +28,32 @@
             },
             {
                 "name": "mixedAndOrConditions",
-                "score": 5,
+                "score": 6,
                 "line": 25,
                 "column": 1
             },
             {
                 "name": "complexParenthesizedConditions",
-                "score": 4,
+                "score": 5,
                 "line": 31,
                 "column": 1
             },
             {
                 "name": "negatedComplexConditions",
-                "score": 8,
+                "score": 7,
                 "line": 37,
                 "column": 1
             },
             {
                 "name": "elseIfWithComplexConditions",
-                "score": 5,
+                "score": 4,
                 "line": 43,
+                "column": 1
+            },
+            {
+                "name": "negatedInnerSequence",
+                "score": 4,
+                "line": 51,
                 "column": 1
             }
         ]

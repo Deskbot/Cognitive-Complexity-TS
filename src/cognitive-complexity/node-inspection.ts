@@ -109,6 +109,11 @@ export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {
 
     const firstNonParenthesisAncestor = getFirstNonParenthesizedAncestor(node);
 
+    // Exclude sequences within IfStatement conditions, as they are handled separately
+    if (ts.isIfStatement(firstNonParenthesisAncestor)) {
+        return false;
+    }
+
     if (operatorIsBoolean) {
         // True if the parent does not use the same operator as this node.
         // Presumably true if the parent is not a binary expression.
