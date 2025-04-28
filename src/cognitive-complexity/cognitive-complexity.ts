@@ -185,10 +185,9 @@ function nodeCost(
      * The name being introduced (if there is one)
      * for a variable whose declaration this scope is directly inside of.
      * It is used to give names to anonymous functions and classes.
-     * let a =    $a$         () => {};
-     * let a =  ( $a$         () => {} );
-     * let a = f( $undefined$ () => {} );
-     * let a =                      () => { $undefined$ };
+     * let a =    $a$         () => { $anonymous$ };
+     * let a =  ( $a$         () => { $anonymous$ } );
+     * let a = f( $anonymous$ () => { $anonymous$ } );
      */
     let newVariableBeingDefined = getNameOfAssignment(node);
     if (newVariableBeingDefined === undefined
