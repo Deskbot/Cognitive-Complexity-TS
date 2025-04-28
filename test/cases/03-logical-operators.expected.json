@@ -45,15 +45,63 @@
                 "column": 1
             },
             {
-                "name": "parenthesesAroundASequenceBreak",
+                "name": "notBreaksSequence",
                 "score": 2,
                 "line": 29,
                 "column": 1
             },
             {
-                "name": "parenthesesCanBreakSequence",
-                "score": 3,
+                "name": "parenthesesAroundASequenceBreak",
+                "score": 2,
                 "line": 33,
+                "column": 1
+            },
+            {
+                "name": "parenthesesBreakSequence",
+                "score": 3,
+                "line": 37,
+                "column": 1
+            },
+            {
+                "name": "sequenceInParentheses1",
+                "score": 3,
+                "line": 41,
+                "column": 1
+            },
+            {
+                "name": "sequenceInParentheses2",
+                "score": 3,
+                "line": 45,
+                "column": 1
+            },
+            {
+                "name": "sequenceInParentheses3",
+                "score": 3,
+                "line": 49,
+                "column": 1
+            },
+            {
+                "name": "sequenceInParentheses4",
+                "score": 3,
+                "line": 53,
+                "column": 1
+            },
+            {
+                "name": "parenthesesBreakingOneSequenceButNotAnother",
+                "score": 2,
+                "line": 57,
+                "column": 1
+            },
+            {
+                "name": "parenthesesBreakingTwoSequences",
+                "score": 3,
+                "line": 61,
+                "column": 1
+            },
+            {
+                "name": "otherOperators",
+                "score": 0,
+                "line": 65,
                 "column": 1
             }
         ]
