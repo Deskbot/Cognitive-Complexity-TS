@@ -94,7 +94,7 @@ function costOfDepth(node: ts.Node, depth: number): number {
 }
 
 function inherentCost(node: ts.Node, scope: Scope): number {
-    // certain language features carry and inherent cost
+    // certain language features carry an inherent cost
     if (isSequenceOfDifferentBooleanOperations(node)
         || ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
