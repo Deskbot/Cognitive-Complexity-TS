@@ -14,52 +14,28 @@ function twoSequences() {
     true && !true && !!true || !true || true;
 }
 
-function threeSequences() {
-    true && !true || !!true || true && !!true;
+function threeSequences1() {
+    true && !true || true && !!true;
+}
+
+function threeSequences2() {
+    true || !true && true || !!true;
 }
 
 function noOp() {
     true;
 }
 
-function parenthesesDoesNotBreakSequence() {
+function not() {
+    !true
+}
+
+function parenthesesBreakSequence() {
     true && (true && true)
 }
 
-function notBreaksSequence() {
+function parenthesesBreakSequence2() {
     true && !(true && true)
-}
-
-function parenthesesAroundASequenceBreak() {
-    true && (true || true)
-}
-
-function parenthesesBreakSequence() { // && is child of || due to precedence
-    true && (true && true || true)
-}
-
-function sequenceInParentheses1() {
-    true && (true || true && true)
-}
-
-function sequenceInParentheses2() {
-    true || (true && true || true)
-}
-
-function sequenceInParentheses3() {
-    true || (true || true && true)
-}
-
-function sequenceInParentheses4() {
-    true && (true || true) && true
-}
-
-function parenthesesBreakingOneSequenceButNotAnother() {
-    true && (true && true) || true
-}
-
-function parenthesesBreakingTwoSequences() {
-    true || (true || true) && true
 }
 
 function otherOperators() {
