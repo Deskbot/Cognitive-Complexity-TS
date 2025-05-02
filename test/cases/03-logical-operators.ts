@@ -38,6 +38,10 @@ function parenthesesBreakSequence2() {
     true && !(true && true)
 }
 
+function parenthesesBreakSequence3() {
+    true && (true && true) && true
+}
+
 function otherOperators() {
     true == true != true > true < true >= true <= true
 }
