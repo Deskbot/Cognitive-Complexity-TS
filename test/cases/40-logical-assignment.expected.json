@@ -1,0 +1,43 @@
+{
+    "40-logical-assignment.ts": {
+        "score": 9,
+        "inner": [
+            {
+                "name": "andEquals",
+                "score": 1,
+                "line": 1,
+                "column": 1
+            },
+            {
+                "name": "andEqualsAnd",
+                "score": 2,
+                "line": 5,
+                "column": 1
+            },
+            {
+                "name": "orEquals",
+                "score": 1,
+                "line": 9,
+                "column": 1
+            },
+            {
+                "name": "orEqualsOr",
+                "score": 2,
+                "line": 13,
+                "column": 1
+            },
+            {
+                "name": "nullCoalesceEquals",
+                "score": 1,
+                "line": 17,
+                "column": 1
+            },
+            {
+                "name": "nullCoalesceEqualsNullCoalesce",
+                "score": 2,
+                "line": 21,
+                "column": 1
+            }
+        ]
+    }
+}
