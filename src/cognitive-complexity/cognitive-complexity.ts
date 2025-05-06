@@ -179,7 +179,7 @@ function nodeCost(
 
     // get the ancestors container names from the perspective of this node's children
     const namedAncestorsOfChildren = scope.maybeAdd(node, variableBeingDefined);
-    const { same, below } = whereAreChildren(node);
+    const { left, right, below } = whereAreChildren(node); // TODO roll binary expression stuff into here
 
     /**
      * The name being introduced (if there is one)
@@ -200,26 +200,21 @@ function nodeCost(
 
     // Do in order traversal for binary expressions. We don't care about traversal order in any other case.
     // This is so we can have the correct preceding operator.
-    if (ts.isBinaryExpression(node)) {
-        const leftChildren = aggregateCostOfChildren([node.left], depth, topLevel, scope, variableBeingDefined, precedingOperator)
-        const rightChildren = aggregateCostOfChildren([node.right], depth, topLevel, scope, variableBeingDefined, node.operatorToken)
+    const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scope, variableBeingDefined, precedingOperator)
+    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, precedingOperator) // TODO use operator from the left
 
-        costOfSameDepthChildren = {
-            score: leftChildren.score + rightChildren.score,
-            inner: [...leftChildren.inner, ...rightChildren.inner],
-        }
-
-    } else {
-        costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
-        score += costOfSameDepthChildren.score;
+    costOfSameDepthChildren = {
+        score: leftChildren.score + rightChildren.score,
+        inner: [...leftChildren.inner, ...rightChildren.inner],
     }
 
     // The nodes below this node have the same depth number,
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined, undefined);
 
+    score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.score;
 
     const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.inner];
