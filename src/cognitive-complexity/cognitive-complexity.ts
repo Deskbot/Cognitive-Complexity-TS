@@ -1,5 +1,5 @@
 import * as ts from "typescript"
-import { FileOutput, ContainerOutput, ScoreAndInner } from "../../shared/types";
+import { FileOutput, ContainerOutput, ScoreAndInner, TraversalContext } from "../../shared/types";
 import { countNotAtTheEnds } from "../util/util";
 import {
     chooseContainerName,
@@ -17,7 +17,7 @@ import {
 import { Scope } from "./Scope";
 
 export function fileCost(file: ts.SourceFile): FileOutput {
-    return nodeCost(file, true);
+    return nodeCost(file, true).scoreAndInner;
 }
 
 function aggregateCostOfChildren(
@@ -27,8 +27,9 @@ function aggregateCostOfChildren(
     scope: Scope,
     variableBeingDefined: string | undefined,
     precedingOperator: ts.BinaryOperatorToken | undefined,
-): ScoreAndInner {
+): TraversalContext {
     let score = 0;
+    let newPrecedingOperator: ts.BinaryOperatorToken | undefined = undefined;
 
     // The inner containers of a node is defined as the concat of:
     // * all child nodes that are functions/namespaces/classes
@@ -36,7 +37,9 @@ function aggregateCostOfChildren(
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
-        const childCost = nodeCost(child, topLevel, childDepth, scope, variableBeingDefined, precedingOperator);
+        const context = nodeCost(child, topLevel, childDepth, scope, variableBeingDefined, precedingOperator);
+        const childCost = context.scoreAndInner;
+        newPrecedingOperator = context.precedingOperator;
 
         score += childCost.score;
 
@@ -56,8 +59,11 @@ function aggregateCostOfChildren(
     }
 
     return {
-        score,
-        inner
+        scoreAndInner: {
+            score,
+            inner
+        },
+        precedingOperator: newPrecedingOperator,
     };
 }
 
@@ -173,13 +179,11 @@ function nodeCost(
     scope = new Scope([], []),
     variableBeingDefined: string | undefined = undefined,
     precedingOperator: ts.BinaryOperatorToken | undefined = undefined,
-): ScoreAndInner {
-    let score = inherentCost(node, scope, precedingOperator);
-    score += costOfDepth(node, depth);
+): TraversalContext {
 
     // get the ancestors container names from the perspective of this node's children
     const namedAncestorsOfChildren = scope.maybeAdd(node, variableBeingDefined);
-    const { left, right, below } = whereAreChildren(node); // TODO roll binary expression stuff into here
+    const { left, right, below } = whereAreChildren(node);
 
     /**
      * The name being introduced (if there is one)
@@ -190,22 +194,23 @@ function nodeCost(
      * let a = f( $anonymous$ () => { $anonymous$ } );
      */
     let newVariableBeingDefined = getNameOfAssignment(node);
-    if (newVariableBeingDefined === undefined
-        && passThroughNameBeingAssigned(node)
-    ) {
+    if (newVariableBeingDefined === undefined && passThroughNameBeingAssigned(node)) {
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    let costOfSameDepthChildren: ScoreAndInner;
-
-    // Do in order traversal for binary expressions. We don't care about traversal order in any other case.
-    // This is so we can have the correct preceding operator.
+    // Do in order traversal. Expand the left node first. This is so we can have the correct preceding operator.
     const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scope, variableBeingDefined, precedingOperator)
-    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, precedingOperator) // TODO use operator from the left
 
-    costOfSameDepthChildren = {
-        score: leftChildren.score + rightChildren.score,
-        inner: [...leftChildren.inner, ...rightChildren.inner],
+    let score = inherentCost(node, scope, leftChildren.precedingOperator);
+    score += costOfDepth(node, depth);
+
+    const operatorPrecedingTheRight = ts.isBinaryExpression(node) ? node.operatorToken : undefined
+
+    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, operatorPrecedingTheRight)
+
+    const costOfSameDepthChildren = {
+        score: leftChildren.scoreAndInner.score + rightChildren.scoreAndInner.score,
+        inner: [...leftChildren.scoreAndInner.inner, ...rightChildren.scoreAndInner.inner],
     }
 
     // The nodes below this node have the same depth number,
@@ -215,13 +220,20 @@ function nodeCost(
     const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined, undefined);
 
     score += costOfSameDepthChildren.score;
-    score += costOfBelowChildren.score;
+    score += costOfBelowChildren.scoreAndInner.score;
 
-    const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.inner];
+    const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.scoreAndInner.inner];
+
+    ts.isBinaryExpression(node) ? node.operatorToken
+        : ts.isParenthesizedExpression(node) ? undefined
+            :
 
     return {
-        inner,
-        score,
+        scoreAndInner: {
+            inner,
+            score,
+        },
+        precedingOperator: rightChildren.precedingOperator,
     };
 }
 
