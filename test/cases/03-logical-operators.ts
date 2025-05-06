@@ -45,3 +45,7 @@ function parenthesesBreakSequence3() {
 function otherOperators() {
     true == true != true > true < true >= true <= true
 }
+
+function functionInExpression() {
+    true && (function inner() { return true && true })()
+}
