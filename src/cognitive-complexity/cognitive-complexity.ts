@@ -10,10 +10,9 @@ import { whereAreChildren } from "./depth";
 import {
     isContainer,
     getColumnAndLine,
-    isSequenceOfDifferentBooleanOperations,
     isBreakOrContinueToLabel,
     isBinaryTypeOperator,
-    passThroughNameBeingAssigned
+    passThroughNameBeingAssigned,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -27,6 +26,7 @@ function aggregateCostOfChildren(
     topLevel: boolean,
     scope: Scope,
     variableBeingDefined: string | undefined,
+    precedingOperator: ts.BinaryOperatorToken | undefined,
 ): ScoreAndInner {
     let score = 0;
 
@@ -36,7 +36,7 @@ function aggregateCostOfChildren(
     const inner = [] as ContainerOutput[];
 
     for (const child of children) {
-        const childCost = nodeCost(child, topLevel, childDepth, scope, variableBeingDefined);
+        const childCost = nodeCost(child, topLevel, childDepth, scope, variableBeingDefined, precedingOperator);
 
         score += childCost.score;
 
@@ -93,9 +93,9 @@ function costOfDepth(node: ts.Node, depth: number): number {
     return 0;
 }
 
-function inherentCost(node: ts.Node, scope: Scope): number {
-    // certain language features carry an inherent cost
-    if (isSequenceOfDifferentBooleanOperations(node)
+function inherentCost(node: ts.Node, scope: Scope, precedingOperator: ts.BinaryOperatorToken | undefined): number {
+    // certain language features carry and inherent cost
+    if (isNewSequenceOfBinaryOperators(node, precedingOperator)
         || ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
         || ts.isConditionalTypeNode(node)
@@ -172,13 +172,13 @@ function nodeCost(
     depth = 0,
     scope = new Scope([], []),
     variableBeingDefined: string | undefined = undefined,
+    precedingOperator: ts.BinaryOperatorToken | undefined = undefined,
 ): ScoreAndInner {
-    let score = inherentCost(node, scope);
+    let score = inherentCost(node, scope, precedingOperator);
     score += costOfDepth(node, depth);
 
     // get the ancestors container names from the perspective of this node's children
-    const namedAncestorsOfChildren = scope
-        .maybeAdd(node, variableBeingDefined);
+    const namedAncestorsOfChildren = scope.maybeAdd(node, variableBeingDefined);
     const { same, below } = whereAreChildren(node);
 
     /**
@@ -196,15 +196,30 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    const costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined);
+    let costOfSameDepthChildren: ScoreAndInner;
+
+    // Do in order traversal for binary expressions. We don't care about traversal order in any other case.
+    // This is so we can have the correct preceding operator.
+    if (ts.isBinaryExpression(node)) {
+        const leftChildren = aggregateCostOfChildren([node.left], depth, topLevel, scope, variableBeingDefined, precedingOperator)
+        const rightChildren = aggregateCostOfChildren([node.right], depth, topLevel, scope, variableBeingDefined, node.operatorToken)
+
+        costOfSameDepthChildren = {
+            score: leftChildren.score + rightChildren.score,
+            inner: [...leftChildren.inner, ...rightChildren.inner],
+        }
+
+    } else {
+        costOfSameDepthChildren = aggregateCostOfChildren(same, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
+        score += costOfSameDepthChildren.score;
+    }
 
     // The nodes below this node have the same depth number,
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
 
-    score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.score;
 
     const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.inner];
@@ -213,4 +228,20 @@ function nodeCost(
         inner,
         score,
     };
+}
+
+function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.BinaryOperatorToken | undefined) {
+    if (!ts.isBinaryExpression(node)) {
+        return false;
+    }
+
+    if (node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandToken
+        && node.operatorToken.kind !== ts.SyntaxKind.BarBarToken
+        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionToken
+    ) {
+        return false;
+    }
+
+    // is now an operator, or is different to previous operator
+    return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
 }

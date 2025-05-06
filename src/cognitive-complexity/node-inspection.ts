@@ -92,33 +92,6 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
         || ts.isAccessor(node);
 }
 
-export function isSequenceOfDifferentBooleanOperations(node: ts.Node): boolean {
-    if (!ts.isBinaryExpression(node)) {
-        return false;
-    }
-
-    const operatorToken = node.getChildAt(1);
-
-    if (!ts.isToken(operatorToken)) {
-        return false;
-    }
-
-    const operatorIsBoolean = operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken
-        || operatorToken.kind === ts.SyntaxKind.BarBarToken
-        || operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken;
-
-    const firstNonParenthesisAncestor = getFirstNonParenthesizedAncestor(node);
-
-    if (operatorIsBoolean) {
-        // True if the parent does not use the same operator as this node.
-        // Presumably true if the parent is not a binary expression.
-        // Child number 1 is the operator token.
-        return firstNonParenthesisAncestor.getChildAt(1)?.kind != operatorToken.kind;
-    }
-
-    return false;
-}
-
 export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
