@@ -216,6 +216,10 @@ function nodeCost(
 
     precedingOperator = rightChildren.precedingOperator;
 
+    if (ts.isParenthesizedExpression(node) || ts.isParenthesizedTypeNode(node) || ts.isStatement(node) || ts.isBlock(node)) {
+        precedingOperator = undefined;
+    }
+
     const costOfSameDepthChildren = {
         score: leftChildren.scoreAndInner.score + rightChildren.scoreAndInner.score,
         inner: [...leftChildren.scoreAndInner.inner, ...rightChildren.scoreAndInner.inner],

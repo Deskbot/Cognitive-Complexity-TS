@@ -79,12 +79,12 @@
                 "score": 2,
                 "line": 49,
                 "column": 1,
-                "inner": {
+                "inner": [{
                     "name": "inner",
                     "score": 1,
                     "line": 50,
                     "column": 14
-                }
+                }]
             }
         ]
     }
