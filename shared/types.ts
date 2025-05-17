@@ -1,3 +1,5 @@
+import ts from "typescript";
+
 export interface ColumnAndLine {
     column: number;
     line: number;
@@ -26,4 +28,9 @@ export type ProgramOutput = FolderOutput;
 export interface ScoreAndInner {
     score: number;
     inner: ContainerOutput[];
+}
+
+export interface TraversalContext {
+    scoreAndInner: ScoreAndInner;
+    precedingOperator: ts.BinaryOperatorToken | undefined;
 }

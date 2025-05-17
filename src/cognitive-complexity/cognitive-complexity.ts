@@ -199,14 +199,19 @@ function nodeCost(
     }
 
     // Do in order traversal. Expand the left node first. This is so we can have the correct preceding operator.
-    const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scope, variableBeingDefined, precedingOperator)
+    const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scope, variableBeingDefined, precedingOperator);
+    precedingOperator = leftChildren.precedingOperator;
 
-    let score = inherentCost(node, scope, leftChildren.precedingOperator);
+    let score = inherentCost(node, scope, precedingOperator);
     score += costOfDepth(node, depth);
 
-    const operatorPrecedingTheRight = ts.isBinaryExpression(node) ? node.operatorToken : undefined
+    precedingOperator = ts.isBinaryExpression(node) ? node.operatorToken
+                        : ts.isParenthesizedExpression(node) ? undefined
+                        : precedingOperator;
 
-    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, operatorPrecedingTheRight)
+    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, precedingOperator);
+
+    precedingOperator = rightChildren.precedingOperator;
 
     const costOfSameDepthChildren = {
         score: leftChildren.scoreAndInner.score + rightChildren.scoreAndInner.score,
@@ -224,16 +229,12 @@ function nodeCost(
 
     const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.scoreAndInner.inner];
 
-    ts.isBinaryExpression(node) ? node.operatorToken
-        : ts.isParenthesizedExpression(node) ? undefined
-            :
-
     return {
         scoreAndInner: {
             inner,
             score,
         },
-        precedingOperator: rightChildren.precedingOperator,
+        precedingOperator,
     };
 }
 
