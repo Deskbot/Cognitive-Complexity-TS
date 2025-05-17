@@ -29,7 +29,6 @@ function aggregateCostOfChildren(
     precedingOperator: ts.BinaryOperatorToken | undefined,
 ): TraversalContext {
     let score = 0;
-    let newPrecedingOperator: ts.BinaryOperatorToken | undefined = undefined;
 
     // The inner containers of a node is defined as the concat of:
     // * all child nodes that are functions/namespaces/classes
@@ -39,7 +38,7 @@ function aggregateCostOfChildren(
     for (const child of children) {
         const context = nodeCost(child, topLevel, childDepth, scope, variableBeingDefined, precedingOperator);
         const childCost = context.scoreAndInner;
-        newPrecedingOperator = context.precedingOperator;
+        precedingOperator = context.precedingOperator;
 
         score += childCost.score;
 
@@ -63,7 +62,7 @@ function aggregateCostOfChildren(
             score,
             inner
         },
-        precedingOperator: newPrecedingOperator,
+        precedingOperator,
     };
 }
 
@@ -206,7 +205,7 @@ function nodeCost(
     score += costOfDepth(node, depth);
 
     precedingOperator = ts.isBinaryExpression(node) ? node.operatorToken
-                        : ts.isParenthesizedExpression(node) ? undefined
+                        : ts.isParenthesizedExpression(node) || ts.isStatement(node) || ts.isBlock(node) ? undefined
                         : precedingOperator;
 
     const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, precedingOperator);
