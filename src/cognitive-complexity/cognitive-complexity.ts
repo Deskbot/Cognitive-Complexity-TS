@@ -197,6 +197,10 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
+    if (ts.isParenthesizedExpression(node) || ts.isParenthesizedTypeNode(node) || ts.isStatement(node) || ts.isBlock(node)) {
+        precedingOperator = undefined;
+    }
+
     // Do in order traversal. Expand the left node first. This is so we can have the correct preceding operator.
     const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scope, variableBeingDefined, precedingOperator);
     precedingOperator = leftChildren.precedingOperator;
@@ -204,9 +208,9 @@ function nodeCost(
     let score = inherentCost(node, scope, precedingOperator);
     score += costOfDepth(node, depth);
 
-    precedingOperator = ts.isBinaryExpression(node) ? node.operatorToken
-                        : ts.isParenthesizedExpression(node) || ts.isStatement(node) || ts.isBlock(node) ? undefined
-                        : precedingOperator;
+    if (ts.isBinaryExpression(node)) {
+        precedingOperator = node.operatorToken;
+    }
 
     const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, precedingOperator);
 
