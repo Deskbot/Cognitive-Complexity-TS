@@ -200,7 +200,8 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    if (isDisruptionInSequenceOfBinaryOperators(node)) {
+    // Ignore the preceding operator if this expression starts a new sequence of binary operators
+    if (isInterruptInSequenceOfBinaryOperators(node)) {
         precedingOperator = undefined;
     }
 
@@ -218,7 +219,8 @@ function nodeCost(
     const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scopeForChildren, newVariableBeingDefined, precedingOperator);
     precedingOperator = rightChildren.precedingOperator;
 
-    if (isDisruptionInSequenceOfBinaryOperators(node)) {
+    // Ensure the last operator doesn't leak outside of this context
+    if (isInterruptInSequenceOfBinaryOperators(node)) {
         precedingOperator = undefined;
     }
 
@@ -266,7 +268,7 @@ function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.Bin
     return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
 }
 
-function isDisruptionInSequenceOfBinaryOperators(node: ts.Node) {
+function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
     return ts.isParenthesizedExpression(node)
         || ts.isParenthesizedTypeNode(node)
         || ts.isStatement(node)
