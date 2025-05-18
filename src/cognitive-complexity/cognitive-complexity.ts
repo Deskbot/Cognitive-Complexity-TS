@@ -13,6 +13,8 @@ import {
     isBreakOrContinueToLabel,
     isBinaryTypeOperator,
     passThroughNameBeingAssigned,
+    isInterruptInSequenceOfBinaryOperators,
+    isNewSequenceOfBinaryOperators,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -247,30 +249,4 @@ function nodeCost(
         },
         precedingOperator,
     };
-}
-
-function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.BinaryOperatorToken | undefined) {
-    if (!ts.isBinaryExpression(node)) {
-        return false;
-    }
-
-    if (node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandToken
-        && node.operatorToken.kind !== ts.SyntaxKind.BarBarToken
-        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionToken
-        && node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandEqualsToken
-        && node.operatorToken.kind !== ts.SyntaxKind.BarBarEqualsToken
-        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionEqualsToken
-    ) {
-        return false;
-    }
-
-    // is now an operator, or is different to previous operator
-    return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
-}
-
-function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
-    return ts.isParenthesizedExpression(node)
-        || ts.isParenthesizedTypeNode(node)
-        || ts.isStatement(node)
-        || ts.isBlock(node);
 }

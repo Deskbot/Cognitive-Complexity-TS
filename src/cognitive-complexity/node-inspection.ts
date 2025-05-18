@@ -96,6 +96,33 @@ export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
 
+
+export function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.BinaryOperatorToken | undefined) {
+    if (!ts.isBinaryExpression(node)) {
+        return false;
+    }
+
+    if (node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandToken
+        && node.operatorToken.kind !== ts.SyntaxKind.BarBarToken
+        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionToken
+        && node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandEqualsToken
+        && node.operatorToken.kind !== ts.SyntaxKind.BarBarEqualsToken
+        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionEqualsToken
+    ) {
+        return false;
+    }
+
+    // is now an operator, or is different to previous operator
+    return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
+}
+
+export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
+    return ts.isParenthesizedExpression(node)
+        || ts.isParenthesizedTypeNode(node)
+        || ts.isStatement(node)
+        || ts.isBlock(node);
+}
+
 export function passThroughNameBeingAssigned(node: ts.Node): boolean {
     return isSyntaxList(node)
         || ts.isObjectLiteralExpression(node)
