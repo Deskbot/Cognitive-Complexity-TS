@@ -181,7 +181,7 @@ function nodeCost(
 ): TraversalContext {
 
     // get the ancestors container names from the perspective of this node's children
-    const namedAncestorsOfChildren = scope.maybeAdd(node, variableBeingDefined);
+    const scopeForChildren = scope.maybeAdd(node, variableBeingDefined);
     const { left, right, below } = whereAreChildren(node);
 
     /**
@@ -200,12 +200,12 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    if (ts.isParenthesizedExpression(node) || ts.isParenthesizedTypeNode(node) || ts.isStatement(node) || ts.isBlock(node)) {
+    if (isDisruptionInSequenceOfBinaryOperators(node)) {
         precedingOperator = undefined;
     }
 
     // Do in order traversal. Expand the left node first. This is so we can have the correct preceding operator.
-    const leftChildren = aggregateCostOfChildren(left, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
+    const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scopeForChildren, newVariableBeingDefined, precedingOperator);
     precedingOperator = leftChildren.precedingOperator;
 
     let score = inherentCost(node, scope, precedingOperator);
@@ -215,10 +215,10 @@ function nodeCost(
         precedingOperator = node.operatorToken;
     }
 
-    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
+    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scopeForChildren, newVariableBeingDefined, precedingOperator);
     precedingOperator = rightChildren.precedingOperator;
 
-    if (ts.isParenthesizedExpression(node) || ts.isParenthesizedTypeNode(node) || ts.isStatement(node) || ts.isBlock(node)) {
+    if (isDisruptionInSequenceOfBinaryOperators(node)) {
         precedingOperator = undefined;
     }
 
@@ -231,7 +231,7 @@ function nodeCost(
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, namedAncestorsOfChildren, newVariableBeingDefined, undefined);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, scopeForChildren, newVariableBeingDefined, undefined);
 
     score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.scoreAndInner.score;
@@ -264,4 +264,11 @@ function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.Bin
 
     // is now an operator, or is different to previous operator
     return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
+}
+
+function isDisruptionInSequenceOfBinaryOperators(node: ts.Node) {
+    return ts.isParenthesizedExpression(node)
+        || ts.isParenthesizedTypeNode(node)
+        || ts.isStatement(node)
+        || ts.isBlock(node);
 }
