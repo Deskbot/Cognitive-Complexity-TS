@@ -213,7 +213,6 @@ function nodeCost(
     }
 
     const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, variableBeingDefined, precedingOperator);
-
     precedingOperator = rightChildren.precedingOperator;
 
     if (ts.isParenthesizedExpression(node) || ts.isParenthesizedTypeNode(node) || ts.isStatement(node) || ts.isBlock(node)) {
