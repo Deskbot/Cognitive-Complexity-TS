@@ -255,6 +255,9 @@ function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.Bin
     if (node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandToken
         && node.operatorToken.kind !== ts.SyntaxKind.BarBarToken
         && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionToken
+        && node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandEqualsToken
+        && node.operatorToken.kind !== ts.SyntaxKind.BarBarEqualsToken
+        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionEqualsToken
     ) {
         return false;
     }
