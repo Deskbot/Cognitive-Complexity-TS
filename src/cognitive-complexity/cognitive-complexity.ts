@@ -211,9 +211,11 @@ function nodeCost(
     const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scopeForChildren, newVariableBeingDefined, precedingOperator);
     precedingOperator = leftChildren.precedingOperator;
 
+    // Score for the current node
     let score = inherentCost(node, scope, precedingOperator);
     score += costOfDepth(node, depth);
 
+    // If this is a binary operator, pass along information about the operator
     if (ts.isBinaryExpression(node)) {
         precedingOperator = node.operatorToken;
     }
@@ -230,7 +232,7 @@ function nodeCost(
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
-    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, scopeForChildren, newVariableBeingDefined, undefined);
+    const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, scopeForChildren, newVariableBeingDefined, precedingOperator);
 
     score += leftChildren.scoreAndInner.score;
     score += rightChildren.scoreAndInner.score;
