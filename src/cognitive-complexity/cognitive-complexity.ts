@@ -226,21 +226,21 @@ function nodeCost(
         precedingOperator = undefined;
     }
 
-    const costOfSameDepthChildren = {
-        score: leftChildren.scoreAndInner.score + rightChildren.scoreAndInner.score,
-        inner: [...leftChildren.scoreAndInner.inner, ...rightChildren.scoreAndInner.inner],
-    }
-
     // The nodes below this node have the same depth number,
     // iff this node is top level and it is a container.
     const container = isContainer(node);
     const depthOfBelow = depth + (topLevel && container ? 0 : 1);
     const costOfBelowChildren = aggregateCostOfChildren(below, depthOfBelow, false, scopeForChildren, newVariableBeingDefined, undefined);
 
-    score += costOfSameDepthChildren.score;
+    score += leftChildren.scoreAndInner.score;
+    score += rightChildren.scoreAndInner.score;
     score += costOfBelowChildren.scoreAndInner.score;
 
-    const inner = [...costOfSameDepthChildren.inner, ...costOfBelowChildren.scoreAndInner.inner];
+    const inner = [
+        ...leftChildren.scoreAndInner.inner,
+        ...rightChildren.scoreAndInner.inner,
+        ...costOfBelowChildren.scoreAndInner.inner
+    ];
 
     return {
         scoreAndInner: {
