@@ -16,4 +16,6 @@ class A {
     static #e = () => { return true && false; }
 
     static #f = function () { return true && false; }
+
+    static #g = function h() { return true && false; }
 }

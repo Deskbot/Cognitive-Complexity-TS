@@ -1,10 +1,10 @@
 {
     "39-javascript-private-fields.ts": {
-        "score": 5,
+        "score": 6,
         "inner": [
             {
                 "name": "A",
-                "score": 5,
+                "score": 6,
                 "line": 1,
                 "column": 1,
                 "inner": [
@@ -36,6 +36,12 @@
                         "name": "#f",
                         "score": 1,
                         "line": 18,
+                        "column": 17
+                    },
+                    {
+                        "name": "h",
+                        "score": 1,
+                        "line": 20,
                         "column": 17
                     }
                 ]
