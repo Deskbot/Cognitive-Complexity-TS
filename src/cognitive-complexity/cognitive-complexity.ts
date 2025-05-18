@@ -205,7 +205,7 @@ function nodeCost(
     }
 
     // Do in order traversal. Expand the left node first. This is so we can have the correct preceding operator.
-    const leftChildren = aggregateCostOfChildren(left, depth, topLevel, scope, newVariableBeingDefined, precedingOperator);
+    const leftChildren = aggregateCostOfChildren(left, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
     precedingOperator = leftChildren.precedingOperator;
 
     let score = inherentCost(node, scope, precedingOperator);
@@ -215,7 +215,7 @@ function nodeCost(
         precedingOperator = node.operatorToken;
     }
 
-    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, scope, newVariableBeingDefined, precedingOperator);
+    const rightChildren = aggregateCostOfChildren(right, depth, topLevel, namedAncestorsOfChildren, newVariableBeingDefined, precedingOperator);
     precedingOperator = rightChildren.precedingOperator;
 
     if (ts.isParenthesizedExpression(node) || ts.isParenthesizedTypeNode(node) || ts.isStatement(node) || ts.isBlock(node)) {
