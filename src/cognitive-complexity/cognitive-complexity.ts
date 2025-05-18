@@ -169,9 +169,9 @@ function inherentCost(node: ts.Node, scope: Scope, precedingOperator: ts.BinaryO
 
 /**
  * @param node The node whose cost we want
- * @param topLevel Whether the node is at the top level of a file
- * @param depth The depth the node is at
- * @param scope The scope at the node
+ * @param ctx Information about the context a node is in, which is needed to know the node cost.
+ * @param mutCtx Same as above, but this information can be changed while traversing,
+ *               which will provide information up the call stack (where this function is called and higher).
  */
 function nodeCost(
     node: ts.Node,

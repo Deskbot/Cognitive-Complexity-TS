@@ -32,12 +32,28 @@ export interface ScoreAndInner {
 }
 
 export interface TraversalContext {
-    readonly scope: Scope;
-    readonly variableBeingDefined: string | undefined;
+    /**
+     * Whether the node is at the top level of a file
+     */
     readonly topLevel: boolean;
+    /**
+     * The depth the node is at
+     */
     readonly depth: number;
+    /**
+     * Information about scope where the node exists in the code
+     */
+    readonly scope: Scope;
+    /**
+     * If the node is part of a variable being introduced, what is the name of that variable.
+     */
+    readonly variableBeingDefined: string | undefined;
 }
 
 export interface MutableTraversalContext {
+    /**
+     * In a sequence of binary operators, which operator are we continuing on from.
+     * During in order traversal, this value will be set by one child node and read by an adjacent child.
+     */
     precedingOperator: ts.BinaryOperatorToken | undefined;
 }
