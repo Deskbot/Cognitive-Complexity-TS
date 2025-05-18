@@ -23,6 +23,10 @@ export class Scope {
         return this.local.includes(name) || this.object.includes(name);
     }
 
+    /**
+     * @returns a new scope with the identifier from the node included,
+     *          or if there is no identifier, it returns the scope not modified nor cloned
+     */
     maybeAdd(node: ts.Node, variableBeingDefined: string | undefined): Scope {
         const { local, object } = this.scopeToAdd(node, variableBeingDefined);
 

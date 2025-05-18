@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { Scope } from "../src/cognitive-complexity/Scope";
 
 export interface ColumnAndLine {
     column: number;
@@ -31,6 +32,12 @@ export interface ScoreAndInner {
 }
 
 export interface TraversalContext {
-    scoreAndInner: ScoreAndInner;
+    readonly scope: Scope;
+    readonly variableBeingDefined: string | undefined;
+    readonly topLevel: boolean;
+    readonly depth: number;
+}
+
+export interface MutableTraversalContext {
     precedingOperator: ts.BinaryOperatorToken | undefined;
 }
