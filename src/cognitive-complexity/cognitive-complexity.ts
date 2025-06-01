@@ -218,7 +218,7 @@ function nodeCost(
 
     // get the ancestors container names from the perspective of this node's children
     const scopeForChildren = scope.maybeAdd(node, variableBeingDefined);
-    const { left, right, below } = whereAreChildren(node);
+    const { sameDepth, below } = whereAreChildren(node);
 
     /**
      * The name being introduced (if there is one)
@@ -251,7 +251,7 @@ function nodeCost(
     }
 
     // Do in order traversal. Expand the left node first. This is so we can have the correct preceding operator.
-    const leftChildren = aggregateCostOfChildren(left, ctxForChildren, mutCtx);
+    const childrenCost = aggregateCostOfChildren(sameDepth, ctxForChildren, mutCtx);
 
     // Score for the current node
     let score = inherentCost(node, scope, mutCtx);
@@ -267,8 +267,6 @@ function nodeCost(
     if (isChainableBinaryTypeOperator(node)) {
         mutCtx.precedingTypeOperator = node.kind;
     }
-
-    const rightChildren = aggregateCostOfChildren(right, ctxForChildren, mutCtx);
 
     // The nodes below this node have the same depth number,
     // iff this node is top level and it is a container.
@@ -288,13 +286,11 @@ function nodeCost(
         mutCtx.precedingTypeOperator = undefined;
     }
 
-    score += leftChildren.score;
-    score += rightChildren.score;
+    score += childrenCost.score;
     score += costOfBelowChildren.score;
 
     const inner = [
-        ...leftChildren.inner,
-        ...rightChildren.inner,
+        ...childrenCost.inner,
         ...costOfBelowChildren.inner
     ];
 
