@@ -202,13 +202,15 @@ function nodeCost(
     let score = inherentCost(node, scope, mutCtx);
     score += costOfDepth(node, depth);
 
-    if (isBinaryTypeOperator(node)) {
-        mutCtx.precedingTypeOperator = node.kind;
-    }
-
-    // If this is a binary operator, pass along information about the operator
+    // If this is a binary expression, pass along information about the operator
     if (ts.isBinaryExpression(node)) {
         mutCtx.precedingOperator = node.operatorToken;
+    }
+
+    // Type operators are structured differently in the syntax tree compared to logical operators.
+    // If this is a type operator, pass along the information.
+    if (isBinaryTypeOperator(node)) {
+        mutCtx.precedingTypeOperator = node.kind;
     }
 
     const rightChildren = aggregateCostOfChildren(right, ctxForChildren, mutCtx);
