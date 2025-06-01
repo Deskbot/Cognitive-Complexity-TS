@@ -82,14 +82,6 @@ function binaryExpression(node: ts.BinaryExpression): DepthOfChildren {
     }
 }
 
-// function binaryTypeExpression(node: ts.UnionTypeNode | ts.IntersectionTypeNode): DepthOfChildren {
-//     return {
-//         left: [node.types[0]],
-//         right: node.types.slice(1),
-//         below: [],
-//     }
-// }
-
 function catchClause(node: ts.CatchClause): DepthOfChildren {
     const children = node.getChildren();
     const variableDeclaration = children.find(child => ts.isVariableDeclaration(child));
