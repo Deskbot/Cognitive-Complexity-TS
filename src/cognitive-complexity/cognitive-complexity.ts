@@ -242,7 +242,23 @@ function nodeCost(
         mutCtx.precedingTypeOperator = undefined;
     }
 
-    const ctxForChildren = {
+    // Score for the current node
+    let score = inherentCost(node, scope, mutCtx);
+    score += costOfDepth(node, depth);
+
+    // If this is a binary operator, there won't be any children.
+    // Pass along the operator info
+    if (isChainableBinaryOperator(node)) {
+        mutCtx.precedingOperator = node.kind;
+    }
+
+    // If this is a binary type operator, there won't be any children.
+    // Pass along the operator info
+    if (isChainableBinaryTypeOperator(node)) {
+        mutCtx.precedingTypeOperator = node.kind;
+    }
+
+    const ctxForChildrenSameDepth = {
         depth,
         topLevel,
         precedingOperator: mutCtx.precedingOperator,
@@ -250,30 +266,14 @@ function nodeCost(
         variableBeingDefined: newVariableBeingDefined,
     }
 
-    // Do in order traversal. Expand the left node first. This is so we can have the correct preceding operator.
-    const childrenCost = aggregateCostOfChildren(sameDepth, ctxForChildren, mutCtx);
+    const costOfSameDepthChildren = aggregateCostOfChildren(sameDepth, ctxForChildrenSameDepth, mutCtx);
 
-    // Score for the current node
-    let score = inherentCost(node, scope, mutCtx);
-    score += costOfDepth(node, depth);
-
-    // If this is a binary expression, pass along information about the operator
-    if (isChainableBinaryOperator(node)) {
-        mutCtx.precedingOperator = node.kind;
-    }
-
-    // Type operators are structured differently in the syntax tree compared to logical operators.
-    // If this is a type operator, pass along the information.
-    if (isChainableBinaryTypeOperator(node)) {
-        mutCtx.precedingTypeOperator = node.kind;
-    }
-
-    // The nodes below this node have the same depth number,
-    // iff this node is top level and it is a container.
+    // The nodes below this node have an increased depth number,
+    // unless this node is top level and it is a container.
     const depthOfBelow = depth + (topLevel && isContainer(node) ? 0 : 1);
 
     const ctxForChildrenBelow = {
-        ...ctxForChildren,
+        ...ctxForChildrenSameDepth,
         depth: depthOfBelow,
         topLevel: false,
     };
@@ -286,11 +286,11 @@ function nodeCost(
         mutCtx.precedingTypeOperator = undefined;
     }
 
-    score += childrenCost.score;
+    score += costOfSameDepthChildren.score;
     score += costOfBelowChildren.score;
 
     const inner = [
-        ...childrenCost.inner,
+        ...costOfSameDepthChildren.inner,
         ...costOfBelowChildren.inner
     ];
 
