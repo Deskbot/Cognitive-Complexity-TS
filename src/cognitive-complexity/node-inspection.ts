@@ -123,7 +123,11 @@ export function isNewSequenceOfBinaryTypeOperators(
 }
 
 export function isBinaryTypeOperator(node: ts.Node): node is ts.Node & { kind: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken } {
-    return node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken;
+    const isPartOfTypeExpression = node?.parent !== undefined // this is actually undefined-able
+        && (ts.isUnionTypeNode(node.parent) || ts.isIntersectionTypeNode(node.parent)) // doing .parent skips the syntax list for some reason
+
+    return isPartOfTypeExpression
+        && (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken);
 }
 
 export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
