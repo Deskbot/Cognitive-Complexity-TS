@@ -14,6 +14,7 @@ import {
     isInterruptInSequenceOfBinaryOperators,
     isNewSequenceOfBinaryOperators,
     isNewSequenceOfBinaryTypeOperators,
+    isBinaryTypeOperator,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -201,7 +202,7 @@ function nodeCost(
     let score = inherentCost(node, scope, mutCtx);
     score += costOfDepth(node, depth);
 
-    if (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken) {
+    if (isBinaryTypeOperator(node)) {
         mutCtx.precedingTypeOperator = node.kind;
     }
 

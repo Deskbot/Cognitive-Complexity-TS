@@ -122,6 +122,10 @@ export function isNewSequenceOfBinaryTypeOperators(
     return false;
 }
 
+export function isBinaryTypeOperator(node: ts.Node): node is ts.Node & { kind: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken } {
+    return node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken;
+}
+
 export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
     return ts.isParenthesizedExpression(node)
         || ts.isParenthesizedTypeNode(node)
