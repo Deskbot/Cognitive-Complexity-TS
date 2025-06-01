@@ -1,19 +1,3 @@
-export function countNotAtTheEnds<T>(arr: T[], count: (elem: T) => boolean): number {
-    if (arr.length <= 2) {
-        return 0;
-    }
-
-    let tot = 0;
-
-    for (let i = 1; i < arr.length - 2; i++) {
-        if (count(arr[i])) {
-            tot += 1;
-        }
-    }
-
-    return tot;
-}
-
 export async function doesNotThrow<T>(promise: Promise<T>): Promise<boolean> {
     try {
         await promise;

@@ -51,10 +51,6 @@ export function getTextWithoutBrackets(node: ts.Node): string {
     return node.getText();
 }
 
-export function isBinaryTypeOperator(node: ts.Node): node is ts.UnionOrIntersectionTypeNode {
-    return ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node);
-}
-
 export function isBreakOrContinueToLabel(node: ts.Node): boolean {
     if (ts.isBreakOrContinueStatement(node)) {
         for (const child of node.getChildren()) {
@@ -96,7 +92,6 @@ export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
 
-
 export function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.BinaryOperatorToken | undefined) {
     if (!ts.isBinaryExpression(node)) {
         return false;
@@ -116,11 +111,29 @@ export function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator:
     return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
 }
 
+export function isBinaryTypeExpression(node: ts.Node) {
+    return ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node);
+}
+
+export function isNewSequenceOfBinaryTypeOperators(
+    node: ts.Node,
+    precedingTypeOperator: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken | undefined
+) {
+    if (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken) {
+        return precedingTypeOperator !== node.kind;
+    }
+
+    return false;
+}
+
 export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
     return ts.isParenthesizedExpression(node)
         || ts.isParenthesizedTypeNode(node)
         || ts.isStatement(node)
-        || ts.isBlock(node);
+        || ts.isBlock(node)
+        || ts.isMethodDeclaration(node)
+        || ts.isFunctionDeclaration(node)
+        || ts.isArrowFunction(node);
 }
 
 export function passThroughNameBeingAssigned(node: ts.Node): boolean {

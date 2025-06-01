@@ -1,6 +1,5 @@
 import * as ts from "typescript"
 import { FileOutput, ContainerOutput, ScoreAndInner, TraversalContext, MutableTraversalContext } from "../../shared/types";
-import { countNotAtTheEnds } from "../util/util";
 import {
     chooseContainerName,
     getNameIfCalledNode,
@@ -11,23 +10,26 @@ import {
     isContainer,
     getColumnAndLine,
     isBreakOrContinueToLabel,
-    isBinaryTypeOperator,
     passThroughNameBeingAssigned,
     isInterruptInSequenceOfBinaryOperators,
     isNewSequenceOfBinaryOperators,
+    isNewSequenceOfBinaryTypeOperators,
+    isBinaryTypeExpression,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
 export function fileCost(file: ts.SourceFile): FileOutput {
-    const initialContext = {
+    const initialContext: TraversalContext = {
         depth: 0,
         scope: new Scope([], []),
         topLevel: true,
         variableBeingDefined: undefined,
     };
 
-    const initialMutableContext = {
+    const initialMutableContext: MutableTraversalContext = {
         precedingOperator: undefined,
+        precedingTypeOperator: undefined,
+        typeOperatorSemaphore: 0,
     };
 
     return nodeCost(file, initialContext, initialMutableContext);
@@ -100,9 +102,9 @@ function costOfDepth(node: ts.Node, depth: number): number {
     return 0;
 }
 
-function inherentCost(node: ts.Node, scope: Scope, precedingOperator: ts.BinaryOperatorToken | undefined): number {
+function inherentCost(node: ts.Node, scope: Scope, mutCtx: Readonly<MutableTraversalContext>): number {
     // certain language features carry and inherent cost
-    if (isNewSequenceOfBinaryOperators(node, precedingOperator)
+    if (isNewSequenceOfBinaryOperators(node, mutCtx.precedingOperator)
         || ts.isCatchClause(node)
         || ts.isConditionalExpression(node)
         || ts.isConditionalTypeNode(node)
@@ -114,6 +116,7 @@ function inherentCost(node: ts.Node, scope: Scope, precedingOperator: ts.BinaryO
         || ts.isSwitchStatement(node)
         || ts.isWhileStatement(node)
         || isBreakOrContinueToLabel(node)
+        || isNewSequenceOfBinaryTypeOperators(node, mutCtx.precedingTypeOperator)
     ) {
         return 1;
     }
@@ -139,27 +142,6 @@ function inherentCost(node: ts.Node, scope: Scope, precedingOperator: ts.BinaryO
                 score += 1;
             }
         }
-
-        return score;
-    }
-
-    if (isBinaryTypeOperator(node)) {
-        // This node naturally represents a sequence of binary type operators.
-        // (unlike normal binary operators)
-        let score = 1;
-
-        // However, this sequence can contain nodes that are a different binary operator.
-        // We can assume that children of the internal syntax list that are binary operators
-        // are not the same kind as this node.
-        // Binary sub-expressions at either end of the syntax list
-        // do not break this sequence of operators in the code; they merely bookend it.
-        const syntaxList = node.getChildren()[0];
-        const numOfSequenceInterrupts = countNotAtTheEnds(
-            syntaxList.getChildren(),
-            isBinaryTypeOperator
-        );
-
-        score += numOfSequenceInterrupts;
 
         return score;
     }
@@ -200,9 +182,14 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
+    if (isBinaryTypeExpression(node)) {
+        mutCtx.typeOperatorSemaphore += 1;
+    }
+
     // Ignore the preceding operator if this expression starts a new sequence of binary operators
     if (isInterruptInSequenceOfBinaryOperators(node)) {
         mutCtx.precedingOperator = undefined;
+        mutCtx.precedingTypeOperator = undefined;
     }
 
     const ctxForChildren = {
@@ -217,12 +204,20 @@ function nodeCost(
     const leftChildren = aggregateCostOfChildren(left, ctxForChildren, mutCtx);
 
     // Score for the current node
-    let score = inherentCost(node, scope, mutCtx.precedingOperator);
+    let score = inherentCost(node, scope, mutCtx);
     score += costOfDepth(node, depth);
+
+    if (mutCtx.typeOperatorSemaphore > 0 && (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken)) {
+        mutCtx.precedingTypeOperator = node.kind;
+    }
 
     // If this is a binary operator, pass along information about the operator
     if (ts.isBinaryExpression(node)) {
         mutCtx.precedingOperator = node.operatorToken;
+    }
+
+    if (isBinaryTypeExpression(node)) {
+        mutCtx.typeOperatorSemaphore -= 1;
     }
 
     const rightChildren = aggregateCostOfChildren(right, ctxForChildren, mutCtx);
@@ -242,6 +237,7 @@ function nodeCost(
     // Ensure the last operator doesn't leak outside of this context
     if (isInterruptInSequenceOfBinaryOperators(node)) {
         mutCtx.precedingOperator = undefined;
+        mutCtx.precedingTypeOperator = undefined;
     }
 
     score += leftChildren.score;
