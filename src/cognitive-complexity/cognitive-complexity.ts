@@ -14,7 +14,10 @@ import {
     isInterruptInSequenceOfBinaryOperators,
     isNewSequenceOfBinaryOperators,
     isNewSequenceOfBinaryTypeOperators,
-    isBinaryTypeOperator,
+    isChainableBinaryTypeOperator,
+    isChainableBinaryOperator,
+    ChainableBinaryOperator,
+    ChainableBinaryTypeOperator,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -42,8 +45,8 @@ interface MutableTraversalContext {
      * In a sequence of binary operators, which operator are we continuing on from.
      * During in order traversal, this value will be set by one child node and read by an adjacent child.
      *
-     * A binary operator node has 2 children, one for each operand.
-     * We do in order traversal, keeping track of the binary operator node (not the operator token).
+     * A binary operator node has 3 children: left expression, operand, right expression.
+     * We do in order traversal, keeping track of the binary operator token.
      *
      * A && B && C || D
      *
@@ -52,7 +55,7 @@ interface MutableTraversalContext {
      *      &&    C
      *     A  B
      */
-    precedingOperator: ts.BinaryOperatorToken | undefined;
+    precedingOperator: ChainableBinaryOperator["kind"] | undefined;
 
     /**
      * In a sequence of type operators, which operator are we continuing on from.
@@ -66,17 +69,8 @@ interface MutableTraversalContext {
      *               |
      *            &     D
      *          A B C
-     *
-     * We can't track the operator node itself
-     * because there is always a SyntaxList node between the operator node and the operands.
-     * We can't easily change the latest operator based on the UnionType node, after evaluating the first operand.
-     * UnionType
-     *   SyntaxList
-     *     LiteralType
-     *     BarToken
-     *     LiteralType
      */
-    precedingTypeOperator: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken | undefined;
+    precedingTypeOperator: ChainableBinaryTypeOperator["kind"] | undefined;
 }
 
 export function fileCost(file: ts.SourceFile): FileOutput {
@@ -264,13 +258,13 @@ function nodeCost(
     score += costOfDepth(node, depth);
 
     // If this is a binary expression, pass along information about the operator
-    if (ts.isBinaryExpression(node)) {
-        mutCtx.precedingOperator = node.operatorToken;
+    if (isChainableBinaryOperator(node)) {
+        mutCtx.precedingOperator = node.kind;
     }
 
     // Type operators are structured differently in the syntax tree compared to logical operators.
     // If this is a type operator, pass along the information.
-    if (isBinaryTypeOperator(node)) {
+    if (isChainableBinaryTypeOperator(node)) {
         mutCtx.precedingTypeOperator = node.kind;
     }
 

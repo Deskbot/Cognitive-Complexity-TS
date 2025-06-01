@@ -92,37 +92,42 @@ export function isSyntaxList(node: ts.Node): node is ts.SyntaxList {
     return node.kind === ts.SyntaxKind.SyntaxList;
 }
 
-export function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ts.BinaryOperatorToken | undefined) {
-    if (!ts.isBinaryExpression(node)) {
-        return false;
-    }
-
-    if (node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandToken
-        && node.operatorToken.kind !== ts.SyntaxKind.BarBarToken
-        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionToken
-        && node.operatorToken.kind !== ts.SyntaxKind.AmpersandAmpersandEqualsToken
-        && node.operatorToken.kind !== ts.SyntaxKind.BarBarEqualsToken
-        && node.operatorToken.kind !== ts.SyntaxKind.QuestionQuestionEqualsToken
+export function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator: ChainableBinaryOperator["kind"] | undefined) {
+    if (!isChainableBinaryOperator(node)
+        && node.kind !== ts.SyntaxKind.AmpersandAmpersandEqualsToken
+        && node.kind !== ts.SyntaxKind.BarBarEqualsToken
+        && node.kind !== ts.SyntaxKind.QuestionQuestionEqualsToken
     ) {
         return false;
     }
 
     // is now an operator, or is different to previous operator
-    return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
+    return precedingOperator === undefined || node.kind !== precedingOperator;
 }
 
-export function isNewSequenceOfBinaryTypeOperators(
-    node: ts.Node,
-    precedingTypeOperator: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken | undefined
-) {
-    if (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken) {
-        return precedingTypeOperator !== node.kind;
+export function isNewSequenceOfBinaryTypeOperators(node: ts.Node, precedingTypeOperator: ChainableBinaryTypeOperator["kind"] | undefined) {
+    if (!isChainableBinaryTypeOperator(node)) {
+        return false;
     }
 
-    return false;
+    return precedingTypeOperator !== node.kind;
 }
 
-export function isBinaryTypeOperator(node: ts.Node): node is ts.Node & { kind: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken } {
+export type ChainableBinaryOperator = ts.Node & {
+    kind: ts.SyntaxKind.AmpersandAmpersandToken | ts.SyntaxKind.BarBarToken | ts.SyntaxKind.QuestionQuestionToken
+};
+
+export function isChainableBinaryOperator(node: ts.Node): node is ChainableBinaryOperator {
+    return node.kind === ts.SyntaxKind.AmpersandAmpersandToken
+        || node.kind === ts.SyntaxKind.BarBarToken
+        || node.kind === ts.SyntaxKind.QuestionQuestionToken;
+}
+
+export type ChainableBinaryTypeOperator = ts.Node & {
+    kind: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken
+};
+
+export function isChainableBinaryTypeOperator(node: ts.Node): node is ts.Node & { kind: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken } {
     const isPartOfTypeExpression = node?.parent !== undefined // this is actually undefined-able
         && (ts.isUnionTypeNode(node.parent) || ts.isIntersectionTypeNode(node.parent)) // doing .parent skips the syntax list for some reason
 

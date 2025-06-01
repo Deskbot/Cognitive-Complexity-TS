@@ -76,8 +76,8 @@ function arrowFunction(node: ts.ArrowFunction): DepthOfChildren {
 
 function binaryExpression(node: ts.BinaryExpression): DepthOfChildren {
     return {
-        left: [node.left],
-        right: [node.right],
+        left: node.getChildren(),
+        right: [],
         below: [],
     }
 }
