@@ -111,10 +111,6 @@ export function isNewSequenceOfBinaryOperators(node: ts.Node, precedingOperator:
     return precedingOperator === undefined || node.operatorToken.kind !== precedingOperator.kind;
 }
 
-export function isBinaryTypeExpression(node: ts.Node) {
-    return ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node);
-}
-
 export function isNewSequenceOfBinaryTypeOperators(
     node: ts.Node,
     precedingTypeOperator: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken | undefined

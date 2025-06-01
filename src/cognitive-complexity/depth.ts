@@ -4,7 +4,7 @@
 
 import * as ts from "typescript";
 import { UnreachableNodeState } from "../util/node-util";
-import { isForLikeStatement, ForLikeStatement, isBinaryTypeExpression } from "./node-inspection";
+import { isForLikeStatement, ForLikeStatement } from "./node-inspection";
 
 interface DepthOfChildren {
     /**
@@ -54,8 +54,6 @@ export function whereAreChildren(node: ts.Node): DepthOfChildren {
         return switchStatement(node);
     } else if (ts.isWhileStatement(node)) {
         return whileStatement(node);
-    // } else if (isBinaryTypeExpression(node)) {
-    //     return binaryTypeExpression(node);
     } else {
         return {
             left: node.getChildren(),

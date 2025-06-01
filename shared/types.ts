@@ -62,9 +62,4 @@ export interface MutableTraversalContext {
      * During in order traversal, this value will be set by one child node and read by an adjacent child.
      */
     precedingTypeOperator: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken | undefined;
-
-    /**
-     * Keeps track of how many levels deep into a binary type operator tree we are.
-     */
-    typeOperatorSemaphore: number;
 }

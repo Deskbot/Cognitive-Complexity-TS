@@ -14,7 +14,6 @@ import {
     isInterruptInSequenceOfBinaryOperators,
     isNewSequenceOfBinaryOperators,
     isNewSequenceOfBinaryTypeOperators,
-    isBinaryTypeExpression,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -29,7 +28,6 @@ export function fileCost(file: ts.SourceFile): FileOutput {
     const initialMutableContext: MutableTraversalContext = {
         precedingOperator: undefined,
         precedingTypeOperator: undefined,
-        typeOperatorSemaphore: 0,
     };
 
     return nodeCost(file, initialContext, initialMutableContext);
@@ -182,10 +180,6 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    if (isBinaryTypeExpression(node)) {
-        mutCtx.typeOperatorSemaphore += 1;
-    }
-
     // Ignore the preceding operator if this expression starts a new sequence of binary operators
     if (isInterruptInSequenceOfBinaryOperators(node)) {
         mutCtx.precedingOperator = undefined;
@@ -207,17 +201,13 @@ function nodeCost(
     let score = inherentCost(node, scope, mutCtx);
     score += costOfDepth(node, depth);
 
-    if (mutCtx.typeOperatorSemaphore > 0 && (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken)) {
+    if (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken) {
         mutCtx.precedingTypeOperator = node.kind;
     }
 
     // If this is a binary operator, pass along information about the operator
     if (ts.isBinaryExpression(node)) {
         mutCtx.precedingOperator = node.operatorToken;
-    }
-
-    if (isBinaryTypeExpression(node)) {
-        mutCtx.typeOperatorSemaphore -= 1;
     }
 
     const rightChildren = aggregateCostOfChildren(right, ctxForChildren, mutCtx);
