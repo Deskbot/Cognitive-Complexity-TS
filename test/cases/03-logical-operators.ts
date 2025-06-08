@@ -46,6 +46,19 @@ function otherOperators() {
     true == true != true > true < true >= true <= true
 }
 
-function functionInExpression() {
-    true && (function inner() { return true && true })()
+function allOtherBreaksInSequenceOfOperators(param = true && true) {
+    () => true && true
+    function f() { return true && true }
+    true && true
+    {
+        true && true
+    }
+    true && true
+    true && true
+    class C {
+        param = true && true
+        m() {
+            true && true
+        }
+    }
 }
