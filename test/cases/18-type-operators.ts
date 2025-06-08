@@ -21,7 +21,7 @@ function breaksInSequencesOfTypeOperators<T extends true | true = true | true>(p
     <V extends 1 | number = 1 | 1>(b: 1 | number = 1 | 1): 1 | undefined => { 1 | 1; return undefined } // 4
     function f<X extends T | T = T | T>(arg: T | T): T | T { return true as T | T } // 5
     class C<Y extends T | T> { // 1
-        y: T | T // 1
+        y: T | T = f<any | any>(true as any) // 2
         z<A extends T | T = T | T>(a: T | T): T | undefined { return undefined } // 4
     }
     return true as T

@@ -1,6 +1,6 @@
 {
     "18-type-operators.ts": {
-        "score": 40,
+        "score": 41,
         "inner": [
             {
                 "name": "A",
@@ -46,7 +46,7 @@
             },
             {
                 "name": "breaksInSequencesOfTypeOperators",
-                "score": 26,
+                "score": 27,
                 "line": 15,
                 "column": 1,
                 "inner": [{
@@ -66,7 +66,7 @@
                     "column": 5
                 }, {
                     "name": "C",
-                    "score": 6,
+                    "score": 7,
                     "line": 23,
                     "column": 5,
                     "inner": [{
