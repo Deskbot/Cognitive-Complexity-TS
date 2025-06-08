@@ -142,7 +142,9 @@ export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
         || ts.isBlock(node)
         || ts.isMethodDeclaration(node)
         || ts.isFunctionDeclaration(node)
-        || ts.isArrowFunction(node);
+        || ts.isArrowFunction(node)
+        || ts.isTypeParameterDeclaration(node)
+        || node.kind === ts.SyntaxKind.FirstAssignment; // separates extends expression from parameter default
 }
 
 export function passThroughNameBeingAssigned(node: ts.Node): boolean {

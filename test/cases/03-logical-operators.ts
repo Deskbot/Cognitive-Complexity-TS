@@ -62,3 +62,18 @@ function allOtherBreaksInSequenceOfOperators(param = true && true) {
         }
     }
 }
+
+function breaksInSequencesOfTypeOperators<T extends true | true = true | true>(param: true | true) // 3
+    : T | T // 1
+{
+    type U<T> = T | (T | T) // 2
+    let a: U<T | T> | U<T | T> | number // 3
+        = 1 | 1 as (1 | 1) as (1 | 1); // 2
+    <V extends T | T = T | T>(b: T | T): T | undefined => { return undefined } // 4
+    function f<X extends T | T = T | T>(arg: T | T): T | T { return true as T | T } // 5
+    class C<Y extends T | T> { // 1
+        y: T | T // 1
+        z<A extends T | T = T | T>(a: T | T): T | undefined { return undefined } // 4
+    }
+    return true as T
+}
