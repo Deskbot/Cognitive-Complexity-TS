@@ -147,6 +147,7 @@ export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
         // when breaking sequences of type operators.
         // T | T | T would be under one union type already.
         // This check would treat this whole expression as an interrupt.
+        // If this expression is inside angle brackets, this check prevents it from leaking out.
         || ts.isUnionTypeNode(node)
         || ts.isIntersectionTypeNode(node)
 
