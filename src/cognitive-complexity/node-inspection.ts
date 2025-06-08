@@ -127,7 +127,7 @@ export type ChainableBinaryTypeOperator = ts.Node & {
     kind: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken
 };
 
-export function isChainableBinaryTypeOperator(node: ts.Node): node is ts.Node & { kind: ts.SyntaxKind.AmpersandToken | ts.SyntaxKind.BarToken } {
+export function isChainableBinaryTypeOperator(node: ts.Node): node is ChainableBinaryTypeOperator {
     const isPartOfTypeExpression = node?.parent !== undefined // this is actually undefined-able
         && (ts.isUnionTypeNode(node.parent) || ts.isIntersectionTypeNode(node.parent)) // doing .parent skips the syntax list for some reason
 
@@ -142,6 +142,14 @@ export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
         || ts.isBlock(node)
         || isFunctionNode(node)
         || ts.isTypeParameterDeclaration(node)
+
+        // This is to solve angle brackets not being easy to interpret,
+        // when breaking sequences of type operators.
+        // T | T | T would be under one union type already.
+        // This check would treat this whole expression as an interrupt.
+        || ts.isUnionTypeNode(node)
+        || ts.isIntersectionTypeNode(node)
+
         || (node.kind === ts.SyntaxKind.ColonToken && isFunctionNode(node.parent))
         || node.kind === ts.SyntaxKind.FirstAssignment; // separates extends expression from parameter default
 }

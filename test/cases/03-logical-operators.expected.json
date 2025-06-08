@@ -1,6 +1,6 @@
 {
     "03-logical-operators.ts": {
-        "score": 42,
+        "score": 53,
         "inner": [
             {
                 "name": "allAnd",
@@ -104,7 +104,7 @@
                 }]
             }, {
                 "name": "breaksInSequencesOfTypeOperators",
-                "score": 25,
+                "score": 26,
                 "line": 66,
                 "column": 1,
                 "inner": [{
@@ -124,13 +124,14 @@
                     "column": 5
                 }, {
                     "name": "C",
-                    "score": 5,
+                    "score": 6,
                     "line": 74,
+                    "column": 5,
                     "inner": [{
                         "name": "z",
                         "score": 4,
                         "line": 76,
-                        "column": 5
+                        "column": 9
                     }]
                 }]
             }
