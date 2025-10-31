@@ -1,6 +1,6 @@
 {
     "03-logical-operators.ts": {
-        "score": 27,
+        "score": 30,
         "inner": [
             {
                 "name": "allAnd",
@@ -89,8 +89,7 @@
                     "score": 1,
                     "line": 51,
                     "column": 5
-                },
-                {
+                }, {
                     "name": "C",
                     "score": 2,
                     "line": 58,
@@ -102,6 +101,12 @@
                         "column": 9
                     }]
                 }]
+            },
+            {
+                "name": "functionCalls",
+                "score": 2,
+                "line": 66,
+                "column": 1
             }
         ]
     }

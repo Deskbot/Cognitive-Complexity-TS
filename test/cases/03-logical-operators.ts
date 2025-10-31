@@ -62,3 +62,7 @@ function allOtherBreaksInSequenceOfOperators(param = true && true) {
         }
     }
 }
+
+function functionCalls() {
+    true && Boolean(true && true) && true
+}

@@ -141,6 +141,7 @@ export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
         || ts.isStatement(node)
         || ts.isBlock(node)
         || isFunctionNode(node)
+        || ts.isCallLikeExpression(node)
         || ts.isTypeParameterDeclaration(node)
 
         // This is to solve angle brackets not being easy to interpret,
