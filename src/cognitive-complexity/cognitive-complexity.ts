@@ -236,27 +236,23 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    let sequenceToContinue: ChainableBinaryOperator["kind"] | undefined = undefined
-    if (ts.isCallLikeExpression(node)) {
-        sequenceToContinue = mutCtx.precedingOperator;
-    }
+    const sequenceToContinue = mutCtx.precedingOperator
 
     // Ignore the preceding operator if this expression starts a new sequence of binary operators
     if (isInterruptInSequenceOfBinaryOperators(node)) {
-        mutCtx.precedingOperator = undefined;
         mutCtx.precedingTypeOperator = undefined;
+        mutCtx.precedingOperator = undefined;
     }
 
     // Score for the current node
     let score = inherentCost(node, scope, mutCtx);
     score += costOfDepth(node, depth);
 
-
     // If this is a binary operator, there won't be any children.
     // Pass along the operator info
     if (isChainableBinaryOperator(node)) {
         mutCtx.precedingOperator = node.kind;
-    } else {
+    } else if (ts.isCallLikeExpression(node)) {
         // continue whatever sequence we paused
         mutCtx.precedingOperator = sequenceToContinue;
     }
