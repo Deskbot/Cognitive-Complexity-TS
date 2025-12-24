@@ -30,16 +30,24 @@ function not() {
     !true
 }
 
-function parenthesesBreakSequence() {
+function parentheses1() {
+    // does not break the sequence
     true && (true && true)
 }
 
-function parenthesesBreakSequence2() {
+function parentheses2() {
+    // does not break the sequence
+    true && (true && true) && true
+}
+
+function notParentheticalExpression() {
+    // breaks the sequence
     true && !(true && true)
 }
 
-function parenthesesBreakSequence3() {
-    true && (true && true) && true
+function functionCalls() {
+    // breaks the sequence
+    true && Boolean(true && true) && true
 }
 
 function otherOperators() {
@@ -61,8 +69,4 @@ function allOtherBreaksInSequenceOfOperators(param = true && true) {
             true && true
         }
     }
-}
-
-function functionCalls() {
-    true && Boolean(true && true) && true
 }
