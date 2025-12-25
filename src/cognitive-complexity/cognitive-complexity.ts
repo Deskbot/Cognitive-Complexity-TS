@@ -11,7 +11,7 @@ import {
     getColumnAndLine,
     isBreakOrContinueToLabel,
     passThroughNameBeingAssigned,
-    isInterruptInSequenceOfBinaryOperators,
+    breaksASequenceOfBinaryOperators,
     isNewSequenceOfBinaryOperators,
     isNewSequenceOfBinaryTypeOperators,
     isChainableBinaryTypeOperator,
@@ -237,7 +237,7 @@ function nodeCost(
     }
 
     const opSequenceInProgress = mutCtx.precedingOperator
-    const isOpSequenceInterrupt = isInterruptInSequenceOfBinaryOperators(node)
+    const isOpSequenceInterrupt = breaksASequenceOfBinaryOperators(node)
 
     // Ignore the preceding operator if this expression starts a new sequence of binary operators
     if (isOpSequenceInterrupt) {

@@ -135,7 +135,14 @@ export function isChainableBinaryTypeOperator(node: ts.Node): node is ChainableB
         && (node.kind === ts.SyntaxKind.AmpersandToken || node.kind === ts.SyntaxKind.BarToken);
 }
 
-export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
+/**
+ * A node that forms a hard boundary that sequences of binary operators can't cross into or out of.
+ * The node can contain sequences of binary operators
+ * but no nodes outside of this node can be part of that sequence.
+ * This function is used to know if we need to check what the current sequence is,
+ * and it is used to end the current sequence.
+ */
+export function breaksASequenceOfBinaryOperators(node: ts.Node) {
     return ts.isStatement(node)
         || ts.isBlock(node)
         || isFunctionNode(node)
