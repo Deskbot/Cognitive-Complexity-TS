@@ -1,6 +1,6 @@
 {
     "03-logical-operators.ts": {
-        "score": 27,
+        "score": 30,
         "inner": [
             {
                 "name": "allAnd",
@@ -51,59 +51,71 @@
                 "column": 1
             },
             {
-                "name": "parentheses1",
+                "name": "parenthesesSameOperators1",
                 "score": 1,
                 "line": 33,
                 "column": 1
             },
             {
-                "name": "parentheses2",
+                "name": "parenthesesSameOperators2",
                 "score": 1,
                 "line": 38,
                 "column": 1
             },
             {
-                "name": "notParentheticalExpression",
+                "name": "parenthesesDifferentOperators1",
                 "score": 2,
                 "line": 43,
                 "column": 1
             },
             {
+                "name": "parenthesesDifferentOperators2",
+                "score": 2,
+                "line": 47,
+                "column": 1
+            },
+            {
+                "name": "notParentheticalExpression",
+                "score": 2,
+                "line": 51,
+                "column": 1
+            },
+            {
                 "name": "functionCalls",
                 "score": 2,
-                "line": 48,
+                "line": 56,
                 "column": 1
             },
             {
                 "name": "otherOperators",
                 "score": 0,
-                "line": 53,
+                "line": 61,
                 "column": 1
             },
             {
                 "name": "allOtherBreaksInSequenceOfOperators",
                 "score": 9,
-                "line": 57,
+                "line": 65,
                 "column": 1,
                 "inner": [{
                     "name": "",
                     "score": 1,
-                    "line": 58,
+                    "line": 66,
                     "column": 5
                 }, {
                     "name": "f",
                     "score": 1,
-                    "line": 59,
+                    "line": 67,
                     "column": 5
                 }, {
                     "name": "C",
                     "score": 2,
-                    "line": 66,
+                    "line": 74,
                     "column": 5,
                     "inner": [{
                         "name": "m",
                         "score": 1,
-                        "line": 68,
+                        "line": 76,
                         "column": 9
                     }]
                 }]

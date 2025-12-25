@@ -30,14 +30,22 @@ function not() {
     !true
 }
 
-function parentheses1() {
+function parenthesesSameOperators1() {
     // does not break the sequence
     true && (true && true)
 }
 
-function parentheses2() {
+function parenthesesSameOperators2() {
     // does not break the sequence
     true && (true && true) && true
+}
+
+function parenthesesDifferentOperators1() {
+    (true && (true || true)) || true
+}
+
+function parenthesesDifferentOperators2() {
+    true && ((true || true) || true)
 }
 
 function notParentheticalExpression() {
