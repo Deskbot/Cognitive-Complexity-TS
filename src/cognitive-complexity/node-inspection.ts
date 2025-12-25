@@ -144,16 +144,8 @@ export function breaksASequenceOfBinaryOperators(node: ts.Node) {
     return ts.isStatement(node)
         || ts.isBlock(node)
         || isFunctionNode(node)
+        || ts.isParameter(node)
         || ts.isTypeParameterDeclaration(node)
-
-        // This is to solve angle brackets not being easy to interpret,
-        // when breaking sequences of type operators.
-        // T | T | T would be under one union type already.
-        // This check would treat this whole expression as an interrupt.
-        // If this expression is inside angle brackets, this check prevents it from leaking out.
-        || ts.isUnionTypeNode(node)
-        || ts.isIntersectionTypeNode(node)
-
         || (node.kind === ts.SyntaxKind.ColonToken && isFunctionNode(node.parent))
         || node.kind === ts.SyntaxKind.FirstAssignment; // separates extends expression from parameter default
 }
@@ -165,7 +157,9 @@ export function breaksASequenceOfBinaryOperators(node: ts.Node) {
  * (i.e. A && Node(B && C) && D, this is two sequences, one inside Node(), the other outside)
  */
 export function pausesASequenceOfBinaryOperators(node: ts.Node) {
-    return ts.isCallLikeExpression(node) || ts.isPrefixUnaryExpression(node)
+    return ts.isCallLikeExpression(node)
+        || ts.isPrefixUnaryExpression(node)
+        || ts.isParenthesizedExpression(node)
 }
 
 export function passThroughNameBeingAssigned(node: ts.Node): boolean {
