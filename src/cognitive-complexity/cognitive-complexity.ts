@@ -18,6 +18,7 @@ import {
     isChainableBinaryOperator,
     ChainableBinaryOperator,
     ChainableBinaryTypeOperator,
+    pausesASequenceOfBinaryOperators,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -253,10 +254,7 @@ function nodeCost(
     // Pass along the operator info
     if (isChainableBinaryOperator(node)) {
         mutCtx.precedingOperator = node.kind;
-    } else if (ts.isCallLikeExpression(node)) {
-        // continue whatever sequence we paused
-        mutCtx.precedingOperator = opSequenceInProgress;
-    } else if (ts.isPrefixUnaryExpression(node)) {
+    } else if (pausesASequenceOfBinaryOperators(node)) {
         mutCtx.precedingOperator = undefined;
     }
 
@@ -288,13 +286,7 @@ function nodeCost(
 
     const costOfBelowChildren = aggregateCostOfChildren(below, ctxForChildrenBelow, mutCtx);
 
-    // Ensure the last operator doesn't leak outside of this context
-    if (isOpSequenceInterrupt) {
-        mutCtx.precedingOperator = undefined;
-        mutCtx.precedingTypeOperator = undefined;
-    }
-
-    if (ts.isPrefixUnaryExpression(node)) {
+    if (pausesASequenceOfBinaryOperators(node)) {
         // continue whatever sequence we paused
         mutCtx.precedingOperator = opSequenceInProgress;
     }

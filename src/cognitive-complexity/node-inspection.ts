@@ -136,17 +136,14 @@ export function isChainableBinaryTypeOperator(node: ts.Node): node is ChainableB
 }
 
 /**
- * A node that forms a hard boundary that sequences of binary operators can't cross into or out of.
- * The node can contain sequences of binary operators
- * but no nodes outside of this node can be part of that sequence.
- * This function is used to know if we need to check what the current sequence is,
- * and it is used to end the current sequence.
+ * A node that causes an end to a sequence of binary operators
+ * (i.e. A && B { C && D }, the curly braces end the prior sequence;
+ * C will not be interpreted as part of the last sequence.
  */
 export function breaksASequenceOfBinaryOperators(node: ts.Node) {
     return ts.isStatement(node)
         || ts.isBlock(node)
         || isFunctionNode(node)
-        || ts.isCallLikeExpression(node)
         || ts.isTypeParameterDeclaration(node)
 
         // This is to solve angle brackets not being easy to interpret,
@@ -159,6 +156,16 @@ export function breaksASequenceOfBinaryOperators(node: ts.Node) {
 
         || (node.kind === ts.SyntaxKind.ColonToken && isFunctionNode(node.parent))
         || node.kind === ts.SyntaxKind.FirstAssignment; // separates extends expression from parameter default
+}
+
+/**
+ * A node that doesn't cause an end to a sequence of binary operators
+ * (i.e. A && Node && B, the 2 && are in the same sequence)
+ * but the node's children don't form part of that sequence
+ * (i.e. A && Node(B && C) && D, this is two sequences, one inside Node(), the other outside)
+ */
+export function pausesASequenceOfBinaryOperators(node: ts.Node) {
+    return ts.isCallLikeExpression(node) || ts.isPrefixUnaryExpression(node)
 }
 
 export function passThroughNameBeingAssigned(node: ts.Node): boolean {
