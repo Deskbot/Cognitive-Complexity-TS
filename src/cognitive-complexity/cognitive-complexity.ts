@@ -256,6 +256,8 @@ function nodeCost(
     } else if (ts.isCallLikeExpression(node)) {
         // continue whatever sequence we paused
         mutCtx.precedingOperator = opSequenceInProgress;
+    } else if (ts.isPrefixUnaryExpression(node)) {
+        mutCtx.precedingOperator = undefined;
     }
 
     // If this is a binary type operator, there won't be any children.
@@ -290,6 +292,11 @@ function nodeCost(
     if (isOpSequenceInterrupt) {
         mutCtx.precedingOperator = undefined;
         mutCtx.precedingTypeOperator = undefined;
+    }
+
+    if (ts.isPrefixUnaryExpression(node)) {
+        // continue whatever sequence we paused
+        mutCtx.precedingOperator = opSequenceInProgress;
     }
 
     score += costOfSameDepthChildren.score;
