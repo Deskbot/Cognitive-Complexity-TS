@@ -237,11 +237,10 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    const opSequenceInProgress = mutCtx.precedingOperator
-    const isOpSequenceInterrupt = breaksASequenceOfBinaryOperators(node)
+    const opSequenceInProgress = mutCtx.precedingOperator;
 
-    // Ignore the preceding operator if this expression starts a new sequence of binary operators
-    if (isOpSequenceInterrupt) {
+    // Check if the node ends any ongoing sequence of binary operators
+    if (breaksASequenceOfBinaryOperators(node)) {
         mutCtx.precedingTypeOperator = undefined;
         mutCtx.precedingOperator = undefined;
     }
@@ -254,14 +253,14 @@ function nodeCost(
     // Pass along the operator info
     if (isChainableBinaryOperator(node)) {
         mutCtx.precedingOperator = node.kind;
-    } else if (pausesASequenceOfBinaryOperators(node)) {
-        mutCtx.precedingOperator = undefined;
     }
-
     // If this is a binary type operator, there won't be any children.
     // Pass along the operator info
-    if (isChainableBinaryTypeOperator(node)) {
+    else if (isChainableBinaryTypeOperator(node)) {
         mutCtx.precedingTypeOperator = node.kind;
+    }
+    else if (pausesASequenceOfBinaryOperators(node)) {
+        mutCtx.precedingOperator = undefined;
     }
 
     const ctxForChildrenSameDepth = {
