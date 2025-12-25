@@ -26,3 +26,7 @@ function breaksInSequencesOfTypeOperators<T extends true | true = true | true>(p
     }
     return true as T
 }
+
+type InParentheses = NonNullable<true | true>
+
+type PauseSequenceInParentheses = NonNullable<true | true> | number | NonNullable<true | true> | number
