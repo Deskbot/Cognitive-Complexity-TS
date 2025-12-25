@@ -161,6 +161,7 @@ export function pausesASequenceOfBinaryOperators(node: ts.Node) {
     return ts.isCallLikeExpression(node)
         || ts.isPrefixUnaryExpression(node)
         || ts.isParenthesizedExpression(node)
+        || ts.isTypeReferenceNode(node)
 }
 
 export function passThroughNameBeingAssigned(node: ts.Node): boolean {
