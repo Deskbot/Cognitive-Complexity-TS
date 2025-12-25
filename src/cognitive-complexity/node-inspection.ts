@@ -146,6 +146,7 @@ export function breaksASequenceOfBinaryOperators(node: ts.Node) {
         || isFunctionNode(node)
         || ts.isParameter(node)
         || ts.isTypeParameterDeclaration(node)
+        || ts.isPropertyDeclaration(node)
         || (node.kind === ts.SyntaxKind.ColonToken && isFunctionNode(node.parent))
         || node.kind === ts.SyntaxKind.FirstAssignment; // separates extends expression from parameter default
 }
