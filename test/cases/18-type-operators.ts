@@ -17,7 +17,7 @@ function breaksInSequencesOfTypeOperators<T extends true | true = true | true>(p
 {
     type U<T> = T | (T | T) // 1
     let a: NonNullable<1 | 1> | number | NonNullable<1 | 1> | number // 3
-        = 1 | 1 as 1 | 1 as 1 | 1; // 3
+        = 1 | 1 as 1 | 1 as 1 | 1; // 2
     <V extends 1 | number = 1 | 1>(b: 1 | number = 1 | 1): 1 | undefined => { 1 | 1; return undefined } // 4
     function f<X extends T | T = T | T>(arg: T | T): T | T { return true as T | T } // 5
     class C<Y extends T | T> { // 1
