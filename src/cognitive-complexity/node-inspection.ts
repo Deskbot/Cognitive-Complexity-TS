@@ -136,9 +136,7 @@ export function isChainableBinaryTypeOperator(node: ts.Node): node is ChainableB
 }
 
 export function isInterruptInSequenceOfBinaryOperators(node: ts.Node) {
-    return ts.isParenthesizedExpression(node)
-        || ts.isParenthesizedTypeNode(node)
-        || ts.isStatement(node)
+    return ts.isStatement(node)
         || ts.isBlock(node)
         || isFunctionNode(node)
         || ts.isCallLikeExpression(node)
