@@ -236,10 +236,11 @@ function nodeCost(
         newVariableBeingDefined = variableBeingDefined;
     }
 
-    const sequenceToContinue = mutCtx.precedingOperator
+    const opSequenceInProgress = mutCtx.precedingOperator
+    const isOpSequenceInterrupt = isInterruptInSequenceOfBinaryOperators(node)
 
     // Ignore the preceding operator if this expression starts a new sequence of binary operators
-    if (isInterruptInSequenceOfBinaryOperators(node)) {
+    if (isOpSequenceInterrupt) {
         mutCtx.precedingTypeOperator = undefined;
         mutCtx.precedingOperator = undefined;
     }
@@ -254,7 +255,7 @@ function nodeCost(
         mutCtx.precedingOperator = node.kind;
     } else if (ts.isCallLikeExpression(node)) {
         // continue whatever sequence we paused
-        mutCtx.precedingOperator = sequenceToContinue;
+        mutCtx.precedingOperator = opSequenceInProgress;
     }
 
     // If this is a binary type operator, there won't be any children.
@@ -286,7 +287,7 @@ function nodeCost(
     const costOfBelowChildren = aggregateCostOfChildren(below, ctxForChildrenBelow, mutCtx);
 
     // Ensure the last operator doesn't leak outside of this context
-    if (isInterruptInSequenceOfBinaryOperators(node)) {
+    if (isOpSequenceInterrupt) {
         mutCtx.precedingOperator = undefined;
         mutCtx.precedingTypeOperator = undefined;
     }
