@@ -1,26 +1,24 @@
 import { promises as fsP } from "fs";
-import * as fs from "fs"
-import glob from "glob";
+import * as fs from "fs";
+import { glob } from "glob";
 import { js_beautify } from "js-beautify";
 import * as path from "path";
 import * as process from "process";
-import tempfile from "tempfile";
-import { toPromise } from "../src/util/util";
 import { programOutput } from "../src/api";
-import { compare } from "./util";
+import { compare, tempfile } from "./util";
 
 const casesDir = path.normalize(__dirname + "/../../test/cases");
 
 main();
 
 function allCaseFilePaths(): Promise<string[]> {
-    return toPromise(cb => glob(`${casesDir}/*`, cb));
+    return glob(`${casesDir}/*`);
 }
 
 async function getExpectation(fileName: string): Promise<any> {
     const tsIndex = fileName.lastIndexOf(".");
     if (tsIndex !== -1) {
-        fileName = fileName.substr(0, tsIndex);
+        fileName = fileName.substring(0, tsIndex);
     }
     const caseExpectationFile = fileName + ".expected.json";
     const expectedJsonFile = await fsP.readFile(caseExpectationFile);
@@ -52,7 +50,7 @@ async function main() {
 
         // run program on case
         // convert output to json
-        const outputPath = tempfile();
+        const outputPath = await tempfile();
         try {
             const resultObj = await runCase(caseFilePath, outputPath);
             // read json expected for case

@@ -10,12 +10,12 @@ interface DepthOfChildren {
     /**
      * The same level of depth.
      */
-    sameDepth: ts.Node[];
+    sameDepth: readonly ts.Node[];
 
     /**
      * One level of depth below.
      */
-    below: ts.Node[];
+    below: readonly ts.Node[];
 };
 
 /**

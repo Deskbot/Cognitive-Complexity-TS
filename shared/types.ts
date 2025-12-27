@@ -1,6 +1,3 @@
-import ts from "typescript";
-import { Scope } from "../src/cognitive-complexity/Scope";
-
 export interface ColumnAndLine {
     column: number;
     line: number;

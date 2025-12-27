@@ -92,7 +92,7 @@ export function fileCost(file: ts.SourceFile): FileOutput {
 }
 
 function aggregateCostOfChildren(
-    children: ts.Node[],
+    children: readonly ts.Node[],
     ctx: TraversalContext,
     mutCtx: MutableTraversalContext,
 ): ScoreAndInner {

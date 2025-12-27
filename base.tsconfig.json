@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
         "alwaysStrict": true,
-        "lib": ["ESNEXT", "ES2019"],
+        "lib": ["ESNEXT"],
         "module": "commonjs",
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noImplicitReturns": true,
+        "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,
         "target": "ES2019"

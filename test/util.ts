@@ -1,4 +1,7 @@
+import { randomUUID } from "crypto";
 import * as deep_diff from "deep-diff";
+import * as fs from "fs/promises";
+import * as os from "os";
 
 export function compare(expected: any, actual: any): any[] | undefined {
     const differences = deep_diff.diff(expected, actual);
@@ -21,4 +24,10 @@ function renameKeys(diff: any) {
     delete newDiff.rhs;
 
     return newDiff;
+}
+
+export async function tempfile() {
+    const path = os.tmpdir() + "/ccts-tests-" + randomUUID()
+    await fs.writeFile(path, "")
+    return path
 }
