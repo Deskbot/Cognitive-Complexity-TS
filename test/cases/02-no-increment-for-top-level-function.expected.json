@@ -1,5 +1,6 @@
 {
     "02-no-increment-for-top-level-function.ts": {
+        "kind": "file",
         "score": 5,
         "inner": [
             {

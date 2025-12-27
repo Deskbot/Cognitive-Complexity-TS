@@ -1,5 +1,6 @@
 {
     "05-default-control-flow.ts": {
+        "kind": "file",
         "score": 2,
         "inner": [
             {

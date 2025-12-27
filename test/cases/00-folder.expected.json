@@ -1,13 +1,16 @@
 {
     "00-folder": {
         "file-in-folder-2.ts": {
+            "kind": "file",
             "score": 0
         },
         "file-in-folder.ts": {
+            "kind": "file",
             "score": 0
         },
         "00-folder-2.ts": {
             "file-in-folder-in-folder.ts": {
+                "kind": "file",
                 "score": 0
             }
         }

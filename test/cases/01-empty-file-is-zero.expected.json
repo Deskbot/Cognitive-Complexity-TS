@@ -1,5 +1,6 @@
 {
     "01-empty-file-is-zero.ts": {
+        "kind": "file",
         "score": 0
     }
 }
