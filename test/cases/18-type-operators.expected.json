@@ -1,6 +1,6 @@
 {
     "18-type-operators.ts": {
-        "score": 42,
+        "score": 45,
         "inner": [
             {
                 "name": "A",
@@ -87,6 +87,12 @@
                 "name": "PauseSequenceInParentheses",
                 "score": 3,
                 "line": 32,
+                "column": 1
+            },
+            {
+                "name": "asBreaksTypeOpSequence_butNotDataOpSequence",
+                "score": 3,
+                "line": 34,
                 "column": 1
             }
         ]

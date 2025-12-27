@@ -19,6 +19,7 @@ import {
     ChainableBinaryOperator,
     ChainableBinaryTypeOperator,
     pausesASequenceOfBinaryOperators,
+    pausesASequenceOfBinaryTypeOperators,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -240,6 +241,7 @@ function nodeCost(
     const opSequenceInProgress = mutCtx.precedingOperator;
     const typeOpSequenceInProgress = mutCtx.precedingTypeOperator;
     const pauseOpSequence = pausesASequenceOfBinaryOperators(node);
+    const pauseTypeOpSequence = pausesASequenceOfBinaryTypeOperators(node);
 
     // Check if the node ends any ongoing sequence of binary operators
     if (breaksASequenceOfBinaryOperators(node)) {
@@ -262,6 +264,7 @@ function nodeCost(
         mutCtx.precedingTypeOperator = node.kind;
     } else if (pauseOpSequence) {
         mutCtx.precedingOperator = undefined;
+    } else if (pauseTypeOpSequence) {
         mutCtx.precedingTypeOperator = undefined;
     }
 
@@ -290,6 +293,7 @@ function nodeCost(
     // continue a paused sequence
     if (pauseOpSequence) {
         mutCtx.precedingOperator = opSequenceInProgress;
+    } else if (pauseTypeOpSequence) {
         mutCtx.precedingTypeOperator = typeOpSequenceInProgress;
     }
 

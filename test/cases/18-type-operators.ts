@@ -30,3 +30,7 @@ function breaksInSequencesOfTypeOperators<T extends true | true = true | true>(p
 type InParentheses = NonNullable<true | true>
 
 type PauseSequenceInParentheses = NonNullable<true | true> | number | NonNullable<true | true> | number
+
+function asBreaksTypeOpSequence_butNotDataOpSequence() {
+    1 && (1 && 1 as 1 | 1 as 1 | 1) && 1 // 1 sequence of bitwise ors, 2 sequences of unions
+}

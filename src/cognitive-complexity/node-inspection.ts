@@ -160,8 +160,15 @@ export function breaksASequenceOfBinaryOperators(node: ts.Node) {
 export function pausesASequenceOfBinaryOperators(node: ts.Node) {
     return ts.isCallLikeExpression(node)
         || ts.isPrefixUnaryExpression(node)
-        || ts.isParenthesizedExpression(node)
+}
+
+/**
+ * @see {pausesASequenceOfBinaryOperators} but for type operators
+ */
+export function pausesASequenceOfBinaryTypeOperators(node: ts.Node) {
+    return ts.isParenthesizedExpression(node)
         || ts.isTypeReferenceNode(node)
+        || ts.isAsExpression(node)
 }
 
 export function passThroughNameBeingAssigned(node: ts.Node): boolean {
