@@ -160,6 +160,7 @@ export function breaksASequenceOfBinaryOperators(node: ts.Node) {
 export function pausesASequenceOfBinaryOperators(node: ts.Node) {
     return ts.isCallLikeExpression(node)
         || ts.isPrefixUnaryExpression(node)
+        || ts.isElementAccessExpression(node)
 }
 
 /**

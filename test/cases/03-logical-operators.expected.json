@@ -1,6 +1,6 @@
 {
     "03-logical-operators.ts": {
-        "score": 30,
+        "score": 32,
         "inner": [
             {
                 "name": "allAnd",
@@ -119,6 +119,12 @@
                         "column": 9
                     }]
                 }]
+            },
+            {
+                "name": "squareBrackets",
+                "score": 2,
+                "column": 1,
+                "line": 82
             }
         ]
     }

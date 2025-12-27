@@ -78,3 +78,7 @@ function allOtherBreaksInSequenceOfOperators(param = true && true) {
         }
     }
 }
+
+function squareBrackets() {
+    Math.random() && {}[Math.random() && Math.random()] && Math.random()
+}
