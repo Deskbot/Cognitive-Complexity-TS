@@ -144,6 +144,12 @@ export class ComplexityController {
     }
 
     private moveComplexityNodes(inner: SortedAnything[], removeWhat: (data: SortedAnything) => boolean) {
+
+        // depth first search
+        for (const child of inner) {
+            this.moveComplexityNodes(child.inner, removeWhat)
+        }
+
         const removed = removeAll(inner, removeWhat);
 
         if (removed.length > 0) {
@@ -165,9 +171,6 @@ export class ComplexityController {
                     this.model.updateContainer(removedElem);
                 }
             }
-
-            // now there are more nodes in the parent inner, consider filtering it again
-            this.moveComplexityNodes(inner, removeWhat);
         }
     }
 
