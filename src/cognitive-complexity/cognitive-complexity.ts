@@ -238,6 +238,8 @@ function nodeCost(
     }
 
     const opSequenceInProgress = mutCtx.precedingOperator;
+    const typeOpSequenceInProgress = mutCtx.precedingTypeOperator;
+    const pauseOpSequence = pausesASequenceOfBinaryOperators(node);
 
     // Check if the node ends any ongoing sequence of binary operators
     if (breaksASequenceOfBinaryOperators(node)) {
@@ -258,9 +260,9 @@ function nodeCost(
     // Pass along the operator info
     else if (isChainableBinaryTypeOperator(node)) {
         mutCtx.precedingTypeOperator = node.kind;
-    }
-    else if (pausesASequenceOfBinaryOperators(node)) {
+    } else if (pauseOpSequence) {
         mutCtx.precedingOperator = undefined;
+        mutCtx.precedingTypeOperator = undefined;
     }
 
     const ctxForChildrenSameDepth = {
@@ -285,9 +287,10 @@ function nodeCost(
 
     const costOfBelowChildren = aggregateCostOfChildren(below, ctxForChildrenBelow, mutCtx);
 
-    if (pausesASequenceOfBinaryOperators(node)) {
-        // continue whatever sequence we paused
+    // continue a paused sequence
+    if (pauseOpSequence) {
         mutCtx.precedingOperator = opSequenceInProgress;
+        mutCtx.precedingTypeOperator = typeOpSequenceInProgress;
     }
 
     score += costOfSameDepthChildren.score;
