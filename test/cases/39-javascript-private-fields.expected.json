@@ -5,42 +5,49 @@
         "inner": [
             {
                 "name": "A",
+                "kind": "class",
                 "score": 6,
                 "line": 1,
                 "column": 1,
                 "inner": [
                     {
                         "name": "#b",
+                        "kind": "function",
                         "score": 1,
                         "line": 4,
                         "column": 5
                     },
                     {
                         "name": "#c",
+                        "kind": "function",
                         "score": 1,
                         "line": 8,
                         "column": 5
                     },
                     {
                         "name": "#d",
+                        "kind": "function",
                         "score": 1,
                         "line": 12,
                         "column": 5
                     },
                     {
                         "name": "#e",
+                        "kind": "function",
                         "score": 1,
                         "line": 16,
                         "column": 17
                     },
                     {
                         "name": "#f",
+                        "kind": "function",
                         "score": 1,
                         "line": 18,
                         "column": 17
                     },
                     {
                         "name": "h",
+                        "kind": "function",
                         "score": 1,
                         "line": 20,
                         "column": 17

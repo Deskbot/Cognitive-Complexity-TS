@@ -5,12 +5,14 @@
         "inner": [
             {
                 "name": "h",
+                "kind": "function",
                 "score": 2,
                 "line": 1,
                 "column": 1
             },
             {
                 "name": "i",
+                "kind": "function",
                 "score": 2,
                 "line": 9,
                 "column": 1

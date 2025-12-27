@@ -5,6 +5,7 @@
         "inner": [
             {
                 "name": "[something]",
+                "kind": "function",
                 "score": 2,
                 "line": 3,
                 "column": 5

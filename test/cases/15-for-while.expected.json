@@ -5,54 +5,63 @@
         "inner": [
             {
                 "name": "f",
+                "kind": "function",
                 "score": 1,
                 "line": 2,
                 "column": 1
             },
             {
                 "name": "g",
+                "kind": "function",
                 "score": 1,
                 "line": 6,
                 "column": 1
             },
             {
                 "name": "h",
+                "kind": "function",
                 "score": 1,
                 "line": 10,
                 "column": 1
             },
             {
                 "name": "i",
+                "kind": "function",
                 "score": 2,
                 "line": 17,
                 "column": 1
             },
             {
                 "name": "j",
+                "kind": "function",
                 "score": 2,
                 "line": 25,
                 "column": 1
             },
             {
                 "name": "k",
+                "kind": "function",
                 "score": 2,
                 "line": 31,
                 "column": 1
             },
             {
                 "name": "l",
+                "kind": "function",
                 "score": 3,
                 "line": 38,
                 "column": 1
             },
             {
                 "name": "m",
+                "kind": "function",
                 "score": 3,
                 "line": 46,
                 "column": 1
             },
             {
                 "name": "n",
+                "kind": "function",
                 "score": 3,
                 "line": 52,
                 "column": 1

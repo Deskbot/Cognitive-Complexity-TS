@@ -5,12 +5,14 @@
         "inner": [
             {
                 "name": "noRecursion",
+                "kind": "function",
                 "score": 0,
                 "line": 1,
                 "column": 1
             },
             {
                 "name": "recursion",
+                "kind": "function",
                 "score": 1,
                 "line": 5,
                 "column": 1

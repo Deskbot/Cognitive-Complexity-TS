@@ -6,6 +6,7 @@
     "configurations": [
         {
             "name": "Test",
+            "kind": "class",
             "preLaunchTask": "Build",
 
             "type": "node",
@@ -25,6 +26,7 @@
         },
         {
             "name": "UI",
+            "kind": "class",
             "preLaunchTask": "Build",
             "type": "node",
             "request": "launch",

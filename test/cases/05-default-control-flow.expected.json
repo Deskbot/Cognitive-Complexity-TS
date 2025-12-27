@@ -5,24 +5,28 @@
         "inner": [
             {
                 "name": "f",
+                "kind": "function",
                 "line": 1,
                 "column": 1,
                 "score": 0
             },
             {
                 "name": "g",
+                "kind": "function",
                 "line": 5,
                 "column": 1,
                 "score": 0
             },
             {
                 "name": "h",
+                "kind": "function",
                 "line": 9,
                 "column": 1,
                 "score": 1
             },
             {
                 "name": "i",
+                "kind": "function",
                 "line": 15,
                 "column": 1,
                 "score": 1

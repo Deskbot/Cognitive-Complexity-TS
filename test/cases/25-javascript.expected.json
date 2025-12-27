@@ -1,9 +1,11 @@
 {
     "25-javascript.js": {
+        "kind": "file",
         "score": 0,
         "inner": [
             {
                 "name": "f",
+                "kind": "function",
                 "score": 0,
                 "line": 1,
                 "column": 1

@@ -5,36 +5,42 @@
         "inner": [
             {
                 "name": "andEquals",
+                "kind": "function",
                 "score": 1,
                 "line": 1,
                 "column": 1
             },
             {
                 "name": "andEqualsAnd",
+                "kind": "function",
                 "score": 2,
                 "line": 5,
                 "column": 1
             },
             {
                 "name": "orEquals",
+                "kind": "function",
                 "score": 1,
                 "line": 9,
                 "column": 1
             },
             {
                 "name": "orEqualsOr",
+                "kind": "function",
                 "score": 2,
                 "line": 13,
                 "column": 1
             },
             {
                 "name": "nullCoalesceEquals",
+                "kind": "function",
                 "score": 1,
                 "line": 17,
                 "column": 1
             },
             {
                 "name": "nullCoalesceEqualsNullCoalesce",
+                "kind": "function",
                 "score": 2,
                 "line": 21,
                 "column": 1

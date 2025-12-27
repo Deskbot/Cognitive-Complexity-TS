@@ -22,10 +22,6 @@ export function chooseContainerName(node: ts.Node, variableBeingDefined: string 
         return getClassExpressionName(node, variableBeingDefined);
     }
 
-    if (ts.isConstructorDeclaration(node)) {
-        return "constructor";
-    }
-
     if (ts.isInterfaceDeclaration(node)) {
         return getInterfaceDeclarationName(node);
     }
@@ -203,6 +199,10 @@ function getFunctionNodeName(func: FunctionNode): string | undefined {
 
     if (ts.isArrowFunction(func)) {
         return undefined;
+    }
+
+    if (ts.isConstructorDeclaration(func)) {
+        return "constructor";
     }
 
     if (ts.isFunctionDeclaration(func)) {

@@ -5,116 +5,136 @@
         "inner": [
             {
                 "name": "allAnd",
+                "kind": "function",
                 "score": 1,
                 "line": 1,
                 "column": 1
             },
             {
                 "name": "allOr",
+                "kind": "function",
                 "score": 1,
                 "line": 5,
                 "column": 1
             },
             {
                 "name": "allNullCoalescence",
+                "kind": "function",
                 "score": 1,
                 "line": 9,
                 "column": 1
             },
             {
                 "name": "twoSequences",
+                "kind": "function",
                 "score": 2,
                 "line": 13,
                 "column": 1
             },
             {
                 "name": "threeSequences1",
+                "kind": "function",
                 "score": 3,
                 "line": 17,
                 "column": 1
             },
             {
                 "name": "threeSequences2",
+                "kind": "function",
                 "score": 3,
                 "line": 21,
                 "column": 1
             },
             {
                 "name": "noOp",
+                "kind": "function",
                 "score": 0,
                 "line": 25,
                 "column": 1
             },
             {
                 "name": "not",
+                "kind": "function",
                 "score": 0,
                 "line": 29,
                 "column": 1
             },
             {
                 "name": "parenthesesSameOperators1",
+                "kind": "function",
                 "score": 1,
                 "line": 33,
                 "column": 1
             },
             {
                 "name": "parenthesesSameOperators2",
+                "kind": "function",
                 "score": 1,
                 "line": 38,
                 "column": 1
             },
             {
                 "name": "parenthesesDifferentOperators1",
+                "kind": "function",
                 "score": 2,
                 "line": 43,
                 "column": 1
             },
             {
                 "name": "parenthesesDifferentOperators2",
+                "kind": "function",
                 "score": 2,
                 "line": 47,
                 "column": 1
             },
             {
                 "name": "notParentheticalExpression",
+                "kind": "function",
                 "score": 2,
                 "line": 51,
                 "column": 1
             },
             {
                 "name": "functionCalls",
+                "kind": "function",
                 "score": 2,
                 "line": 56,
                 "column": 1
             },
             {
                 "name": "otherOperators",
+                "kind": "function",
                 "score": 0,
                 "line": 61,
                 "column": 1
             },
             {
                 "name": "allOtherBreaksInSequenceOfOperators",
+                "kind": "function",
                 "score": 9,
                 "line": 65,
                 "column": 1,
                 "inner": [{
                     "name": "",
+                    "kind": "function",
                     "score": 1,
                     "line": 66,
                     "column": 5
                 }, {
                     "name": "f",
+                    "kind": "function",
                     "score": 1,
                     "line": 67,
                     "column": 5
                 }, {
                     "name": "C",
+                    "kind": "class",
                     "score": 2,
                     "line": 74,
                     "column": 5,
                     "inner": [{
                         "name": "m",
+                        "kind": "function",
                         "score": 1,
                         "line": 76,
                         "column": 9
@@ -123,6 +143,7 @@
             },
             {
                 "name": "squareBrackets",
+                "kind": "function",
                 "score": 2,
                 "column": 1,
                 "line": 82

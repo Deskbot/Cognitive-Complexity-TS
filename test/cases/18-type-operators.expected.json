@@ -5,73 +5,86 @@
         "inner": [
             {
                 "name": "A",
+                "kind": "type",
                 "score": 0,
                 "line": 1,
                 "column": 1
             },
             {
                 "name": "B",
+                "kind": "type",
                 "score": 1,
                 "line": 3,
                 "column": 1
             },
             {
                 "name": "C",
+                "kind": "type",
                 "score": 2,
                 "line": 5,
                 "column": 1
             },
             {
                 "name": "D",
+                "kind": "type",
                 "score": 3,
                 "line": 7,
                 "column": 1
             },
             {
                 "name": "E",
+                "kind": "type",
                 "score": 3,
                 "line": 9,
                 "column": 1
             },
             {
                 "name": "F",
+                "kind": "type",
                 "score": 1,
                 "line": 11,
                 "column": 1
             },
             {
                 "name": "G",
+                "kind": "type",
                 "score": 2,
                 "line": 13,
                 "column": 1
             },
             {
                 "name": "breaksInSequencesOfTypeOperators",
+                "kind": "function",
                 "score": 26,
                 "line": 15,
                 "column": 1,
                 "inner": [{
                     "name": "U",
+                    "kind": "type",
                     "score": 1,
                     "line": 18,
                     "column": 5
                 }, {
                     "name": "",
+                    "kind": "function",
                     "score": 4,
                     "line": 21,
                     "column": 5
                 }, {
                     "name": "f",
+                    "kind": "function",
                     "score": 5,
                     "line": 22,
                     "column": 5
                 }, {
                     "name": "C",
+                    "kind": "class",
                     "score": 7,
                     "line": 23,
                     "column": 5,
                     "inner": [{
                         "name": "z",
+                        "kind": "function",
                         "score": 4,
                         "line": 25,
                         "column": 9
@@ -80,18 +93,21 @@
             },
             {
                 "name": "InParentheses",
+                "kind": "type",
                 "score": 1,
                 "line": 30,
                 "column": 1
             },
             {
                 "name": "PauseSequenceInParentheses",
+                "kind": "type",
                 "score": 3,
                 "line": 32,
                 "column": 1
             },
             {
                 "name": "asBreaksTypeOpSequence_butNotDataOpSequence",
+                "kind": "function",
                 "score": 3,
                 "line": 34,
                 "column": 1

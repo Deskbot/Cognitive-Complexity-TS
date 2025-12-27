@@ -5,12 +5,14 @@
         "inner": [
             {
                 "name": "NewSelf",
+                "kind": "class",
                 "score": 1,
                 "line": 1,
                 "column": 1,
                 "inner": [
                     {
                         "name": "constructor",
+                        "kind": "function",
                         "score": 1,
                         "line": 2,
                         "column": 5
@@ -19,12 +21,14 @@
             },
             {
                 "name": "anonymousClass",
+                "kind": "class",
                 "score": 1,
                 "line": 7,
                 "column": 24,
                 "inner": [
                     {
                         "name": "method",
+                        "kind": "function",
                         "score": 1,
                         "line": 8,
                         "column": 5
@@ -33,18 +37,21 @@
             },
             {
                 "name": "NamedClass",
+                "kind": "class",
                 "score": 2,
                 "line": 13,
                 "column": 22,
                 "inner": [
                     {
                         "name": "alias",
+                        "kind": "function",
                         "score": 1,
                         "line": 14,
                         "column": 5
                     },
                     {
                         "name": "realName",
+                        "kind": "function",
                         "score": 1,
                         "line": 18,
                         "column": 5

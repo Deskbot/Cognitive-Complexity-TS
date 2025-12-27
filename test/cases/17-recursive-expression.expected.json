@@ -5,48 +5,56 @@
         "inner": [
             {
                 "name": "i",
+                "kind": "function",
                 "score": 1,
                 "line": 1,
                 "column": 11
             },
             {
                 "name": "j",
+                "kind": "function",
                 "score": 2,
                 "line": 5,
                 "column": 11
             },
             {
                 "name": "k",
+                "kind": "function",
                 "score": 0,
                 "line": 10,
                 "column": 11
             },
             {
                 "name": "l",
+                "kind": "function",
                 "score": 1,
                 "line": 14,
                 "column": 11
             },
             {
                 "name": "m",
+                "kind": "function",
                 "score": 2,
                 "line": 18,
                 "column": 11
             },
             {
                 "name": "n",
+                "kind": "function",
                 "score": 0,
                 "line": 23,
                 "column": 11
             },
             {
                 "name": "",
+                "kind": "function",
                 "score": 0,
                 "line": 27,
                 "column": 1
             },
             {
                 "name": "p",
+                "kind": "function",
                 "score": 2,
                 "line": 31,
                 "column": 11

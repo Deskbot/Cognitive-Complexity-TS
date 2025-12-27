@@ -5,6 +5,7 @@
         "inner": [
             {
                 "name": "optionalChaining",
+                "kind": "function",
                 "score": 0,
                 "line": 3,
                 "column": 1

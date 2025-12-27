@@ -1,5 +1,6 @@
 {
   "name": "cognitive-complexity-ts",
+  "kind": "function",
   "version": "0.7.0",
   "description": "",
   "keywords": [

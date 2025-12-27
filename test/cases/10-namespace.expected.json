@@ -5,12 +5,14 @@
         "inner": [
             {
                 "name": "N",
+                "kind": "module",
                 "line": 1,
                 "column": 1,
                 "score": 0
             },
             {
                 "name": "M",
+                "kind": "module",
                 "line": 5,
                 "column": 1,
                 "score": 1

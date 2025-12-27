@@ -5,54 +5,63 @@
         "inner": [
             {
                 "name": "exportFunctionDeclaration",
+                "kind": "function",
                 "score": 1,
                 "line": 1,
                 "column": 1
             },
             {
                 "name": "exportConstAnonymousFunction",
+                "kind": "function",
                 "score": 1,
                 "line": 5,
                 "column": 45
             },
             {
                 "name": "exportLetAnonymousFunction",
+                "kind": "function",
                 "score": 1,
                 "line": 9,
                 "column": 41
             },
             {
                 "name": "asyncDeclaration",
+                "kind": "function",
                 "score": 1,
                 "line": 13,
                 "column": 1
             },
             {
                 "name": "asyncAnonymous",
+                "kind": "function",
                 "score": 1,
                 "line": 17,
                 "column": 24
             },
             {
                 "name": "exportAsyncDeclaration",
+                "kind": "function",
                 "score": 1,
                 "line": 21,
                 "column": 1
             },
             {
                 "name": "exportAsyncAnonymous",
+                "kind": "function",
                 "score": 1,
                 "line": 25,
                 "column": 37
             },
             {
                 "name": "ExportNamespace",
+                "kind": "module",
                 "score": 0,
                 "line": 29,
                 "column": 1
             },
             {
                 "name": "ExportClass",
+                "kind": "class",
                 "score": 0,
                 "line": 33,
                 "column": 1

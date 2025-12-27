@@ -5,18 +5,21 @@
         "inner": [
             {
                 "name": "parens",
+                "kind": "function",
                 "score": 1,
                 "line": 1,
                 "column": 1
             },
             {
                 "name": "C",
+                "kind": "class",
                 "score": 1,
                 "line": 5,
                 "column": 1,
                 "inner": [
                     {
                         "name": "bracketedCallExpression",
+                        "kind": "function",
                         "score": 1,
                         "line": 6,
                         "column": 5
@@ -25,18 +28,21 @@
             },
             {
                 "name": "l",
+                "kind": "function",
                 "score": 1,
                 "line": 11,
                 "column": 11
             },
             {
                 "name": "NoParentheses",
+                "kind": "class",
                 "score": 1,
                 "line": 15,
                 "column": 1,
                 "inner": [
                     {
                         "name": "constructor",
+                        "kind": "function",
                         "score": 1,
                         "line": 16,
                         "column": 5
@@ -45,12 +51,14 @@
             },
             {
                 "name": "Parentheses",
+                "kind": "class",
                 "score": 1,
                 "line": 21,
                 "column": 1,
                 "inner": [
                     {
                         "name": "constructor",
+                        "kind": "function",
                         "score": 1,
                         "line": 22,
                         "column": 5
@@ -59,12 +67,14 @@
             },
             {
                 "name": "func",
+                "kind": "function",
                 "score": 1,
                 "line": 27,
                 "column": 13
             },
             {
                 "name": "bracketedMethodCall",
+                "kind": "function",
                 "score": 1,
                 "line": 32,
                 "column": 5
