@@ -1,4 +1,4 @@
-import { ProgramOutput } from "../../../shared/types.js";
+import { NodeKind, ProgramOutput } from "../../../shared/types.js";
 import { cloneSortedOutput, convertToSortedOutput, isSortedContainerOutput, isSortedFileOutput, isSortedFolderOutput, SortedAnything, SortedProgram, sortProgramByComplexity, sortProgramByName, sortProgramInOrder } from "../domain/sortedOutput.js";
 import { removeAll } from "../util.js";
 import { Tree } from "../component/tree/Tree.js";
@@ -7,12 +7,26 @@ import { ComplexityModel } from "./ComplexityModel.js";
 export enum Include {
     folders = 1,
     files,
-    containers,
+    namespaces,
+    classes,
+    functionsAndTypes,
 }
 
 export enum Sort {
     inOrder = 1,
     complexity,
+}
+
+const nodeKindIncludeMap = {
+    class: Include.classes,
+    file: Include.files,
+    function: Include.functionsAndTypes,
+    module: Include.namespaces,
+    type: Include.functionsAndTypes,
+};
+
+export function convertNodeKindToInclude(kind: NodeKind) {
+    return nodeKindIncludeMap[kind]
 }
 
 /**
@@ -26,7 +40,13 @@ export class ComplexityController {
     private complexity: SortedProgram;
     private initialComplexity: SortedProgram;
 
-    private include = Include.folders;
+    private include = {
+        [Include.folders]: true,
+        [Include.files]: true,
+        [Include.namespaces]: true,
+        [Include.classes]: true,
+        [Include.functionsAndTypes]: true,
+    };
     private sortMethod = Sort.inOrder;
 
     constructor(progComp: ProgramOutput, model: ComplexityModel, view: Tree) {
@@ -57,11 +77,13 @@ export class ComplexityController {
 
     private sort() {
         if (this.sortMethod === Sort.inOrder) {
-            if (this.include === Include.containers) {
-                // don't consider relative line numbers of containers
+            const noFilesOrFolders = !this.include[Include.folders] && !this.include[Include.files];
+
+            if (noFilesOrFolders) {
+                // don't consider relative line numbers of thing in a file
                 sortProgramByName(this.complexity);
             } else {
-                // consider relative line numbers of containers
+                // consider relative line numbers of things in a file
                 sortProgramInOrder(this.complexity);
             }
 
@@ -81,12 +103,37 @@ export class ComplexityController {
     private filter() {
         this.complexity = cloneSortedOutput(this.initialComplexity);
 
-        const removeWhat: (data: SortedAnything) => boolean
-            = this.include === Include.folders
-                ? () => false
-                : this.include === Include.files
-                    ? data => isSortedFolderOutput(data)
-                    : data => !isSortedContainerOutput(data)
+        const removeWhat = (data: SortedAnything) => {
+            if (!this.include[Include.folders]) {
+                if (isSortedFolderOutput(data)) {
+                    return true
+                }
+            }
+
+            if (!this.include[Include.files]) {
+                if (isSortedFileOutput(data)) {
+                    return true
+                }
+            }
+
+            if (!isSortedContainerOutput(data)) {
+                return false;
+            }
+
+            if (!this.include[Include.namespaces]) {
+                if (data.kind === "module") {
+                    return true
+                }
+            }
+
+            if (!this.include[Include.classes]) {
+                if (data.kind === "class") {
+                    return true
+                }
+            }
+
+            return false
+        }
 
         this.moveComplexityNodes(this.complexity.inner, removeWhat);
 
@@ -129,8 +176,8 @@ export class ComplexityController {
         complexity.inner.forEach(child => this.reDepth(child, depth + 1));
     }
 
-    setInclude(include: Include) {
-        this.include = include;
+    setInclude(include: Include, value: boolean) {
+        this.include[include] = value;
         this.filter();
     }
 }

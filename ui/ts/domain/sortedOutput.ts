@@ -1,22 +1,19 @@
-import { ContainerOutput, FileOutput, FolderOutput, FunctionNodeInfo, ProgramOutput } from "../../../shared/types.js";
+import { ContainerOutput, FileOutput, FolderOutput, ProgramOutput } from "../../../shared/types.js";
 import { Unique, UniqueId } from "../framework.js";
 import { Sorter } from "../util.js";
 import { isFileOutput } from "./output.js";
 import { concatFilePath } from "./path.js";
 
-export interface SortedContainer extends FunctionNodeInfo, Unique {
-    name: string;
+export interface SortedContainer extends Unique, ContainerOutput {
     path: string;
     depth: number;
-    score: number;
     inner: SortedContainer[];
 }
 
-export interface SortedFile extends Unique {
+export interface SortedFile extends Unique, FileOutput {
     name: string;
     path: string;
     depth: number;
-    score: number;
     inner: SortedContainer[];
 }
 
@@ -32,15 +29,15 @@ export interface SortedFolder extends Unique {
 export type SortedAnything = SortedFolder | SortedFile | SortedContainer;
 
 export function isSortedFileOutput(output: SortedAnything): output is SortedFile {
-    return (output as SortedFile).score !== undefined && (output as SortedContainer).line === undefined;
+    return ("score" in output) && !("line" in output);
 }
 
 export function isSortedFolderOutput(output: SortedAnything): output is SortedFolder {
-    return (output as SortedFile | SortedContainer).score === undefined;
+    return !("score" in output)
 }
 
 export function isSortedContainerOutput(output: SortedAnything): output is SortedContainer {
-    return (output as SortedContainer).line !== undefined;
+    return "line" in output
 }
 
 // clone
@@ -123,6 +120,7 @@ export function convertToSortedOutput(programOutput: ProgramOutput): SortedFolde
 function convertToSortedContainer(path: string, depth: number, containerOutput: ContainerOutput): SortedContainer {
     return {
         id: UniqueId.next(),
+        kind: containerOutput.kind,
         column: containerOutput.column,
         line: containerOutput.line,
         name: containerOutput.name,
@@ -144,6 +142,7 @@ function convertToSortedFile(path: string, name: string, depth: number, fileOutp
 
     return {
         id: UniqueId.next(),
+        kind: "file",
         name,
         path,
         depth,
