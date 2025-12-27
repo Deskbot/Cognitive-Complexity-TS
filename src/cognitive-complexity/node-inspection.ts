@@ -1,5 +1,5 @@
 import * as ts from "typescript";
-import { ColumnAndLine } from "../../shared/types";
+import { ColumnAndLine, NodeKind } from "../../shared/types";
 import { repeat } from "../util/util";
 
 export type ForLikeStatement = ts.ForStatement | ts.ForInOrOfStatement;
@@ -40,6 +40,26 @@ export function getFirstNonParenthesizedAncestor(node: ts.Node): ts.Node {
     return firstNonParenthesisAncestor;
 }
 
+export function getNodeKind(node: ts.Node) {
+    if (isFunctionNode(node)) {
+        return "function";
+    }
+
+    if (ts.isClassDeclaration(node) || ts.isClassExpression(node)) {
+        return "class";
+    }
+
+    if (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node)) {
+        return "type";
+    }
+
+    if (ts.isModuleDeclaration(node)) {
+        return "module";
+    }
+
+    return undefined;
+}
+
 export function getTextWithoutBrackets(node: ts.Node): string {
     if (ts.isParenthesizedExpression(node)) {
         return node.getChildren()
@@ -66,7 +86,6 @@ export function isBreakOrContinueToLabel(node: ts.Node): boolean {
 export function isContainer(node: ts.Node): boolean {
     return isFunctionNode(node)
         || ts.isClassDeclaration(node)
-        || ts.isConstructorDeclaration(node)
         || ts.isInterfaceDeclaration(node)
         || ts.isModuleDeclaration(node)
         || ts.isTypeAliasDeclaration(node)
@@ -85,6 +104,7 @@ export function isFunctionNode(node: ts.Node): node is FunctionNode {
         || ts.isFunctionDeclaration(node)
         || ts.isFunctionExpression(node)
         || ts.isMethodDeclaration(node)
+        || ts.isConstructorDeclaration(node)
         || ts.isAccessor(node);
 }
 

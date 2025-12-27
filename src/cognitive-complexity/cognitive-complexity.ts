@@ -20,6 +20,7 @@ import {
     ChainableBinaryTypeOperator,
     pausesASequenceOfBinaryOperators,
     pausesASequenceOfBinaryTypeOperators,
+    getNodeKind,
 } from "./node-inspection";
 import { Scope } from "./Scope";
 
@@ -88,7 +89,10 @@ export function fileCost(file: ts.SourceFile): FileOutput {
         precedingTypeOperator: undefined,
     };
 
-    return nodeCost(file, initialContext, initialMutableContext);
+    return {
+        kind: "file",
+        ...nodeCost(file, initialContext, initialMutableContext),
+    }
 }
 
 function aggregateCostOfChildren(
@@ -113,6 +117,7 @@ function aggregateCostOfChildren(
 
         if (name !== undefined) {
             inner.push({
+                kind: getNodeKind(child)!,
                 ...getColumnAndLine(child),
                 ...childCost,
                 name,
