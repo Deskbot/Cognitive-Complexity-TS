@@ -54,7 +54,7 @@ export async function getFolderOutput(folderPath: string): Promise<FolderOutput>
             }
 
             // correct extension
-            if (entry.name.match(/.*\.[tj]sx?$/) !== null) {
+            if (entry.name.match(/.*\.[cm]?[tj]sx?$/) !== null) {
                 return getFileOutput(folderPath + "/" + entry.name);
             }
 

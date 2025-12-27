@@ -1,0 +1,28 @@
+{
+    "41-extensions": {
+        "common.cjs": {
+            "kind": "file",
+            "score": 0
+        },
+        "common.cts": {
+            "kind": "file",
+            "score": 0
+        },
+        "module.mjs": {
+            "kind": "file",
+            "score": 0
+        },
+        "module.mts": {
+            "kind": "file",
+            "score": 0
+        },
+        "react.jsx": {
+            "kind": "file",
+            "score": 0
+        },
+        "react.tsx": {
+            "kind": "file",
+            "score": 0
+        }
+    }
+}
